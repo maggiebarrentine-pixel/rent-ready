@@ -16,13 +16,13 @@
     --surface2: #22263a;
     --border: #2e3350;
     --accent: #f0c040;
-    --accent2: #4fd1c5;
     --accent3: #f87171;
     --text: #e8eaf6;
     --muted: #6b7280;
     --na: #6b7280;
     --inprogress: #f0c040;
     --complete: #4fd1c5;
+    --purple: #a78bfa;
     --radius: 10px;
   }
 
@@ -49,396 +49,121 @@
     gap: 12px;
   }
 
-  .header-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 20px;
-    letter-spacing: -0.5px;
-    color: var(--text);
-    line-height: 1;
-  }
-
+  .header-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; color: var(--text); line-height: 1; }
   .header-title span { color: var(--accent); }
 
-  .legend {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-shrink: 0;
-  }
-
-  .leg {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 9px;
-    color: var(--muted);
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-
-  .leg-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
+  .legend { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+  .leg { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .dot-na { background: var(--na); }
   .dot-ip { background: var(--inprogress); }
   .dot-done { background: var(--complete); }
 
   main { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
 
-  /* Property Card */
-  .property-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-
+  .property-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s; }
   .property-card.all-done { border-color: var(--complete); }
 
-  .property-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 14px;
-    cursor: pointer;
-    user-select: none;
-    background: var(--surface2);
+  .property-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; user-select: none; background: var(--surface2); gap: 8px; }
+
+  .property-address { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--text); flex: 1; letter-spacing: -0.3px; }
+
+  .address-edit-input {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--text);
+    background: var(--bg); border: 1.5px solid var(--accent); border-radius: 6px;
+    padding: 4px 8px; flex: 1; outline: none;
   }
 
-  .property-address {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    color: var(--text);
-    flex: 1;
-    letter-spacing: -0.3px;
-  }
+  .edit-address-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; padding: 4px; flex-shrink: 0; line-height: 1; transition: color 0.15s; }
+  .edit-address-btn:active { color: var(--accent); }
 
-  .progress-bar-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
+  .progress-bar-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .progress-bar { width: 50px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--complete); border-radius: 2px; transition: width 0.4s ease; }
+  .progress-pct { font-size: 10px; color: var(--muted); min-width: 28px; text-align: right; }
 
-  .progress-bar {
-    width: 60px;
-    height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--complete);
-    border-radius: 2px;
-    transition: width 0.4s ease;
-  }
-
-  .progress-pct {
-    font-size: 10px;
-    color: var(--muted);
-    min-width: 28px;
-    text-align: right;
-  }
-
-  .chevron {
-    color: var(--muted);
-    font-size: 12px;
-    margin-left: 8px;
-    transition: transform 0.2s;
-  }
-
+  .chevron { color: var(--muted); font-size: 12px; margin-left: 4px; transition: transform 0.2s; flex-shrink: 0; }
   .property-card.open .chevron { transform: rotate(180deg); }
 
-  /* Vendor Grid */
-  .vendor-grid {
-    display: none;
-    flex-direction: column;
-    gap: 0;
-  }
-
+  .vendor-grid { display: none; flex-direction: column; gap: 0; }
   .property-card.open .vendor-grid { display: flex; }
 
-  .vendor-row {
-    display: flex;
-    align-items: center;
-    padding: 10px 14px;
-    border-top: 1px solid var(--border);
-    gap: 10px;
-    transition: background 0.15s;
-  }
-
+  .vendor-row { display: flex; align-items: center; padding: 10px 14px; border-top: 1px solid var(--border); gap: 10px; transition: background 0.15s; }
   .vendor-row:active { background: var(--surface2); }
+  .vendor-icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+  .vendor-name { font-size: 12px; color: var(--text); flex: 1; letter-spacing: 0.2px; text-transform: uppercase; font-weight: 500; }
 
-  .vendor-icon {
-    font-size: 16px;
-    width: 24px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-
-  .vendor-name {
-    font-size: 12px;
-    color: var(--text);
-    flex: 1;
-    letter-spacing: 0.2px;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-
-  /* Radio Pills */
-  .radio-group {
-    display: flex;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-
+  .radio-group { display: flex; gap: 4px; flex-shrink: 0; }
   .radio-pill input[type="radio"] { display: none; }
 
   .radio-pill label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px 9px;
-    border-radius: 20px;
-    border: 1.5px solid var(--border);
-    font-size: 10px;
-    font-weight: 500;
-    cursor: pointer;
-    color: var(--muted);
-    background: var(--bg);
-    transition: all 0.15s;
-    letter-spacing: 0.3px;
-    white-space: nowrap;
-    -webkit-user-select: none;
-    user-select: none;
+    display: flex; align-items: center; justify-content: center;
+    padding: 5px 9px; border-radius: 20px; border: 1.5px solid var(--border);
+    font-size: 10px; font-weight: 500; cursor: pointer; color: var(--muted);
+    background: var(--bg); transition: all 0.15s; letter-spacing: 0.3px;
+    white-space: nowrap; -webkit-user-select: none; user-select: none;
   }
 
   .radio-pill label:active { transform: scale(0.94); }
+  .radio-pill input[value="na"]:checked + label { background: rgba(107,114,128,0.18); border-color: var(--na); color: var(--na); }
+  .radio-pill input[value="ip"]:checked + label { background: rgba(240,192,64,0.15); border-color: var(--inprogress); color: var(--inprogress); }
+  .radio-pill input[value="done"]:checked + label { background: rgba(79,209,197,0.15); border-color: var(--complete); color: var(--complete); }
+  .radio-pill input[value="no"]:checked + label { background: rgba(248,113,113,0.18); border-color: var(--accent3); color: var(--accent3); }
+  .radio-pill input[value="yes"]:checked + label { background: rgba(79,209,197,0.18); border-color: var(--complete); color: var(--complete); }
+  .radio-pill input[value="micdone"]:checked + label { background: rgba(167,139,250,0.18); border-color: var(--purple); color: var(--purple); }
 
-  /* NA */
-  .radio-pill input[value="na"]:checked + label {
-    background: rgba(107,114,128,0.18);
-    border-color: var(--na);
-    color: var(--na);
+  .mic-row { display: flex; align-items: center; padding: 11px 14px; border-top: 1px solid var(--border); gap: 10px; background: rgba(167,139,250,0.04); }
+  .mic-badge { font-size: 15px; flex-shrink: 0; }
+  .mic-label { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: var(--text); flex: 1; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: background 0.2s; }
+
+  /* Completed banners */
+  .section-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; padding: 4px 2px; }
+
+  .completed-banner {
+    background: rgba(167,139,250,0.06); border: 1px solid var(--purple);
+    border-radius: var(--radius); padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
   }
 
-  /* In-process */
-  .radio-pill input[value="ip"]:checked + label {
-    background: rgba(240,192,64,0.15);
-    border-color: var(--inprogress);
-    color: var(--inprogress);
-  }
+  .completed-banner-address { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--purple); flex: 1; text-decoration: line-through; opacity: 0.8; }
+  .completed-badge { font-size: 10px; color: var(--purple); background: rgba(167,139,250,0.15); border: 1px solid var(--purple); border-radius: 20px; padding: 3px 8px; font-weight: 600; letter-spacing: 0.5px; flex-shrink: 0; }
+  .restore-btn { background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; font-family: 'DM Mono', monospace; flex-shrink: 0; padding: 4px; }
 
-  /* Complete */
-  .radio-pill input[value="done"]:checked + label {
-    background: rgba(79,209,197,0.15);
-    border-color: var(--complete);
-    color: var(--complete);
-  }
-
-  /* MIC row */
-  .mic-row {
-    display: flex;
-    align-items: center;
-    padding: 11px 14px;
-    border-top: 1px solid var(--border);
-    gap: 10px;
-    background: rgba(248,113,113,0.04);
-  }
-
-  .mic-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text);
-    flex: 1;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-
-  .mic-badge {
-    font-size: 15px;
-    flex-shrink: 0;
-  }
-
-  /* Yes pill */
-  .radio-pill input[value="yes"]:checked + label {
-    background: rgba(79,209,197,0.18);
-    border-color: var(--complete);
-    color: var(--complete);
-  }
-
-  /* No pill */
-  .radio-pill input[value="no"]:checked + label {
-    background: rgba(248,113,113,0.18);
-    border-color: var(--accent3);
-    color: var(--accent3);
-  }
-
-  /* Status indicator dot on vendor row */
-  .status-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--border);
-    flex-shrink: 0;
-    transition: background 0.2s;
-  }
-
-  /* Add / Edit Property */
+  /* FAB */
   .fab {
-    position: fixed;
-    bottom: calc(20px + env(safe-area-inset-bottom));
-    right: 16px;
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: #0f1117;
-    border: none;
-    font-size: 26px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(240,192,64,0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    transition: transform 0.15s, box-shadow 0.15s;
+    position: fixed; bottom: calc(20px + env(safe-area-inset-bottom)); right: 16px;
+    width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #0f1117;
+    border: none; font-size: 26px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(240,192,64,0.4); display: flex; align-items: center;
+    justify-content: center; z-index: 200; transition: transform 0.15s, box-shadow 0.15s;
   }
-
   .fab:active { transform: scale(0.9); box-shadow: 0 2px 10px rgba(240,192,64,0.3); }
 
   /* Modal */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 300;
-    align-items: flex-end;
-    justify-content: center;
-  }
-
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; align-items: flex-end; justify-content: center; }
   .modal-overlay.visible { display: flex; }
-
-  .modal {
-    background: var(--surface);
-    border-radius: 20px 20px 0 0;
-    padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
-    width: 100%;
-    max-width: 500px;
-    animation: slideUp 0.25s ease;
-  }
-
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-
-  .modal h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    margin-bottom: 16px;
-    color: var(--text);
-  }
-
-  .modal input {
-    width: 100%;
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 14px;
-    padding: 12px 14px;
-    outline: none;
-    margin-bottom: 14px;
-    transition: border-color 0.15s;
-  }
-
+  .modal { background: var(--surface); border-radius: 20px 20px 0 0; padding: 24px 20px calc(24px + env(safe-area-inset-bottom)); width: 100%; max-width: 500px; animation: slideUp 0.25s ease; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal h2 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 16px; color: var(--text); }
+  .modal input { width: 100%; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; padding: 12px 14px; outline: none; margin-bottom: 14px; transition: border-color 0.15s; }
   .modal input:focus { border-color: var(--accent); }
-
   .modal-actions { display: flex; gap: 10px; }
-
-  .btn {
-    flex: 1;
-    padding: 13px;
-    border-radius: 8px;
-    border: none;
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: opacity 0.15s;
-  }
-
+  .btn { flex: 1; padding: 13px; border-radius: 8px; border: none; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; cursor: pointer; letter-spacing: 0.5px; transition: opacity 0.15s; }
   .btn:active { opacity: 0.75; }
   .btn-primary { background: var(--accent); color: #0f1117; }
   .btn-ghost { background: var(--surface2); color: var(--muted); }
 
-  /* Delete row */
-  .delete-btn {
-    background: none;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 16px;
-    padding: 4px;
-    flex-shrink: 0;
-    line-height: 1;
-    transition: color 0.15s;
-  }
-
-  .delete-btn:active { color: var(--accent3); }
-
-  /* Empty state */
-  .empty {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.8;
-  }
-
+  .empty { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 13px; line-height: 1.8; }
   .empty-icon { font-size: 40px; margin-bottom: 12px; }
   .empty strong { color: var(--text); font-family: 'Syne', sans-serif; font-size: 16px; display: block; margin-bottom: 6px; }
 
-  /* Stats bar */
-  .stats-bar {
-    display: flex;
-    gap: 8px;
-    padding: 0 0 4px;
-  }
-
-  .stat-chip {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    flex: 1;
-    text-align: center;
-  }
-
-  .stat-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    line-height: 1;
-    margin-bottom: 2px;
-  }
-
+  .stats-bar { display: flex; gap: 8px; padding: 0 0 4px; }
+  .stat-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; flex: 1; text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; line-height: 1; margin-bottom: 2px; }
   .stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
-  /* Bottom padding for FAB */
   .bottom-spacer { height: 80px; }
 </style>
 </head>
@@ -454,29 +179,19 @@
 </header>
 
 <main id="main">
-  <!-- Stats -->
   <div class="stats-bar">
-    <div class="stat-chip">
-      <div class="stat-num" id="stat-props">0</div>
-      <div class="stat-label">Properties</div>
-    </div>
-    <div class="stat-chip">
-      <div class="stat-num" id="stat-inprog" style="color:var(--inprogress)">0</div>
-      <div class="stat-label">In Progress</div>
-    </div>
-    <div class="stat-chip">
-      <div class="stat-num" id="stat-done" style="color:var(--complete)">0</div>
-      <div class="stat-label">Complete</div>
-    </div>
+    <div class="stat-chip"><div class="stat-num" id="stat-props">0</div><div class="stat-label">Properties</div></div>
+    <div class="stat-chip"><div class="stat-num" id="stat-inprog" style="color:var(--inprogress)">0</div><div class="stat-label">In Progress</div></div>
+    <div class="stat-chip"><div class="stat-num" id="stat-done" style="color:var(--purple)">0</div><div class="stat-label">MIC Done</div></div>
   </div>
 
   <div id="cards-container"></div>
+  <div id="completed-section" style="display:flex;flex-direction:column;gap:8px;"></div>
   <div class="bottom-spacer"></div>
 </main>
 
 <button class="fab" id="add-btn" title="Add Property">+</button>
 
-<!-- Modal -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <h2>Add Property</h2>
@@ -490,223 +205,197 @@
 
 <script>
 const VENDORS = [
-  { key: 'handyman',    label: 'Handyman',        icon: '🔧' },
-  { key: 'junk',        label: 'Junk Removal',     icon: '🗑️' },
-  { key: 'cleaning',    label: 'Cleaning',         icon: '🧹' },
-  { key: 'carpet',      label: 'Carpet Cleaning',  icon: '🟫' },
-  { key: 'weed',        label: 'Weed Clean-Up',    icon: '🌿' },
-  { key: 'poop',        label: 'Pooper Scoopers',  icon: '🐾' },
+  { key: 'handyman', label: 'Handyman',        icon: '🔧' },
+  { key: 'junk',     label: 'Junk Removal',    icon: '🗑️' },
+  { key: 'cleaning', label: 'Cleaning',         icon: '🧹' },
+  { key: 'carpet',   label: 'Carpet Cleaning',  icon: '🟫' },
+  { key: 'weed',     label: 'Weed Clean-Up',   icon: '🌿' },
+  { key: 'poop',     label: 'Pooper Scoopers',  icon: '🐾' },
 ];
 
-const STORAGE_KEY = 'rent_ready_v2';
-
-function load() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
-}
-
-function save(properties) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(properties));
-}
-
+const STORAGE_KEY = 'rent_ready_v3';
+function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } }
+function saveData(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
 let properties = load();
 
-function getStatus(prop, vendorKey) {
-  return prop.vendors?.[vendorKey] || 'na';
-}
-
-function completedCount(prop) {
-  return VENDORS.filter(v => getStatus(prop, v.key) === 'done').length;
-}
-
-function calcProgress(prop) {
-  const active = VENDORS.filter(v => getStatus(prop, v.key) !== 'na').length;
-  const done = completedCount(prop);
-  if (active === 0) return 0;
-  return Math.round((done / VENDORS.length) * 100);
-}
-
-function statusDotColor(status) {
-  if (status === 'ip') return 'var(--inprogress)';
-  if (status === 'done') return 'var(--complete)';
-  return 'var(--border)';
-}
+function getStatus(prop, key) { return prop.vendors?.[key] || 'na'; }
+function completedCount(prop) { return VENDORS.filter(v => getStatus(prop, v.key) === 'done').length; }
+function calcProgress(prop) { return Math.round((completedCount(prop) / VENDORS.length) * 100); }
+function statusDotColor(s) { return s === 'ip' ? 'var(--inprogress)' : s === 'done' ? 'var(--complete)' : 'var(--border)'; }
+function escHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function renderCards() {
   const container = document.getElementById('cards-container');
+  const completedSection = document.getElementById('completed-section');
+  container.innerHTML = '';
+  completedSection.innerHTML = '';
+
+  const active = properties.filter(p => p.mic !== 'micdone');
+  const completed = properties.filter(p => p.mic === 'micdone');
 
   if (properties.length === 0) {
-    container.innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">🏠</div>
-        <strong>No Properties Yet</strong>
-        Tap the <strong style="color:var(--accent)">+</strong> button below<br>to add your first property.
-      </div>`;
-    updateStats();
-    return;
+    container.innerHTML = `<div class="empty"><div class="empty-icon">🏠</div><strong>No Properties Yet</strong>Tap the <strong style="color:var(--accent)">+</strong> button below<br>to add your first property.</div>`;
+    updateStats(); return;
   }
 
-  container.innerHTML = '';
+  active.forEach(prop => renderActiveCard(prop, properties.indexOf(prop), container));
 
-  properties.forEach((prop, pIdx) => {
-    const pct = calcProgress(prop);
-    const allDone = pct === 100;
-    const isOpen = prop.open !== false;
-
-    const card = document.createElement('div');
-    card.className = `property-card ${isOpen ? 'open' : ''} ${allDone ? 'all-done' : ''}`;
-    card.dataset.idx = pIdx;
-
-    // Vendor rows HTML
-    const vendorRowsHTML = VENDORS.map(v => {
-      const status = getStatus(prop, v.key);
-      const rid = `r_${pIdx}_${v.key}`;
-      return `
-        <div class="vendor-row" data-vendor="${v.key}">
-          <div class="status-dot" style="background:${statusDotColor(status)}"></div>
-          <div class="vendor-icon">${v.icon}</div>
-          <div class="vendor-name">${v.label}</div>
-          <div class="radio-group">
-            <div class="radio-pill">
-              <input type="radio" name="${rid}" id="${rid}_na" value="na" ${status==='na'?'checked':''}>
-              <label for="${rid}_na">NA</label>
-            </div>
-            <div class="radio-pill">
-              <input type="radio" name="${rid}" id="${rid}_ip" value="ip" ${status==='ip'?'checked':''}>
-              <label for="${rid}_ip">⏳</label>
-            </div>
-            <div class="radio-pill">
-              <input type="radio" name="${rid}" id="${rid}_done" value="done" ${status==='done'?'checked':''}>
-              <label for="${rid}_done">✓</label>
-            </div>
-          </div>
-        </div>`;
-    }).join('');
-
-    const micStatus = prop.mic || '';
-    const micId = `mic_${pIdx}`;
-    const micRowHTML = `
-      <div class="mic-row" id="mic-row-${pIdx}">
-        <div class="mic-badge">🔑</div>
-        <div class="mic-label">Ready for MIC</div>
-        <div class="radio-group">
-          <div class="radio-pill">
-            <input type="radio" name="${micId}" id="${micId}_yes" value="yes" ${micStatus==='yes'?'checked':''}>
-            <label for="${micId}_yes">YES</label>
-          </div>
-          <div class="radio-pill">
-            <input type="radio" name="${micId}" id="${micId}_no" value="no" ${micStatus==='no'?'checked':''}>
-            <label for="${micId}_no">NO</label>
-          </div>
-        </div>
-      </div>`;
-
-    card.innerHTML = `
-      <div class="property-header">
-        <div class="property-address">${escHtml(prop.address)}</div>
-        <div class="progress-bar-wrap">
-          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-          <div class="progress-pct">${pct}%</div>
-        </div>
-        <div class="chevron">▼</div>
-      </div>
-      <div class="vendor-grid">${micRowHTML}${vendorRowsHTML}</div>
-    `;
-
-    // Toggle open/close
-    card.querySelector('.property-header').addEventListener('click', () => {
-      properties[pIdx].open = !isOpen;
-      save(properties);
-      renderCards();
-    });
-
-    // Radio change
-    card.querySelectorAll('input[type="radio"]').forEach(input => {
-      input.addEventListener('change', (e) => {
-        const vendorKey = e.target.closest('.vendor-row').dataset.vendor;
-        if (!properties[pIdx].vendors) properties[pIdx].vendors = {};
-        properties[pIdx].vendors[vendorKey] = e.target.value;
-        save(properties);
-        // Update just the dot and progress without full re-render for smooth feel
-        const dot = e.target.closest('.vendor-row').querySelector('.status-dot');
-        dot.style.background = statusDotColor(e.target.value);
-        const newPct = calcProgress(properties[pIdx]);
-        card.querySelector('.progress-fill').style.width = newPct + '%';
-        card.querySelector('.progress-pct').textContent = newPct + '%';
-        if (newPct === 100) card.classList.add('all-done');
-        else card.classList.remove('all-done');
-        updateStats();
+  if (completed.length > 0) {
+    const label = document.createElement('div');
+    label.className = 'section-label';
+    label.textContent = '🔑 MIC Complete';
+    completedSection.appendChild(label);
+    completed.forEach(prop => {
+      const pIdx = properties.indexOf(prop);
+      const banner = document.createElement('div');
+      banner.className = 'completed-banner';
+      banner.innerHTML = `<div class="completed-banner-address">${escHtml(prop.address)}</div><div class="completed-badge">MIC ✓</div><button class="restore-btn" title="Undo">↩ undo</button>`;
+      banner.querySelector('.restore-btn').addEventListener('click', e => {
+        e.stopPropagation();
+        properties[pIdx].mic = 'yes';
+        saveData(properties);
+        renderCards();
       });
+      completedSection.appendChild(banner);
     });
-
-    // MIC radio change
-    card.querySelectorAll(`input[name="mic_${pIdx}"]`).forEach(input => {
-      input.addEventListener('change', (e) => {
-        properties[pIdx].mic = e.target.value;
-        save(properties);
-      });
-    });
-
-    // Long-press to delete
-    let pressTimer;
-    card.querySelector('.property-header').addEventListener('touchstart', () => {
-      pressTimer = setTimeout(() => {
-        if (confirm(`Remove "${prop.address}"?`)) {
-          properties.splice(pIdx, 1);
-          save(properties);
-          renderCards();
-        }
-      }, 700);
-    });
-    card.querySelector('.property-header').addEventListener('touchend', () => clearTimeout(pressTimer));
-    card.querySelector('.property-header').addEventListener('touchmove', () => clearTimeout(pressTimer));
-
-    container.appendChild(card);
-  });
+  }
 
   updateStats();
 }
 
+function renderActiveCard(prop, pIdx, container) {
+  const pct = calcProgress(prop);
+  const isOpen = prop.open !== false;
+  const card = document.createElement('div');
+  card.className = `property-card ${isOpen ? 'open' : ''} ${pct === 100 ? 'all-done' : ''}`;
+
+  const vendorRowsHTML = VENDORS.map(v => {
+    const status = getStatus(prop, v.key);
+    const rid = `r_${pIdx}_${v.key}`;
+    return `<div class="vendor-row" data-vendor="${v.key}">
+      <div class="status-dot" style="background:${statusDotColor(status)}"></div>
+      <div class="vendor-icon">${v.icon}</div>
+      <div class="vendor-name">${v.label}</div>
+      <div class="radio-group">
+        <div class="radio-pill"><input type="radio" name="${rid}" id="${rid}_na" value="na" ${status==='na'?'checked':''}><label for="${rid}_na">NA</label></div>
+        <div class="radio-pill"><input type="radio" name="${rid}" id="${rid}_ip" value="ip" ${status==='ip'?'checked':''}><label for="${rid}_ip">⏳</label></div>
+        <div class="radio-pill"><input type="radio" name="${rid}" id="${rid}_done" value="done" ${status==='done'?'checked':''}><label for="${rid}_done">✓</label></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const mic = prop.mic || '';
+  const micId = `mic_${pIdx}`;
+  const micRowHTML = `<div class="mic-row">
+    <div class="mic-badge">🔑</div>
+    <div class="mic-label">Ready for MIC</div>
+    <div class="radio-group">
+      <div class="radio-pill"><input type="radio" name="${micId}" id="${micId}_no" value="no" ${mic==='no'?'checked':''}><label for="${micId}_no">NO</label></div>
+      <div class="radio-pill"><input type="radio" name="${micId}" id="${micId}_yes" value="yes" ${mic==='yes'?'checked':''}><label for="${micId}_yes">YES</label></div>
+      <div class="radio-pill"><input type="radio" name="${micId}" id="${micId}_micdone" value="micdone" ${mic==='micdone'?'checked':''}><label for="${micId}_micdone">DONE</label></div>
+    </div>
+  </div>`;
+
+  card.innerHTML = `
+    <div class="property-header">
+      <div class="property-address" id="addr-${pIdx}">${escHtml(prop.address)}</div>
+      <button class="edit-address-btn" title="Edit">✏️</button>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-pct">${pct}%</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="vendor-grid">${micRowHTML}${vendorRowsHTML}</div>`;
+
+  // Toggle expand
+  card.querySelector('.property-header').addEventListener('click', e => {
+    if (e.target.closest('.edit-address-btn') || e.target.tagName === 'INPUT') return;
+    properties[pIdx].open = !isOpen;
+    saveData(properties);
+    renderCards();
+  });
+
+  // Edit address
+  card.querySelector('.edit-address-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    const display = card.querySelector(`#addr-${pIdx}`);
+    const btn = card.querySelector('.edit-address-btn');
+    const inp = document.createElement('input');
+    inp.className = 'address-edit-input';
+    inp.value = prop.address;
+    display.replaceWith(inp);
+    btn.textContent = '✅';
+    inp.focus();
+    function commitEdit() {
+      const v = inp.value.trim();
+      if (v) properties[pIdx].address = v;
+      saveData(properties);
+      renderCards();
+    }
+    btn.onclick = e => { e.stopPropagation(); commitEdit(); };
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') commitEdit(); });
+    inp.addEventListener('blur', () => setTimeout(commitEdit, 150));
+  });
+
+  // Vendor radio
+  card.querySelectorAll('.vendor-row input[type="radio"]').forEach(inp => {
+    inp.addEventListener('change', e => {
+      const key = e.target.closest('.vendor-row').dataset.vendor;
+      if (!properties[pIdx].vendors) properties[pIdx].vendors = {};
+      properties[pIdx].vendors[key] = e.target.value;
+      saveData(properties);
+      e.target.closest('.vendor-row').querySelector('.status-dot').style.background = statusDotColor(e.target.value);
+      const np = calcProgress(properties[pIdx]);
+      card.querySelector('.progress-fill').style.width = np + '%';
+      card.querySelector('.progress-pct').textContent = np + '%';
+      card.classList.toggle('all-done', np === 100);
+      updateStats();
+    });
+  });
+
+  // MIC radio
+  card.querySelectorAll(`input[name="${micId}"]`).forEach(inp => {
+    inp.addEventListener('change', e => {
+      properties[pIdx].mic = e.target.value;
+      saveData(properties);
+      if (e.target.value === 'micdone') renderCards();
+    });
+  });
+
+  // Long press delete
+  let pressTimer;
+  card.querySelector('.property-header').addEventListener('touchstart', () => {
+    pressTimer = setTimeout(() => {
+      if (confirm(`Remove "${prop.address}"?`)) { properties.splice(pIdx, 1); saveData(properties); renderCards(); }
+    }, 700);
+  });
+  card.querySelector('.property-header').addEventListener('touchend', () => clearTimeout(pressTimer));
+  card.querySelector('.property-header').addEventListener('touchmove', () => clearTimeout(pressTimer));
+
+  container.appendChild(card);
+}
+
 function updateStats() {
   document.getElementById('stat-props').textContent = properties.length;
-  const inprog = properties.filter(p =>
-    VENDORS.some(v => getStatus(p, v.key) === 'ip') &&
-    !VENDORS.every(v => getStatus(p, v.key) === 'done' || getStatus(p, v.key) === 'na')
-  ).length;
-  const done = properties.filter(p => completedCount(p) === VENDORS.length).length;
-  document.getElementById('stat-inprog').textContent = inprog;
-  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-inprog').textContent = properties.filter(p => p.mic !== 'micdone' && VENDORS.some(v => getStatus(p, v.key) === 'ip')).length;
+  document.getElementById('stat-done').textContent = properties.filter(p => p.mic === 'micdone').length;
 }
 
-function escHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// Modal
 const modal = document.getElementById('modal-overlay');
-const input = document.getElementById('address-input');
-
-document.getElementById('add-btn').addEventListener('click', () => {
-  input.value = '';
-  modal.classList.add('visible');
-  setTimeout(() => input.focus(), 300);
-});
-
+const addrInput = document.getElementById('address-input');
+document.getElementById('add-btn').addEventListener('click', () => { addrInput.value = ''; modal.classList.add('visible'); setTimeout(() => addrInput.focus(), 300); });
 document.getElementById('cancel-btn').addEventListener('click', () => modal.classList.remove('visible'));
 modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('visible'); });
-
 document.getElementById('save-btn').addEventListener('click', () => {
-  const addr = input.value.trim();
-  if (!addr) { input.focus(); return; }
+  const addr = addrInput.value.trim();
+  if (!addr) { addrInput.focus(); return; }
   properties.push({ address: addr, vendors: {}, open: true });
-  save(properties);
+  saveData(properties);
   modal.classList.remove('visible');
   renderCards();
 });
-
-input.addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('save-btn').click();
-});
+addrInput.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('save-btn').click(); });
 
 renderCards();
 </script>
