@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Rent Ready">
+<title>Rent Ready Tracker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3350;
+    --accent: #f0c040;
+    --accent2: #4fd1c5;
+    --accent3: #f87171;
+    --text: #e8eaf6;
+    --muted: #6b7280;
+    --na: #6b7280;
+    --inprogress: #f0c040;
+    --complete: #4fd1c5;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 2px solid var(--accent);
+    padding: 18px 16px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .header-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .header-title span { color: var(--accent); }
+
+  .legend {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .leg {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .leg-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-na { background: var(--na); }
+  .dot-ip { background: var(--inprogress); }
+  .dot-done { background: var(--complete); }
+
+  main { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+
+  /* Property Card */
+  .property-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .property-card.all-done { border-color: var(--complete); }
+
+  .property-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--surface2);
+  }
+
+  .property-address {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text);
+    flex: 1;
+    letter-spacing: -0.3px;
+  }
+
+  .progress-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .progress-bar {
+    width: 60px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--complete);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-pct {
+    font-size: 10px;
+    color: var(--muted);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .chevron {
+    color: var(--muted);
+    font-size: 12px;
+    margin-left: 8px;
+    transition: transform 0.2s;
+  }
+
+  .property-card.open .chevron { transform: rotate(180deg); }
+
+  /* Vendor Grid */
+  .vendor-grid {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .property-card.open .vendor-grid { display: flex; }
+
+  .vendor-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    gap: 10px;
+    transition: background 0.15s;
+  }
+
+  .vendor-row:active { background: var(--surface2); }
+
+  .vendor-icon {
+    font-size: 16px;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .vendor-name {
+    font-size: 12px;
+    color: var(--text);
+    flex: 1;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Radio Pills */
+  .radio-group {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .radio-pill input[type="radio"] { display: none; }
+
+  .radio-pill label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 9px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--muted);
+    background: var(--bg);
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .radio-pill label:active { transform: scale(0.94); }
+
+  /* NA */
+  .radio-pill input[value="na"]:checked + label {
+    background: rgba(107,114,128,0.18);
+    border-color: var(--na);
+    color: var(--na);
+  }
+
+  /* In-process */
+  .radio-pill input[value="ip"]:checked + label {
+    background: rgba(240,192,64,0.15);
+    border-color: var(--inprogress);
+    color: var(--inprogress);
+  }
+
+  /* Complete */
+  .radio-pill input[value="done"]:checked + label {
+    background: rgba(79,209,197,0.15);
+    border-color: var(--complete);
+    color: var(--complete);
+  }
+
+  /* MIC row */
+  .mic-row {
+    display: flex;
+    align-items: center;
+    padding: 11px 14px;
+    border-top: 1px solid var(--border);
+    gap: 10px;
+    background: rgba(248,113,113,0.04);
+  }
+
+  .mic-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .mic-badge {
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  /* Yes pill */
+  .radio-pill input[value="yes"]:checked + label {
+    background: rgba(79,209,197,0.18);
+    border-color: var(--complete);
+    color: var(--complete);
+  }
+
+  /* No pill */
+  .radio-pill input[value="no"]:checked + label {
+    background: rgba(248,113,113,0.18);
+    border-color: var(--accent3);
+    color: var(--accent3);
+  }
+
+  /* Status indicator dot on vendor row */
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  /* Add / Edit Property */
+  .fab {
+    position: fixed;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    right: 16px;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #0f1117;
+    border: none;
+    font-size: 26px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(240,192,64,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .fab:active { transform: scale(0.9); box-shadow: 0 2px 10px rgba(240,192,64,0.3); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 300;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal-overlay.visible { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+    width: 100%;
+    max-width: 500px;
+    animation: slideUp 0.25s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .modal input {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    padding: 12px 14px;
+    outline: none;
+    margin-bottom: 14px;
+    transition: border-color 0.15s;
+  }
+
+  .modal input:focus { border-color: var(--accent); }
+
+  .modal-actions { display: flex; gap: 10px; }
+
+  .btn {
+    flex: 1;
+    padding: 13px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: opacity 0.15s;
+  }
+
+  .btn:active { opacity: 0.75; }
+  .btn-primary { background: var(--accent); color: #0f1117; }
+  .btn-ghost { background: var(--surface2); color: var(--muted); }
+
+  /* Delete row */
+  .delete-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    flex-shrink: 0;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+
+  .delete-btn:active { color: var(--accent3); }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty strong { color: var(--text); font-family: 'Syne', sans-serif; font-size: 16px; display: block; margin-bottom: 6px; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 8px;
+    padding: 0 0 4px;
+  }
+
+  .stat-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    flex: 1;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Bottom padding for FAB */
+  .bottom-spacer { height: 80px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">Rent<span>Ready</span></div>
+  <div class="legend">
+    <div class="leg"><div class="leg-dot dot-na"></div>NA</div>
+    <div class="leg"><div class="leg-dot dot-ip"></div>In-Progress</div>
+    <div class="leg"><div class="leg-dot dot-done"></div>Done</div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-chip">
+      <div class="stat-num" id="stat-props">0</div>
+      <div class="stat-label">Properties</div>
+    </div>
+    <div class="stat-chip">
+      <div class="stat-num" id="stat-inprog" style="color:var(--inprogress)">0</div>
+      <div class="stat-label">In Progress</div>
+    </div>
+    <div class="stat-chip">
+      <div class="stat-num" id="stat-done" style="color:var(--complete)">0</div>
+      <div class="stat-label">Complete</div>
+    </div>
+  </div>
+
+  <div id="cards-container"></div>
+  <div class="bottom-spacer"></div>
+</main>
+
+<button class="fab" id="add-btn" title="Add Property">+</button>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h2>Add Property</h2>
+    <input type="text" id="address-input" placeholder="123 Main St, City, ST" autocomplete="off" autocorrect="off" spellcheck="false">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-btn">Add Property</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const VENDORS = [
+  { key: 'handyman',    label: 'Handyman',        icon: '🔧' },
+  { key: 'junk',        label: 'Junk Removal',     icon: '🗑️' },
+  { key: 'cleaning',    label: 'Cleaning',         icon: '🧹' },
+  { key: 'carpet',      label: 'Carpet Cleaning',  icon: '🟫' },
+  { key: 'weed',        label: 'Weed Clean-Up',    icon: '🌿' },
+  { key: 'poop',        label: 'Pooper Scoopers',  icon: '🐾' },
+];
+
+const STORAGE_KEY = 'rent_ready_v2';
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+
+function save(properties) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(properties));
+}
+
+let properties = load();
+
+function getStatus(prop, vendorKey) {
+  return prop.vendors?.[vendorKey] || 'na';
+}
+
+function completedCount(prop) {
+  return VENDORS.filter(v => getStatus(prop, v.key) === 'done').length;
+}
+
+function calcProgress(prop) {
+  const active = VENDORS.filter(v => getStatus(prop, v.key) !== 'na').length;
+  const done = completedCount(prop);
+  if (active === 0) return 0;
+  return Math.round((done / VENDORS.length) * 100);
+}
+
+function statusDotColor(status) {
+  if (status === 'ip') return 'var(--inprogress)';
+  if (status === 'done') return 'var(--complete)';
+  return 'var(--border)';
+}
+
+function renderCards() {
+  const container = document.getElementById('cards-container');
+
+  if (properties.length === 0) {
+    container.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">🏠</div>
+        <strong>No Properties Yet</strong>
+        Tap the <strong style="color:var(--accent)">+</strong> button below<br>to add your first property.
+      </div>`;
+    updateStats();
+    return;
+  }
+
+  container.innerHTML = '';
+
+  properties.forEach((prop, pIdx) => {
+    const pct = calcProgress(prop);
+    const allDone = pct === 100;
+    const isOpen = prop.open !== false;
+
+    const card = document.createElement('div');
+    card.className = `property-card ${isOpen ? 'open' : ''} ${allDone ? 'all-done' : ''}`;
+    card.dataset.idx = pIdx;
+
+    // Vendor rows HTML
+    const vendorRowsHTML = VENDORS.map(v => {
+      const status = getStatus(prop, v.key);
+      const rid = `r_${pIdx}_${v.key}`;
+      return `
+        <div class="vendor-row" data-vendor="${v.key}">
+          <div class="status-dot" style="background:${statusDotColor(status)}"></div>
+          <div class="vendor-icon">${v.icon}</div>
+          <div class="vendor-name">${v.label}</div>
+          <div class="radio-group">
+            <div class="radio-pill">
+              <input type="radio" name="${rid}" id="${rid}_na" value="na" ${status==='na'?'checked':''}>
+              <label for="${rid}_na">NA</label>
+            </div>
+            <div class="radio-pill">
+              <input type="radio" name="${rid}" id="${rid}_ip" value="ip" ${status==='ip'?'checked':''}>
+              <label for="${rid}_ip">⏳</label>
+            </div>
+            <div class="radio-pill">
+              <input type="radio" name="${rid}" id="${rid}_done" value="done" ${status==='done'?'checked':''}>
+              <label for="${rid}_done">✓</label>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const micStatus = prop.mic || '';
+    const micId = `mic_${pIdx}`;
+    const micRowHTML = `
+      <div class="mic-row" id="mic-row-${pIdx}">
+        <div class="mic-badge">🔑</div>
+        <div class="mic-label">Ready for MIC</div>
+        <div class="radio-group">
+          <div class="radio-pill">
+            <input type="radio" name="${micId}" id="${micId}_yes" value="yes" ${micStatus==='yes'?'checked':''}>
+            <label for="${micId}_yes">YES</label>
+          </div>
+          <div class="radio-pill">
+            <input type="radio" name="${micId}" id="${micId}_no" value="no" ${micStatus==='no'?'checked':''}>
+            <label for="${micId}_no">NO</label>
+          </div>
+        </div>
+      </div>`;
+
+    card.innerHTML = `
+      <div class="property-header">
+        <div class="property-address">${escHtml(prop.address)}</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <div class="progress-pct">${pct}%</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="vendor-grid">${micRowHTML}${vendorRowsHTML}</div>
+    `;
+
+    // Toggle open/close
+    card.querySelector('.property-header').addEventListener('click', () => {
+      properties[pIdx].open = !isOpen;
+      save(properties);
+      renderCards();
+    });
+
+    // Radio change
+    card.querySelectorAll('input[type="radio"]').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const vendorKey = e.target.closest('.vendor-row').dataset.vendor;
+        if (!properties[pIdx].vendors) properties[pIdx].vendors = {};
+        properties[pIdx].vendors[vendorKey] = e.target.value;
+        save(properties);
+        // Update just the dot and progress without full re-render for smooth feel
+        const dot = e.target.closest('.vendor-row').querySelector('.status-dot');
+        dot.style.background = statusDotColor(e.target.value);
+        const newPct = calcProgress(properties[pIdx]);
+        card.querySelector('.progress-fill').style.width = newPct + '%';
+        card.querySelector('.progress-pct').textContent = newPct + '%';
+        if (newPct === 100) card.classList.add('all-done');
+        else card.classList.remove('all-done');
+        updateStats();
+      });
+    });
+
+    // MIC radio change
+    card.querySelectorAll(`input[name="mic_${pIdx}"]`).forEach(input => {
+      input.addEventListener('change', (e) => {
+        properties[pIdx].mic = e.target.value;
+        save(properties);
+      });
+    });
+
+    // Long-press to delete
+    let pressTimer;
+    card.querySelector('.property-header').addEventListener('touchstart', () => {
+      pressTimer = setTimeout(() => {
+        if (confirm(`Remove "${prop.address}"?`)) {
+          properties.splice(pIdx, 1);
+          save(properties);
+          renderCards();
+        }
+      }, 700);
+    });
+    card.querySelector('.property-header').addEventListener('touchend', () => clearTimeout(pressTimer));
+    card.querySelector('.property-header').addEventListener('touchmove', () => clearTimeout(pressTimer));
+
+    container.appendChild(card);
+  });
+
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('stat-props').textContent = properties.length;
+  const inprog = properties.filter(p =>
+    VENDORS.some(v => getStatus(p, v.key) === 'ip') &&
+    !VENDORS.every(v => getStatus(p, v.key) === 'done' || getStatus(p, v.key) === 'na')
+  ).length;
+  const done = properties.filter(p => completedCount(p) === VENDORS.length).length;
+  document.getElementById('stat-inprog').textContent = inprog;
+  document.getElementById('stat-done').textContent = done;
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Modal
+const modal = document.getElementById('modal-overlay');
+const input = document.getElementById('address-input');
+
+document.getElementById('add-btn').addEventListener('click', () => {
+  input.value = '';
+  modal.classList.add('visible');
+  setTimeout(() => input.focus(), 300);
+});
+
+document.getElementById('cancel-btn').addEventListener('click', () => modal.classList.remove('visible'));
+modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('visible'); });
+
+document.getElementById('save-btn').addEventListener('click', () => {
+  const addr = input.value.trim();
+  if (!addr) { input.focus(); return; }
+  properties.push({ address: addr, vendors: {}, open: true });
+  save(properties);
+  modal.classList.remove('visible');
+  renderCards();
+});
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('save-btn').click();
+});
+
+renderCards();
+</script>
+</body>
+</html>
