@@ -78,6 +78,7 @@
 
   .property-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s; }
   .property-card.all-done { border-color: var(--complete); }
+  .property-card.mic-warning { border-color: var(--accent3); }
 
   .property-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; user-select: none; background: var(--surface2); gap: 8px; }
 
@@ -167,6 +168,21 @@
   .bottom-spacer { height: 80px; }
 
   .loading { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
+
+  #pull-indicator {
+    text-align: center;
+    height: 0;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: height 0.15s;
+  }
+  #pull-indicator.visible { height: 44px; }
+  #pull-indicator.release { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -179,6 +195,7 @@
   </div>
 </header>
 
+<div id="pull-indicator">↓ pull to refresh</div>
 <main id="main">
   <div class="stats-bar">
     <div class="stat-chip"><div class="stat-num" id="stat-props">0</div><div class="stat-label">Properties</div></div>
@@ -347,7 +364,8 @@ function renderActiveCard(prop, container) {
   const pct = calcProgress(prop);
   const isOpen = prop.open !== false;
   const card = document.createElement('div');
-  card.className = `property-card ${isOpen ? 'open' : ''} ${pct === 100 ? 'all-done' : ''}`;
+  const micClass = (mic === 'yes' || mic === 'micdone') ? '' : 'mic-warning';
+  card.className = `property-card ${isOpen ? 'open' : ''} ${pct === 100 ? 'all-done' : ''} ${micClass}`;
 
   const vendorRowsHTML = VENDORS.map(v => {
     const status = getStatus(prop, v.key);
@@ -441,7 +459,11 @@ function renderActiveCard(prop, container) {
     inp.addEventListener('change', async e => {
       prop.mic = e.target.value;
       await updateProperty(prop.id, { mic: prop.mic });
-      if (e.target.value === 'micdone') renderCards();
+      if (e.target.value === 'micdone') {
+        renderCards();
+      } else {
+        card.classList.toggle('mic-warning', e.target.value !== 'yes');
+      }
     });
   });
 
@@ -493,6 +515,42 @@ document.getElementById('save-btn').addEventListener('click', async () => {
 });
 
 addrInput.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('save-btn').click(); });
+
+// ── Pull to refresh ──────────────────────────────────────────
+let touchStartY = 0;
+let pulling = false;
+const pullIndicator = document.getElementById('pull-indicator');
+
+document.addEventListener('touchstart', e => {
+  if (window.scrollY === 0) {
+    touchStartY = e.touches[0].clientY;
+    pulling = true;
+  }
+}, { passive: true });
+
+document.addEventListener('touchmove', e => {
+  if (!pulling) return;
+  const delta = e.touches[0].clientY - touchStartY;
+  if (delta > 10) {
+    pullIndicator.classList.add('visible');
+    pullIndicator.textContent = delta > 60 ? '↑ release to refresh' : '↓ pull to refresh';
+    pullIndicator.classList.toggle('release', delta > 60);
+  }
+}, { passive: true });
+
+document.addEventListener('touchend', e => {
+  if (!pulling) return;
+  const delta = e.changedTouches[0].clientY - touchStartY;
+  pulling = false;
+  if (delta > 60) {
+    pullIndicator.textContent = '⟳ refreshing...';
+    fetchAll().then(() => {
+      pullIndicator.classList.remove('visible', 'release');
+    });
+  } else {
+    pullIndicator.classList.remove('visible', 'release');
+  }
+});
 
 // ── Init ─────────────────────────────────────────────────────
 fetchAll();
