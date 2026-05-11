@@ -346,8 +346,8 @@ function render() {
 function buildCard(p, container) {
   const pc = pct(p);
   const isOpen = p.open!==false;
-  const mic = p.mic||'';
-  const micWarning = mic!=='yes' && mic!=='micdone';
+  const micVal = p.mic||'';
+  const micWarning = micVal!=='yes' && micVal!=='micdone';
 
   const card = document.createElement('div');
   card.className = ['property-card', isOpen?'open':'', pc===100?'all-done':'', micWarning?'mic-warning':''].filter(Boolean).join(' ');
@@ -376,9 +376,9 @@ function buildCard(p, container) {
     <div class="mic-badge">🔑</div>
     <div class="mic-label">Ready for MIC</div>
     <div class="radio-group">
-      <div class="radio-pill"><input type="radio" name="${mn}" id="${mn}_no" value="no" ${mic==='no'?'checked':''}><label for="${mn}_no">NO</label></div>
-      <div class="radio-pill"><input type="radio" name="${mn}" id="${mn}_yes" value="yes" ${mic==='yes'?'checked':''}><label for="${mn}_yes">YES</label></div>
-      <div class="radio-pill"><input type="radio" name="${mn}" id="${mn}_micdone" value="micdone" ${mic==='micdone'?'checked':''}><label for="${mn}_micdone">DONE</label></div>
+      <div class="radio-pill"><input type="radio" name="${mn}" id="${mn}_no" value="no" ${micVal==='no'?'checked':''}><label for="${mn}_no">NO</label></div>
+      <div class="radio-pill"><input type="radio" name="${mn}" id="${mn}_yes" value="yes" ${micVal==='yes'?'checked':''}><label for="${mn}_yes">YES</label></div>
+      <div class="radio-pill"><input type="radio" name="${mn}" id="${mn}_micdone" value="micdone" ${micVal==='micdone'?'checked':''}><label for="${mn}_micdone">DONE</label></div>
     </div>
   </div>`;
 
