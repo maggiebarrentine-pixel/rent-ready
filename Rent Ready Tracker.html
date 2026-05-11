@@ -19,7 +19,6 @@
     --accent3: #f87171;
     --text: #e8eaf6;
     --muted: #6b7280;
-    --na: #6b7280;
     --inprogress: #f0c040;
     --complete: #4fd1c5;
     --purple: #a78bfa;
@@ -52,137 +51,135 @@
   .header-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; color: var(--text); line-height: 1; }
   .header-title span { color: var(--accent); }
 
-  .sync-indicator {
-    font-size: 10px;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-
-  .sync-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--muted);
-    transition: background 0.3s;
-  }
-
+  .sync-indicator { font-size: 10px; color: var(--muted); display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
   .sync-dot.syncing { background: var(--inprogress); animation: pulse 1s infinite; }
   .sync-dot.synced { background: var(--complete); }
   .sync-dot.error { background: var(--accent3); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+  #pull-indicator { text-align: center; height: 0; overflow: hidden; color: var(--muted); font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: height 0.15s; }
+  #pull-indicator.visible { height: 44px; }
+  #pull-indicator.release { color: var(--accent); }
 
   main { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
 
+  .stats-bar { display: flex; gap: 8px; }
+  .stat-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; flex: 1; text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; line-height: 1; margin-bottom: 2px; }
+  .stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
   .property-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s; }
-  .property-card.all-done { border-color: var(--complete); }
   .property-card.mic-warning { border-color: var(--accent3); }
+  .property-card.all-done { border-color: var(--complete); }
 
-  .property-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; user-select: none; background: var(--surface2); gap: 8px; }
-
+  .property-header { display: flex; align-items: center; padding: 12px 14px; cursor: pointer; user-select: none; background: var(--surface2); gap: 8px; }
   .property-address { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--text); flex: 1; letter-spacing: -0.3px; }
-
-  .address-edit-input {
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--text);
-    background: var(--bg); border: 1.5px solid var(--accent); border-radius: 6px;
-    padding: 4px 8px; flex: 1; outline: none;
-  }
-
+  .address-edit-input { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--text); background: var(--bg); border: 1.5px solid var(--accent); border-radius: 6px; padding: 4px 8px; flex: 1; outline: none; }
   .edit-address-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; padding: 4px; flex-shrink: 0; line-height: 1; }
 
   .progress-bar-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
   .progress-bar { width: 50px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
   .progress-fill { height: 100%; background: var(--complete); border-radius: 2px; transition: width 0.4s ease; }
   .progress-pct { font-size: 10px; color: var(--muted); min-width: 28px; text-align: right; }
-
   .chevron { color: var(--muted); font-size: 12px; margin-left: 4px; transition: transform 0.2s; flex-shrink: 0; }
   .property-card.open .chevron { transform: rotate(180deg); }
 
-  .vendor-grid { display: none; flex-direction: column; gap: 0; }
+  .vendor-grid { display: none; flex-direction: column; }
   .property-card.open .vendor-grid { display: flex; }
 
-  .vendor-row { display: flex; align-items: center; padding: 10px 14px; border-top: 1px solid var(--border); gap: 10px; transition: background 0.15s; }
+  .vendor-row { display: flex; align-items: center; padding: 8px 14px; border-top: 1px solid var(--border); gap: 8px; flex-wrap: wrap; }
   .vendor-row:active { background: var(--surface2); }
   .vendor-icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
-  .vendor-name { font-size: 12px; color: var(--text); flex: 1; letter-spacing: 0.2px; text-transform: uppercase; font-weight: 500; }
+  .vendor-name { font-size: 12px; color: var(--text); flex: 1; text-transform: uppercase; font-weight: 500; min-width: 80px; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: background 0.2s; }
+
+  .vendor-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; flex: 1; }
+
+  /* Date picker */
+  .vendor-date {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 4px 6px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+    min-width: 100px;
+  }
+  .vendor-date:focus { border-color: var(--accent); }
+  .vendor-date.has-date { border-color: var(--inprogress); color: var(--inprogress); }
+
+  /* Webkit date input styling */
+  .vendor-date::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+  }
+
+  .mic-row { display: flex; align-items: center; padding: 11px 14px; border-top: 1px solid var(--border); gap: 10px; background: rgba(167,139,250,0.04); }
+  .mic-badge { font-size: 15px; flex-shrink: 0; }
+  .mic-label { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: var(--text); flex: 1; text-transform: uppercase; }
+
+  /* Notes row */
+  .notes-row { border-top: 1px solid var(--border); padding: 10px 14px; background: rgba(79,209,197,0.02); }
+  .notes-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .notes-textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 10px 12px;
+    outline: none;
+    resize: none;
+    min-height: 70px;
+    transition: border-color 0.15s;
+    line-height: 1.5;
+  }
+  .notes-textarea:focus { border-color: var(--complete); }
+  .notes-textarea::placeholder { color: var(--muted); }
 
   .radio-group { display: flex; gap: 4px; flex-shrink: 0; }
   .radio-pill input[type="radio"] { display: none; }
-
-  .radio-pill label {
-    display: flex; align-items: center; justify-content: center;
-    padding: 5px 9px; border-radius: 20px; border: 1.5px solid var(--border);
-    font-size: 10px; font-weight: 500; cursor: pointer; color: var(--muted);
-    background: var(--bg); transition: all 0.15s; letter-spacing: 0.3px;
-    white-space: nowrap; -webkit-user-select: none; user-select: none;
-  }
-
+  .radio-pill label { display: flex; align-items: center; justify-content: center; padding: 5px 9px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 10px; font-weight: 500; cursor: pointer; color: var(--muted); background: var(--bg); transition: all 0.15s; white-space: nowrap; -webkit-user-select: none; user-select: none; }
   .radio-pill label:active { transform: scale(0.94); }
-  .radio-pill input[value="na"]:checked + label { background: rgba(107,114,128,0.18); border-color: var(--na); color: var(--na); }
+  .radio-pill input[value="na"]:checked + label { background: rgba(107,114,128,0.18); border-color: #6b7280; color: #6b7280; }
   .radio-pill input[value="ip"]:checked + label { background: rgba(240,192,64,0.15); border-color: var(--inprogress); color: var(--inprogress); }
   .radio-pill input[value="done"]:checked + label { background: rgba(79,209,197,0.15); border-color: var(--complete); color: var(--complete); }
   .radio-pill input[value="no"]:checked + label { background: rgba(248,113,113,0.18); border-color: var(--accent3); color: var(--accent3); }
   .radio-pill input[value="yes"]:checked + label { background: rgba(79,209,197,0.18); border-color: var(--complete); color: var(--complete); }
   .radio-pill input[value="micdone"]:checked + label { background: rgba(167,139,250,0.18); border-color: var(--purple); color: var(--purple); }
 
-  .mic-row { display: flex; align-items: center; padding: 11px 14px; border-top: 1px solid var(--border); gap: 10px; background: rgba(167,139,250,0.04); }
-  .mic-badge { font-size: 15px; flex-shrink: 0; }
-  .mic-label { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: var(--text); flex: 1; letter-spacing: 0.5px; text-transform: uppercase; }
-
-  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: background 0.2s; }
-
   .section-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; padding: 4px 2px; }
-
   .completed-banner { background: rgba(167,139,250,0.06); border: 1px solid var(--purple); border-radius: var(--radius); padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
   .completed-banner-address { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--purple); flex: 1; text-decoration: line-through; opacity: 0.8; }
-  .completed-badge { font-size: 10px; color: var(--purple); background: rgba(167,139,250,0.15); border: 1px solid var(--purple); border-radius: 20px; padding: 3px 8px; font-weight: 600; letter-spacing: 0.5px; flex-shrink: 0; }
+  .completed-badge { font-size: 10px; color: var(--purple); background: rgba(167,139,250,0.15); border: 1px solid var(--purple); border-radius: 20px; padding: 3px 8px; font-weight: 600; flex-shrink: 0; }
   .restore-btn { background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; font-family: 'DM Mono', monospace; flex-shrink: 0; padding: 4px; }
 
-  .fab { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom)); right: 16px; width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #0f1117; border: none; font-size: 26px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(240,192,64,0.4); display: flex; align-items: center; justify-content: center; z-index: 200; transition: transform 0.15s, box-shadow 0.15s; }
+  .fab { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom)); right: 16px; width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #0f1117; border: none; font-size: 26px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(240,192,64,0.4); display: flex; align-items: center; justify-content: center; z-index: 200; transition: transform 0.15s; }
   .fab:active { transform: scale(0.9); }
 
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; align-items: flex-end; justify-content: center; }
   .modal-overlay.visible { display: flex; }
   .modal { background: var(--surface); border-radius: 20px 20px 0 0; padding: 24px 20px calc(24px + env(safe-area-inset-bottom)); width: 100%; max-width: 500px; animation: slideUp 0.25s ease; }
-  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
   .modal h2 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 16px; color: var(--text); }
-  .modal input { width: 100%; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; padding: 12px 14px; outline: none; margin-bottom: 14px; transition: border-color 0.15s; }
+  .modal input { width: 100%; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; padding: 12px 14px; outline: none; margin-bottom: 14px; }
   .modal input:focus { border-color: var(--accent); }
   .modal-actions { display: flex; gap: 10px; }
-  .btn { flex: 1; padding: 13px; border-radius: 8px; border: none; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; cursor: pointer; letter-spacing: 0.5px; transition: opacity 0.15s; }
-  .btn:active { opacity: 0.75; }
+  .btn { flex: 1; padding: 13px; border-radius: 8px; border: none; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; cursor: pointer; }
   .btn-primary { background: var(--accent); color: #0f1117; }
   .btn-ghost { background: var(--surface2); color: var(--muted); }
 
   .empty { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 13px; line-height: 1.8; }
   .empty-icon { font-size: 40px; margin-bottom: 12px; }
   .empty strong { color: var(--text); font-family: 'Syne', sans-serif; font-size: 16px; display: block; margin-bottom: 6px; }
-
-  .stats-bar { display: flex; gap: 8px; padding: 0 0 4px; }
-  .stat-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; flex: 1; text-align: center; }
-  .stat-num { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; line-height: 1; margin-bottom: 2px; }
-  .stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-
   .bottom-spacer { height: 80px; }
-
-  .loading { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
-
-  #pull-indicator {
-    text-align: center;
-    height: 0;
-    overflow: hidden;
-    color: var(--muted);
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: height 0.15s;
-  }
-  #pull-indicator.visible { height: 44px; }
-  #pull-indicator.release { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -196,13 +193,14 @@
 </header>
 
 <div id="pull-indicator">↓ pull to refresh</div>
-<main id="main">
+
+<main>
   <div class="stats-bar">
     <div class="stat-chip"><div class="stat-num" id="stat-props">0</div><div class="stat-label">Properties</div></div>
     <div class="stat-chip"><div class="stat-num" id="stat-inprog" style="color:var(--inprogress)">0</div><div class="stat-label">In Progress</div></div>
     <div class="stat-chip"><div class="stat-num" id="stat-done" style="color:var(--purple)">0</div><div class="stat-label">MIC Done</div></div>
   </div>
-  <div id="cards-container"><div class="loading">Loading...</div></div>
+  <div id="cards-container"></div>
   <div id="completed-section" style="display:flex;flex-direction:column;gap:8px;"></div>
   <div class="bottom-spacer"></div>
 </main>
@@ -212,353 +210,330 @@
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <h2>Add Property</h2>
-    <input type="text" id="address-input" placeholder="123 Main St, City, ST" autocomplete="off" autocorrect="off" spellcheck="false">
+    <input type="text" id="address-input" placeholder="123 Main St" autocomplete="off" autocorrect="off" spellcheck="false">
     <div class="modal-actions">
       <button class="btn btn-ghost" id="cancel-btn">Cancel</button>
-      <button class="btn btn-primary" id="save-btn">Add Property</button>
+      <button class="btn btn-primary" id="save-btn">Add</button>
     </div>
   </div>
 </div>
 
 <script>
-// ── Supabase config ──────────────────────────────────────────
-const SUPABASE_URL = 'https://yudtghbbiqkqcjhchulx.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_fLzk6kaug0Uor6B3ywZunA_gL7egj3v';
-const API_URL = 'https://yudtghbbiqkqcjhchulx.supabase.co/rest/v1';
-const TABLE = 'properties';
+const BASE = 'https://yudtghbbiqkqcjhchulx.supabase.co/rest/v1';
+const KEY  = 'sb_publishable_fLzk6kaug0Uor6B3ywZunA_gL7egj3v';
 
 const VENDORS = [
-  { key: 'handyman', label: 'Handyman',        icon: '🔧' },
-  { key: 'junk',     label: 'Junk Removal',    icon: '🗑️' },
-  { key: 'cleaning', label: 'Cleaning',         icon: '🧹' },
-  { key: 'carpet',   label: 'Carpet Cleaning',  icon: '🟫' },
-  { key: 'weed',     label: 'Weed Clean-Up',   icon: '🌿' },
-  { key: 'poop',     label: 'Pooper Scoopers',  icon: '🐾' },
+  { key:'handyman', label:'Handyman',       icon:'🔧' },
+  { key:'junk',     label:'Junk Removal',   icon:'🗑️' },
+  { key:'cleaning', label:'Cleaning',        icon:'🧹' },
+  { key:'carpet',   label:'Carpet Cleaning', icon:'🟫' },
+  { key:'weed',     label:'Weed Clean-Up',  icon:'🌿' },
+  { key:'poop',     label:'Pooper Scoopers', icon:'🐾' },
 ];
 
-let properties = [];
+let props = [];
 
-// ── Supabase helpers ─────────────────────────────────────────
-function headers(extra) {
+function hdr(extra) {
   return Object.assign({
-    'Content-Type': 'application/json',
-    'apikey': SUPABASE_KEY,
-    'Authorization': 'Bearer ' + SUPABASE_KEY,
-    'Prefer': 'return=representation',
-    'X-Client-Info': 'supabase-js/2.0.0'
-  }, extra || {});
+    'Content-Type':'application/json',
+    'apikey': KEY,
+    'Authorization':'Bearer ' + KEY,
+    'Prefer':'return=representation'
+  }, extra||{});
 }
 
-function setSyncStatus(status) {
-  const dot = document.getElementById('sync-dot');
-  const label = document.getElementById('sync-label');
-  dot.className = 'sync-dot ' + status;
-  label.textContent = status === 'syncing' ? 'saving...' : status === 'synced' ? 'synced ✓' : 'offline';
+function sync(state) {
+  document.getElementById('sync-dot').className = 'sync-dot ' + state;
+  document.getElementById('sync-label').textContent = state==='syncing'?'saving...':state==='synced'?'synced ✓':'offline';
 }
 
 async function fetchAll() {
-  setSyncStatus('syncing');
+  sync('syncing');
   try {
-    const res = await fetch(`${API_URL}/${TABLE}?order=created_at.asc`, { headers: headers() });
-    if (!res.ok) throw new Error();
-    properties = await res.json();
-    setSyncStatus('synced');
-    renderCards();
-  } catch {
-    setSyncStatus('error');
-    renderCards();
+    const r = await fetch(BASE+'/properties?order=sort_order.asc,created_at.asc', {headers:hdr()});
+    if (!r.ok) throw new Error(await r.text());
+    props = await r.json();
+    sync('synced');
+    render();
+  } catch(e) {
+    console.error('fetchAll:', e);
+    sync('error');
+    render();
   }
 }
 
-async function insertProperty(prop) {
-  setSyncStatus('syncing');
+async function insertProp(data) {
+  sync('syncing');
   try {
-    const res = await fetch(`${API_URL}/${TABLE}`, {
-      method: 'POST',
-      headers: headers(),
-      body: JSON.stringify(prop)
-    });
-    if (!res.ok) throw new Error();
-    const data = await res.json();
-    setSyncStatus('synced');
-    return data[0];
-  } catch {
-    setSyncStatus('error');
+    const r = await fetch(BASE+'/properties', {method:'POST', headers:hdr(), body:JSON.stringify(data)});
+    if (!r.ok) throw new Error(await r.text());
+    const rows = await r.json();
+    sync('synced');
+    return rows[0];
+  } catch(e) {
+    console.error('insert:', e);
+    sync('error');
     return null;
   }
 }
 
-async function updateProperty(id, changes) {
-  setSyncStatus('syncing');
+async function updateProp(id, data) {
+  sync('syncing');
   try {
-    const res = await fetch(`${API_URL}/${TABLE}?id=eq.${id}`, {
-      method: 'PATCH',
-      headers: headers(),
-      body: JSON.stringify(changes)
-    });
-    if (!res.ok) throw new Error();
-    setSyncStatus('synced');
-  } catch {
-    setSyncStatus('error');
+    const r = await fetch(BASE+'/properties?id=eq.'+id, {method:'PATCH', headers:hdr(), body:JSON.stringify(data)});
+    if (!r.ok) throw new Error(await r.text());
+    sync('synced');
+  } catch(e) {
+    console.error('update:', e);
+    sync('error');
   }
 }
 
-async function deleteProperty(id) {
-  setSyncStatus('syncing');
+async function deleteProp(id) {
+  sync('syncing');
   try {
-    const res = await fetch(`${API_URL}/${TABLE}?id=eq.${id}`, {
-      method: 'DELETE',
-      headers: headers()
-    });
-    if (!res.ok) throw new Error();
-    setSyncStatus('synced');
-  } catch {
-    setSyncStatus('error');
+    const r = await fetch(BASE+'/properties?id=eq.'+id, {method:'DELETE', headers:hdr({'Prefer':''})});
+    if (!r.ok) throw new Error(await r.text());
+    sync('synced');
+  } catch(e) {
+    console.error('delete:', e);
+    sync('error');
   }
 }
 
-// ── Rendering ────────────────────────────────────────────────
-function getStatus(prop, key) { return prop.vendors?.[key] || 'na'; }
-function completedCount(prop) { return VENDORS.filter(v => getStatus(prop, v.key) === 'done').length; }
-function calcProgress(prop) { return Math.round((completedCount(prop) / VENDORS.length) * 100); }
-function statusDotColor(s) { return s === 'ip' ? 'var(--inprogress)' : s === 'done' ? 'var(--complete)' : 'var(--border)'; }
-function escHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function vstatus(p,k){ return p.vendors?.[k]||'na'; }
+function vdate(p,k){ return p.vendors?.[k+'_date']||''; }
+function vdone(p){ return VENDORS.filter(v=>vstatus(p,v.key)==='done').length; }
+function pct(p){ return Math.round(vdone(p)/VENDORS.length*100); }
+function dotColor(s){ return s==='ip'?'var(--inprogress)':s==='done'?'var(--complete)':'var(--border)'; }
 
-function renderCards() {
-  const container = document.getElementById('cards-container');
-  const completedSection = document.getElementById('completed-section');
-  container.innerHTML = '';
-  completedSection.innerHTML = '';
+function render() {
+  const cc = document.getElementById('cards-container');
+  const cs = document.getElementById('completed-section');
+  cc.innerHTML=''; cs.innerHTML='';
 
-  const active = properties.filter(p => p.mic !== 'micdone');
-  const completed = properties.filter(p => p.mic === 'micdone');
+  const active = props.filter(p=>p.mic!=='micdone');
+  const done   = props.filter(p=>p.mic==='micdone');
 
-  if (properties.length === 0) {
-    container.innerHTML = `<div class="empty"><div class="empty-icon">🏠</div><strong>No Properties Yet</strong>Tap the <strong style="color:var(--accent)">+</strong> button below<br>to add your first property.</div>`;
-    updateStats(); return;
+  if (!props.length) {
+    cc.innerHTML=`<div class="empty"><div class="empty-icon">🏠</div><strong>No Properties Yet</strong>Tap + to add your first property.</div>`;
+    stats(); return;
   }
 
-  active.forEach(prop => renderActiveCard(prop, container));
+  active.forEach(p => buildCard(p, cc));
 
-  if (completed.length > 0) {
-    const label = document.createElement('div');
-    label.className = 'section-label';
-    label.textContent = '🔑 MIC Complete';
-    completedSection.appendChild(label);
-    completed.forEach(prop => {
-      const banner = document.createElement('div');
-      banner.className = 'completed-banner';
-      banner.innerHTML = `<div class="completed-banner-address">${escHtml(prop.address)}</div><div class="completed-badge">MIC ✓</div><button class="restore-btn">↩ undo</button>`;
-      banner.querySelector('.restore-btn').addEventListener('click', async e => {
+  if (done.length) {
+    const lbl=document.createElement('div');
+    lbl.className='section-label'; lbl.textContent='🔑 MIC Complete';
+    cs.appendChild(lbl);
+    done.forEach(p=>{
+      const b=document.createElement('div');
+      b.className='completed-banner';
+      b.innerHTML=`<div class="completed-banner-address">${esc(p.address)}</div><div class="completed-badge">MIC ✓</div><button class="restore-btn">↩ undo</button>`;
+      b.querySelector('.restore-btn').addEventListener('click', async e=>{
         e.stopPropagation();
-        prop.mic = 'yes';
-        await updateProperty(prop.id, { mic: 'yes' });
-        renderCards();
+        p.mic='yes';
+        await updateProp(p.id,{mic:'yes'});
+        render();
       });
-      completedSection.appendChild(banner);
+      cs.appendChild(b);
     });
   }
-
-  updateStats();
+  stats();
 }
 
-function renderActiveCard(prop, container) {
-  const pct = calcProgress(prop);
-  const isOpen = prop.open !== false;
-  const card = document.createElement('div');
-  const micClass = (mic === 'yes' || mic === 'micdone') ? '' : 'mic-warning';
-  card.className = `property-card ${isOpen ? 'open' : ''} ${pct === 100 ? 'all-done' : ''} ${micClass}`;
+function buildCard(p, container) {
+  const pc = pct(p);
+  const isOpen = p.open!==false;
+  const mic = p.mic||'';
+  const micWarning = mic!=='yes' && mic!=='micdone';
 
-  const vendorRowsHTML = VENDORS.map(v => {
-    const status = getStatus(prop, v.key);
-    const rid = `r_${prop.id}_${v.key}`;
+  const card = document.createElement('div');
+  card.className = ['property-card', isOpen?'open':'', pc===100?'all-done':'', micWarning?'mic-warning':''].filter(Boolean).join(' ');
+
+  const vendorHTML = VENDORS.map(v=>{
+    const s = vstatus(p,v.key);
+    const d = vdate(p,v.key);
+    const n = `rv_${p.id}_${v.key}`;
     return `<div class="vendor-row" data-vendor="${v.key}">
-      <div class="status-dot" style="background:${statusDotColor(status)}"></div>
+      <div class="status-dot" style="background:${dotColor(s)}"></div>
       <div class="vendor-icon">${v.icon}</div>
       <div class="vendor-name">${v.label}</div>
-      <div class="radio-group">
-        <div class="radio-pill"><input type="radio" name="${rid}" id="${rid}_na" value="na" ${status==='na'?'checked':''}><label for="${rid}_na">NA</label></div>
-        <div class="radio-pill"><input type="radio" name="${rid}" id="${rid}_ip" value="ip" ${status==='ip'?'checked':''}><label for="${rid}_ip">⏳</label></div>
-        <div class="radio-pill"><input type="radio" name="${rid}" id="${rid}_done" value="done" ${status==='done'?'checked':''}><label for="${rid}_done">✓</label></div>
+      <div class="vendor-controls">
+        <input type="date" class="vendor-date ${d?'has-date':''}" data-vendor="${v.key}" value="${esc(d)}" title="Schedule date">
+        <div class="radio-group">
+          <div class="radio-pill"><input type="radio" name="${n}" id="${n}_na" value="na" ${s==='na'?'checked':''}><label for="${n}_na">NA</label></div>
+          <div class="radio-pill"><input type="radio" name="${n}" id="${n}_ip" value="ip" ${s==='ip'?'checked':''}><label for="${n}_ip">⏳</label></div>
+          <div class="radio-pill"><input type="radio" name="${n}" id="${n}_done" value="done" ${s==='done'?'checked':''}><label for="${n}_done">✓</label></div>
+        </div>
       </div>
     </div>`;
   }).join('');
 
-  const mic = prop.mic || '';
-  const micId = `mic_${prop.id}`;
-  const micRowHTML = `<div class="mic-row">
+  const mn = `mic_${p.id}`;
+  const micHTML = `<div class="mic-row">
     <div class="mic-badge">🔑</div>
     <div class="mic-label">Ready for MIC</div>
     <div class="radio-group">
-      <div class="radio-pill"><input type="radio" name="${micId}" id="${micId}_no" value="no" ${mic==='no'?'checked':''}><label for="${micId}_no">NO</label></div>
-      <div class="radio-pill"><input type="radio" name="${micId}" id="${micId}_yes" value="yes" ${mic==='yes'?'checked':''}><label for="${micId}_yes">YES</label></div>
-      <div class="radio-pill"><input type="radio" name="${micId}" id="${micId}_micdone" value="micdone" ${mic==='micdone'?'checked':''}><label for="${micId}_micdone">DONE</label></div>
+      <div class="radio-pill"><input type="radio" name="${mn}" id="${mn}_no" value="no" ${mic==='no'?'checked':''}><label for="${mn}_no">NO</label></div>
+      <div class="radio-pill"><input type="radio" name="${mn}" id="${mn}_yes" value="yes" ${mic==='yes'?'checked':''}><label for="${mn}_yes">YES</label></div>
+      <div class="radio-pill"><input type="radio" name="${mn}" id="${mn}_micdone" value="micdone" ${mic==='micdone'?'checked':''}><label for="${mn}_micdone">DONE</label></div>
     </div>
+  </div>`;
+
+  const notesHTML = `<div class="notes-row">
+    <div class="notes-label">📝 Notes</div>
+    <textarea class="notes-textarea" placeholder="Add notes for field tech...">${esc(p.notes||'')}</textarea>
   </div>`;
 
   card.innerHTML = `
     <div class="property-header">
-      <div class="property-address" id="addr-${prop.id}">${escHtml(prop.address)}</div>
-      <button class="edit-address-btn" title="Edit">✏️</button>
+      <div class="property-address" id="adr_${p.id}">${esc(p.address)}</div>
+      <button class="edit-address-btn">✏️</button>
       <div class="progress-bar-wrap">
-        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-        <div class="progress-pct">${pct}%</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pc}%"></div></div>
+        <div class="progress-pct">${pc}%</div>
       </div>
       <div class="chevron">▼</div>
     </div>
-    <div class="vendor-grid">${micRowHTML}${vendorRowsHTML}</div>`;
+    <div class="vendor-grid">${micHTML}${vendorHTML}${notesHTML}</div>`;
 
-  // Toggle expand
-  card.querySelector('.property-header').addEventListener('click', async e => {
-    if (e.target.closest('.edit-address-btn') || e.target.tagName === 'INPUT') return;
-    prop.open = !isOpen;
-    await updateProperty(prop.id, { open: prop.open });
-    renderCards();
+  // toggle open
+  card.querySelector('.property-header').addEventListener('click', async e=>{
+    if(e.target.closest('.edit-address-btn')||e.target.tagName==='INPUT') return;
+    p.open=!isOpen;
+    await updateProp(p.id,{open:p.open});
+    render();
   });
 
-  // Edit address
-  card.querySelector('.edit-address-btn').addEventListener('click', e => {
+  // edit address
+  card.querySelector('.edit-address-btn').addEventListener('click', e=>{
     e.stopPropagation();
-    const display = card.querySelector(`#addr-${prop.id}`);
-    const btn = card.querySelector('.edit-address-btn');
-    const inp = document.createElement('input');
-    inp.className = 'address-edit-input';
-    inp.value = prop.address;
-    display.replaceWith(inp);
-    btn.textContent = '✅';
-    inp.focus();
-    async function commitEdit() {
-      const v = inp.value.trim();
-      if (v) {
-        prop.address = v;
-        await updateProperty(prop.id, { address: v });
-      }
-      renderCards();
+    const disp=card.querySelector(`#adr_${p.id}`);
+    const btn=card.querySelector('.edit-address-btn');
+    const inp=document.createElement('input');
+    inp.className='address-edit-input'; inp.value=p.address;
+    disp.replaceWith(inp); btn.textContent='✅'; inp.focus();
+    async function commit(){
+      const v=inp.value.trim();
+      if(v){ p.address=v; await updateProp(p.id,{address:v}); }
+      render();
     }
-    btn.onclick = e => { e.stopPropagation(); commitEdit(); };
-    inp.addEventListener('keydown', e => { if (e.key === 'Enter') commitEdit(); });
-    inp.addEventListener('blur', () => setTimeout(commitEdit, 150));
+    btn.onclick=e=>{e.stopPropagation();commit();};
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')commit();});
+    inp.addEventListener('blur',()=>setTimeout(commit,150));
   });
 
-  // Vendor radio
-  card.querySelectorAll('.vendor-row input[type="radio"]').forEach(inp => {
-    inp.addEventListener('change', async e => {
-      const key = e.target.closest('.vendor-row').dataset.vendor;
-      if (!prop.vendors) prop.vendors = {};
-      prop.vendors[key] = e.target.value;
-      await updateProperty(prop.id, { vendors: prop.vendors });
-      e.target.closest('.vendor-row').querySelector('.status-dot').style.background = statusDotColor(e.target.value);
-      const np = calcProgress(prop);
-      card.querySelector('.progress-fill').style.width = np + '%';
-      card.querySelector('.progress-pct').textContent = np + '%';
-      card.classList.toggle('all-done', np === 100);
-      updateStats();
+  // vendor status radios
+  card.querySelectorAll('.vendor-row input[type="radio"]').forEach(inp=>{
+    inp.addEventListener('change', async e=>{
+      const k=e.target.closest('.vendor-row').dataset.vendor;
+      if(!p.vendors) p.vendors={};
+      p.vendors[k]=e.target.value;
+      await updateProp(p.id,{vendors:p.vendors});
+      e.target.closest('.vendor-row').querySelector('.status-dot').style.background=dotColor(e.target.value);
+      const np=pct(p);
+      card.querySelector('.progress-fill').style.width=np+'%';
+      card.querySelector('.progress-pct').textContent=np+'%';
+      card.classList.toggle('all-done',np===100);
+      stats();
     });
   });
 
-  // MIC radio
-  card.querySelectorAll(`input[name="${micId}"]`).forEach(inp => {
-    inp.addEventListener('change', async e => {
-      prop.mic = e.target.value;
-      await updateProperty(prop.id, { mic: prop.mic });
-      if (e.target.value === 'micdone') {
-        renderCards();
-      } else {
-        card.classList.toggle('mic-warning', e.target.value !== 'yes');
-      }
+  // vendor date pickers
+  let dateTimer;
+  card.querySelectorAll('.vendor-date').forEach(input=>{
+    input.addEventListener('change', e=>{
+      const k=e.target.dataset.vendor;
+      if(!p.vendors) p.vendors={};
+      p.vendors[k+'_date']=e.target.value;
+      e.target.classList.toggle('has-date', !!e.target.value);
+      clearTimeout(dateTimer);
+      dateTimer=setTimeout(()=>updateProp(p.id,{vendors:p.vendors}), 800);
+    });
+    // prevent card collapse when tapping date
+    input.addEventListener('click', e=>e.stopPropagation());
+  });
+
+  // mic radios
+  card.querySelectorAll(`input[name="${mn}"]`).forEach(inp=>{
+    inp.addEventListener('change', async e=>{
+      p.mic=e.target.value;
+      await updateProp(p.id,{mic:p.mic});
+      if(e.target.value==='micdone'){ render(); }
+      else { card.classList.toggle('mic-warning', e.target.value!=='yes'); }
     });
   });
 
-  // Long press delete
-  let pressTimer;
-  card.querySelector('.property-header').addEventListener('touchstart', () => {
-    pressTimer = setTimeout(async () => {
-      if (confirm(`Remove "${prop.address}"?`)) {
-        await deleteProperty(prop.id);
-        properties = properties.filter(p => p.id !== prop.id);
-        renderCards();
-      }
-    }, 700);
+  // notes
+  let notesTimer;
+  const textarea = card.querySelector('.notes-textarea');
+  textarea.addEventListener('input', ()=>{
+    p.notes=textarea.value;
+    clearTimeout(notesTimer);
+    notesTimer=setTimeout(()=>updateProp(p.id,{notes:p.notes}), 1000);
   });
-  card.querySelector('.property-header').addEventListener('touchend', () => clearTimeout(pressTimer));
-  card.querySelector('.property-header').addEventListener('touchmove', () => clearTimeout(pressTimer));
+  textarea.addEventListener('click', e=>e.stopPropagation());
+
+  // long press delete (touch only)
+  let pt;
+  card.querySelector('.property-header').addEventListener('touchstart',()=>{
+    pt=setTimeout(async()=>{
+      if(confirm(`Remove "${p.address}"?`)){
+        await deleteProp(p.id);
+        props=props.filter(x=>x.id!==p.id);
+        render();
+      }
+    },700);
+  });
+  card.querySelector('.property-header').addEventListener('touchend',()=>clearTimeout(pt));
+  card.querySelector('.property-header').addEventListener('touchmove',()=>clearTimeout(pt));
 
   container.appendChild(card);
 }
 
-function updateStats() {
-  document.getElementById('stat-props').textContent = properties.length;
-  document.getElementById('stat-inprog').textContent = properties.filter(p => p.mic !== 'micdone' && VENDORS.some(v => getStatus(p, v.key) === 'ip')).length;
-  document.getElementById('stat-done').textContent = properties.filter(p => p.mic === 'micdone').length;
+function stats() {
+  document.getElementById('stat-props').textContent=props.length;
+  document.getElementById('stat-inprog').textContent=props.filter(p=>p.mic!=='micdone'&&VENDORS.some(v=>vstatus(p,v.key)==='ip')).length;
+  document.getElementById('stat-done').textContent=props.filter(p=>p.mic==='micdone').length;
 }
 
-// ── Modal ────────────────────────────────────────────────────
-const modal = document.getElementById('modal-overlay');
-const addrInput = document.getElementById('address-input');
-
-document.getElementById('add-btn').addEventListener('click', () => {
-  addrInput.value = '';
-  modal.classList.add('visible');
-  setTimeout(() => addrInput.focus(), 300);
-});
-
-document.getElementById('cancel-btn').addEventListener('click', () => modal.classList.remove('visible'));
-modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('visible'); });
-
-document.getElementById('save-btn').addEventListener('click', async () => {
-  const addr = addrInput.value.trim();
-  if (!addr) { addrInput.focus(); return; }
+// modal
+const modal=document.getElementById('modal-overlay');
+const ainput=document.getElementById('address-input');
+document.getElementById('add-btn').addEventListener('click',()=>{ ainput.value=''; modal.classList.add('visible'); setTimeout(()=>ainput.focus(),300); });
+document.getElementById('cancel-btn').addEventListener('click',()=>modal.classList.remove('visible'));
+modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.remove('visible'); });
+document.getElementById('save-btn').addEventListener('click', async()=>{
+  const addr=ainput.value.trim();
+  if(!addr){ainput.focus();return;}
   modal.classList.remove('visible');
-  const newProp = await insertProperty({ address: addr, vendors: {}, mic: '', open: true });
-  if (newProp) {
-    properties.push(newProp);
-    renderCards();
-  }
+  const row=await insertProp({address:addr,vendors:{},mic:'',open:true,notes:'',sort_order:props.length});
+  if(row){ props.push(row); render(); }
+});
+ainput.addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('save-btn').click(); });
+
+// pull to refresh
+let touchY=0, pulling=false;
+const pullEl=document.getElementById('pull-indicator');
+document.addEventListener('touchstart',e=>{ if(window.scrollY===0){touchY=e.touches[0].clientY;pulling=true;}},{passive:true});
+document.addEventListener('touchmove',e=>{
+  if(!pulling)return;
+  const d=e.touches[0].clientY-touchY;
+  if(d>10){ pullEl.classList.add('visible'); pullEl.textContent=d>60?'↑ release to refresh':'↓ pull to refresh'; pullEl.classList.toggle('release',d>60); }
+},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(!pulling)return;
+  const d=e.changedTouches[0].clientY-touchY;
+  pulling=false;
+  if(d>60){ pullEl.textContent='⟳ refreshing...'; fetchAll().then(()=>pullEl.classList.remove('visible','release')); }
+  else { pullEl.classList.remove('visible','release'); }
 });
 
-addrInput.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('save-btn').click(); });
-
-// ── Pull to refresh ──────────────────────────────────────────
-let touchStartY = 0;
-let pulling = false;
-const pullIndicator = document.getElementById('pull-indicator');
-
-document.addEventListener('touchstart', e => {
-  if (window.scrollY === 0) {
-    touchStartY = e.touches[0].clientY;
-    pulling = true;
-  }
-}, { passive: true });
-
-document.addEventListener('touchmove', e => {
-  if (!pulling) return;
-  const delta = e.touches[0].clientY - touchStartY;
-  if (delta > 10) {
-    pullIndicator.classList.add('visible');
-    pullIndicator.textContent = delta > 60 ? '↑ release to refresh' : '↓ pull to refresh';
-    pullIndicator.classList.toggle('release', delta > 60);
-  }
-}, { passive: true });
-
-document.addEventListener('touchend', e => {
-  if (!pulling) return;
-  const delta = e.changedTouches[0].clientY - touchStartY;
-  pulling = false;
-  if (delta > 60) {
-    pullIndicator.textContent = '⟳ refreshing...';
-    fetchAll().then(() => {
-      pullIndicator.classList.remove('visible', 'release');
-    });
-  } else {
-    pullIndicator.classList.remove('visible', 'release');
-  }
-});
-
-// ── Init ─────────────────────────────────────────────────────
+// auto-refresh every 30s
+setInterval(fetchAll,30000);
 fetchAll();
-
-// Auto-refresh every 30 seconds to pick up changes from other devices
-setInterval(fetchAll, 30000);
 </script>
 </body>
 </html>
