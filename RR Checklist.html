@@ -578,20 +578,21 @@ function checkComplete(pid){
     const yBtn=document.getElementById('yes_'+vid);
     const nBtn=document.getElementById('no_'+vid);
     if(!yBtn||!nBtn)return false;
-    return yBtn.classList.contains('active-yes')||nBtn.classList.contains('active-no');
+    const isYes=yBtn.classList.contains('active-yes');
+    const isNo=nBtn.classList.contains('active-no');
+    return isYes||isNo;
   });
   const card=document.getElementById(pid);
   if(!card)return;
   if(allDone){
     card.classList.add('complete');
-    // move to bottom
     const list=document.getElementById('propertiesList');
     list.appendChild(card);
-    // collapse
     const body=document.getElementById('pbody_'+pid);
     const chev=document.getElementById('pchev_'+pid);
     if(body)body.classList.remove('open');
     if(chev)chev.classList.remove('open');
+    saveProperty(pid);
   } else {
     card.classList.remove('complete');
   }
@@ -1047,7 +1048,7 @@ function vendorBlock(pid,vkey,icon,label,cfg){
       '</div>'+
       notesBlock('Additional notes for pest control...');
   } else if(vkey==='estimates'){
-    body='<div class="sec-hdr">Deck</div>'+
+    body=needTog+'<div class="sec-hdr">Deck</div>'+
       '<div class="dr"><div class="dr-top"><input type="checkbox" style="accent-color:var(--green);width:15px;height:15px;"><label>Assessment needed</label></div><textarea placeholder="Describe the issue..."></textarea></div>'+
       '<div class="dr"><div class="dr-top"><input type="checkbox" style="accent-color:var(--green);width:15px;height:15px;"><label>Repairs needed</label></div><textarea placeholder="Describe the repairs needed..."></textarea></div>'+
       ci(vid+'_deck_stain','Stain/paint deck')+
