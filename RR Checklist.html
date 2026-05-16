@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendor Scheduler | Alliance Property Management</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap');
+  :root {
+    --green:#4a7c59;--green-light:#6aaa7a;--green-pale:#e8f3ec;
+    --blue:#1e4d8c;--blue-light:#2e6cb5;--blue-pale:#e8eef7;
+    --teal:#2a7a7a;--white:#ffffff;
+    --gray-50:#f8fafb;--gray-100:#f0f4f7;--gray-200:#e2e8ef;
+    --gray-300:#c8d3dc;--gray-400:#9aaab8;--gray-500:#6b7f8e;--gray-700:#374a5a;--gray-900:#1a2530;
+    --red:#e05252;
+    --shadow-sm:0 1px 3px rgba(30,77,140,0.08);
+    --shadow-md:0 4px 16px rgba(30,77,140,0.12);
+    --radius:10px;--radius-lg:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Open Sans',sans-serif;background:var(--white);color:var(--gray-900);min-height:100vh;}
+
+  /* HEADER */
+  .header{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 50%,var(--teal) 100%);padding:26px 32px 22px;display:flex;align-items:center;gap:18px;box-shadow:0 4px 20px rgba(30,77,140,0.25);}
+  .header-logo{width:50px;height:50px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:var(--blue);font-family:'Montserrat',sans-serif;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+  .header-text h1{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:white;letter-spacing:-0.3px;}
+  .header-text p{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500;margin-top:2px;}
+  .header-badge{margin-left:auto;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);color:white;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:0.5px;white-space:nowrap;}
+
+  .main{max-width:920px;margin:0 auto;padding:28px 20px 60px;}
+
+  /* ADD BAR */
+  .add-bar{display:flex;gap:10px;margin-bottom:28px;}
+  .add-bar input{flex:1;padding:11px 16px;border:2px solid var(--gray-200);border-radius:var(--radius);font-family:'Open Sans',sans-serif;font-size:14px;color:var(--gray-900);background:var(--white);transition:border-color 0.2s;outline:none;}
+  .add-bar input:focus{border-color:var(--blue-light);}
+  .add-bar input::placeholder{color:var(--gray-400);}
+  .btn-add{padding:11px 22px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 100%);color:white;border:none;border-radius:var(--radius);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:var(--shadow-sm);}
+  .btn-add:hover{box-shadow:var(--shadow-md);}
+
+  /* PROPERTY CARD */
+  .property-card{background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius-lg);margin-bottom:20px;box-shadow:var(--shadow-sm);overflow:hidden;}
+  .property-header{display:flex;align-items:center;gap:12px;padding:15px 20px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 100%);cursor:pointer;user-select:none;}
+  .property-icon{width:34px;height:34px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+  .property-name{flex:1;}
+  .property-name input{background:transparent;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:white;width:100%;}
+  .property-name input::placeholder{color:rgba(255,255,255,0.55);}
+  .property-controls{display:flex;align-items:center;gap:8px;}
+  .chevron{color:rgba(255,255,255,0.8);font-size:16px;transition:transform 0.3s;display:inline-block;}
+  .chevron.open{transform:rotate(180deg);}
+  .btn-remove-prop{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;font-weight:600;}
+  .btn-remove-prop:hover{background:rgba(200,0,0,0.45);}
+  .property-body{display:none;}
+  .property-body.open{display:block;}
+
+  /* SETUP */
+  .property-setup{padding:18px 20px;background:var(--blue-pale);border-bottom:2px solid var(--gray-200);}
+  .setup-title{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
+  .setup-group-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.8px;margin:14px 0 8px;}
+  .setup-group-label:first-of-type{margin-top:0;}
+  .setup-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:6px;}
+  .setup-field{display:flex;flex-direction:column;gap:4px;}
+  .setup-field label{font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.5px;}
+  .setup-field input[type="number"]{width:72px;padding:7px 10px;border:2px solid var(--blue-light);border-radius:7px;font-size:14px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:white;}
+  /* TOGGLE BUTTONS for room yes/no */
+  .room-toggles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+  .room-toggle-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border:2px solid var(--gray-300);border-radius:20px;background:white;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--gray-500);cursor:pointer;transition:all 0.15s;user-select:none;}
+  .room-toggle-btn.on{border-color:var(--green);background:var(--green-pale);color:var(--green);}
+  .room-toggle-btn .dot{width:8px;height:8px;border-radius:50%;background:var(--gray-300);flex-shrink:0;transition:background 0.15s;}
+  .room-toggle-btn.on .dot{background:var(--green);}
+  .btn-apply{padding:9px 20px;background:linear-gradient(135deg,var(--green) 0%,var(--green-light) 100%);color:white;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.3px;margin-top:14px;}
+  .btn-apply:hover{box-shadow:var(--shadow-sm);}
+
+  /* VENDORS */
+  .vendors-list{padding:16px 20px;display:flex;flex-direction:column;gap:10px;}
+  .vendor-block{border:2px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;}
+  .vendor-header{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--gray-50);cursor:pointer;user-select:none;}
+  .vendor-header:hover{background:var(--gray-100);}
+  .vendor-dot{width:10px;height:10px;border-radius:50%;background:var(--gray-300);flex-shrink:0;transition:background 0.2s;}
+  .vendor-dot.needed{background:var(--green);}
+  .vendor-name{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--gray-700);flex:1;text-transform:uppercase;letter-spacing:0.5px;}
+  .vendor-chevron{color:var(--gray-500);font-size:13px;transition:transform 0.3s;display:inline-block;}
+  .vendor-chevron.open{transform:rotate(180deg);}
+  .vendor-body{display:none;padding:16px;}
+  .vendor-body.open{display:block;}
+
+  /* NEEDED TOGGLE */
+  .needed-toggle{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid var(--gray-100);}
+  .needed-toggle label{font-size:13px;font-weight:600;color:var(--gray-700);}
+  .toggle-options{display:flex;border-radius:8px;overflow:hidden;border:2px solid var(--gray-200);}
+  .toggle-opt{padding:6px 16px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;background:white;color:var(--gray-400);border:none;transition:all 0.15s;letter-spacing:0.3px;}
+  .toggle-opt.active-yes{background:var(--green);color:white;}
+  .toggle-opt.active-no{background:var(--gray-300);color:var(--gray-700);}
+
+  /* SECTION HEADER */
+  .sec-hdr{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1.2px;padding:10px 0 5px;border-bottom:2px solid var(--green-pale);margin-bottom:8px;margin-top:14px;}
+
+  /* ROOM HEADER */
+  .room-hdr{display:flex;align-items:center;padding:7px 12px;background:var(--green-pale);border-radius:6px;margin:16px 0 10px;}
+  .room-name-input{background:transparent;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.6px;flex:1;width:100%;}
+
+  /* CHECKLIST ITEM */
+  .ci{display:flex;align-items:flex-start;gap:9px;padding:6px 2px;border-bottom:1px solid var(--gray-100);}
+  .ci:last-child{border-bottom:none;}
+  .ci input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;margin-top:2px;cursor:pointer;accent-color:var(--green);}
+  .ci label{font-size:13px;color:var(--gray-700);line-height:1.4;cursor:pointer;}
+  .ci input[type="checkbox"]:checked+label{color:var(--gray-300);text-decoration:line-through;}
+
+  /* PAINT ROW */
+  .paint-row{display:flex;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--gray-100);flex-wrap:wrap;}
+  .paint-row-label{font-size:13px;color:var(--gray-700);font-weight:600;flex:1;min-width:100px;}
+  .paint-opts{display:flex;gap:6px;}
+  .prl{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;padding:4px 11px;border-radius:20px;border:2px solid var(--gray-200);cursor:pointer;color:var(--gray-400);transition:all 0.15s;user-select:none;}
+  .prl input{display:none;}
+  .prl.selected{border-color:var(--blue);background:var(--blue-pale);color:var(--blue);}
+
+  /* DETECTOR ROW */
+  .det-row{display:flex;align-items:flex-start;gap:10px;padding:8px 2px;border-bottom:1px solid var(--gray-100);flex-wrap:wrap;}
+  .det-label{font-size:13px;color:var(--gray-700);flex:1;min-width:120px;padding-top:4px;font-weight:600;}
+  .det-right{display:flex;flex-direction:column;gap:6px;flex:2;min-width:220px;}
+  .det-pairs{display:flex;gap:20px;flex-wrap:wrap;}
+  .det-group{display:flex;flex-direction:column;gap:4px;}
+  .det-group-lbl{font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.5px;font-family:'Montserrat',sans-serif;}
+  .det-btns{display:flex;border-radius:7px;overflow:hidden;border:2px solid var(--gray-200);}
+  .det-btn{padding:5px 14px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;background:white;color:var(--gray-400);border:none;transition:all 0.15s;letter-spacing:0.3px;}
+  .det-btn.yes{background:var(--green);color:white;}
+  .det-btn.no{background:var(--red);color:white;}
+  .det-note{width:100%;padding:5px 9px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:12px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:var(--gray-50);resize:none;min-height:34px;transition:border-color 0.2s;}
+  .det-note:focus{border-color:var(--blue-light);background:white;}
+  .det-note::placeholder{color:var(--gray-300);}
+
+  /* INLINE TEXT ROW */
+  .itr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 2px;border-bottom:1px solid var(--gray-100);}
+  .itr input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;cursor:pointer;accent-color:var(--green);}
+  .itr label{font-size:13px;color:var(--gray-700);}
+  .itr-input{flex:1;min-width:120px;padding:4px 8px;border:1.5px solid var(--gray-200);border-radius:5px;font-size:12px;font-family:'Open Sans',sans-serif;outline:none;background:var(--gray-50);transition:border-color 0.2s;}
+  .itr-input:focus{border-color:var(--green);background:white;}
+  .itr-input::placeholder{color:var(--gray-300);}
+
+  /* DESC ROW */
+  .dr{display:flex;flex-direction:column;gap:5px;padding:7px 2px;border-bottom:1px solid var(--gray-100);}
+  .dr-top{display:flex;align-items:center;gap:9px;}
+  .dr input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;cursor:pointer;accent-color:var(--green);}
+  .dr label{font-size:13px;color:var(--gray-700);}
+  .dr textarea,.ta-plain{width:100%;padding:6px 9px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:12px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:var(--gray-50);resize:vertical;min-height:32px;transition:border-color 0.2s;margin-top:4px;}
+  .dr textarea:focus,.ta-plain:focus{border-color:var(--green);background:white;}
+  .dr textarea::placeholder,.ta-plain::placeholder{color:var(--gray-300);}
+
+  /* NOTES */
+  .notes-area{margin-top:14px;padding-top:14px;border-top:2px solid var(--gray-100);}
+  .notes-lbl{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;display:block;}
+  .notes-ta{width:100%;padding:10px 12px;border:2px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:var(--gray-50);resize:vertical;min-height:68px;transition:border-color 0.2s;}
+  .notes-ta:focus{border-color:var(--blue-light);background:white;}
+  .notes-ta::placeholder{color:var(--gray-300);}
+
+  /* EMPTY STATE */
+  .empty-state{text-align:center;padding:60px 20px;color:var(--gray-500);}
+  .empty-state .icon{font-size:46px;margin-bottom:12px;}
+  .empty-state h3{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:var(--gray-700);margin-bottom:6px;}
+  .empty-state p{font-size:14px;}
+
+  .sub-items{padding-left:24px;margin-top:2px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">A</div>
+  <div class="header-text">
+    <h1>Alliance Property Management</h1>
+    <p>Vendor Scheduling Tracker</p>
+  </div>
+  <div class="header-badge">MOVE-OUT</div>
+</div>
+
+<div class="main">
+  <div class="add-bar">
+    <input type="text" id="newPropInput" placeholder="Enter property address..." onkeydown="if(event.key==='Enter')addProperty()">
+    <button class="btn-add" onclick="addProperty()">+ Add Property</button>
+  </div>
+  <div id="propertiesList">
+    <div class="empty-state">
+      <div class="icon">🏠</div>
+      <h3>No Properties Yet</h3>
+      <p>Add a property address above to get started.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+function uid(){return Math.random().toString(36).substr(2,9);}
+
+/* ---- TOGGLE HELPERS ---- */
+function toggleProp(pid){
+  document.getElementById('pbody_'+pid).classList.toggle('open');
+  document.getElementById('pchev_'+pid).classList.toggle('open');
+}
+function toggleVendor(vid){
+  document.getElementById('vbody_'+vid).classList.toggle('open');
+  document.getElementById('vchev_'+vid).classList.toggle('open');
+}
+function setNeeded(vid,val){
+  document.getElementById('yes_'+vid).className='toggle-opt'+(val==='yes'?' active-yes':'');
+  document.getElementById('no_'+vid).className='toggle-opt'+(val==='no'?' active-no':'');
+  document.getElementById('dot_'+vid).className='vendor-dot'+(val==='yes'?' needed':'');
+}
+function setDet(base,val){
+  const y=document.getElementById(base+'_y');
+  const n=document.getElementById(base+'_n');
+  if(y)y.className='det-btn'+(val==='yes'?' yes':'');
+  if(n)n.className='det-btn'+(val==='no'?' no':'');
+}
+function selectPaint(selId,otherId){
+  setTimeout(()=>{
+    const sl=document.getElementById('lbl_'+selId);
+    const ol=document.getElementById('lbl_'+otherId);
+    if(sl)sl.classList.add('selected');
+    if(ol)ol.classList.remove('selected');
+  },0);
+}
+function toggleRoomBtn(pid,key){
+  const btn=document.getElementById('rtoggle_'+pid+'_'+key);
+  btn.classList.toggle('on');
+}
+
+/* ---- GET CONFIG ---- */
+function getConfig(pid){
+  const n=k=>parseInt(document.getElementById(k+'_'+pid).value)||0;
+  const tog=k=>document.getElementById('rtoggle_'+pid+'_'+k).classList.contains('on');
+  return {
+    beds:n('beds'), baths:n('baths'), halfs:n('halfs'),
+    floors:n('floors'), hallways:n('hallways'), staircases:n('staircases'),
+    livingRoom:tog('living'), loft:tog('loft'), diningRoom:tog('dining'),
+    laundry:tog('laundry'), basement:tog('basement'), garage:tog('garage'), shed:tog('shed')
+  };
+}
+
+function applyRooms(pid){
+  const cfg=getConfig(pid);
+  document.getElementById('hmrooms_'+pid).innerHTML=buildHMRooms(pid,cfg);
+  document.getElementById('clrooms_'+pid).innerHTML=buildCLRooms(pid,cfg);
+}
+
+/* ---- SHARED HELPERS ---- */
+function ci(id,label){
+  return '<div class="ci"><input type="checkbox" id="'+id+'" style="accent-color:var(--green)"><label for="'+id+'">'+label+'</label></div>';
+}
+function roomHdr(label){
+  return '<div class="room-hdr"><input class="room-name-input" value="'+label+'" placeholder="Room name"></div>';
+}
+function notesBlock(ph){
+  return '<div class="notes-area"><span class="notes-lbl">Notes</span><textarea class="notes-ta" placeholder="'+ph+'"></textarea></div>';
+}
+function paintRow(rk){
+  const id1=rk+'_pu',id2=rk+'_c2c';
+  return '<div class="paint-row"><span class="paint-row-label">🎨 Paint</span><div class="paint-opts">'+
+    '<label class="prl" id="lbl_'+id1+'" onclick="selectPaint(\''+id1+'\',\''+id2+'\')"><input type="radio" name="paint_'+rk+'" id="'+id1+'"> Touch-Up</label>'+
+    '<label class="prl" id="lbl_'+id2+'" onclick="selectPaint(\''+id2+'\',\''+id1+'\')"><input type="radio" name="paint_'+rk+'" id="'+id2+'"> Corner to Corner</label>'+
+    '</div></div>';
+}
+function treatmentsBlock(rk,isPatio){
+  return '<div class="sec-hdr" style="margin-top:10px;">Window &amp; Door Treatments</div>'+
+    ci(rk+'_t_mini','Add/replace mini blinds')+
+    ci(rk+'_t_faux','Add/replace faux wood blinds')+
+    ci(rk+'_t_vert','Add/replace vertical blinds')+
+    ci(rk+'_t_rod','Add/replace curtain rod')+
+    (isPatio?ci(rk+'_t_patio_vert','Add/replace patio door vertical blinds')+ci(rk+'_t_patio_rod','Add/replace patio door curtain rod'):'')+
+    '<textarea class="ta-plain" placeholder="Notes (e.g. which window or door)..."></textarea>';
+}
+function hmRoomBlock(rk,hasCabinets,isPatio){
+  return ci(rk+'_nails','Pull nails, screws, and hardware from walls')+
+    ci(rk+'_patch','Patch holes')+
+    paintRow(rk)+
+    ci(rk+'_screens','Torn/damaged window screens (repair or replace)')+
+    (isPatio?ci(rk+'_patio_screen','Torn/damaged patio door screen (repair or replace)'):'')+
+    (hasCabinets?ci(rk+'_cab_doors','Loose cabinet doors (tighten hinges)')+ci(rk+'_cab_handles','Loose handles on drawers, cabinets, and doors (tighten)'):'')+
+    treatmentsBlock(rk,isPatio);
+}
+
+/* ===================== HANDYMAN ROOMS ===================== */
+function buildHMRooms(pid,cfg){
+  let h='';
+
+  // Always: Family Room (patio door likely)
+  h+=roomHdr('Family Room');
+  h+=hmRoomBlock(pid+'_hm_family',false,true);
+
+  // Always: Kitchen
+  h+=roomHdr('Kitchen');
+  h+=hmRoomBlock(pid+'_hm_kitchen',true,false);
+
+  // Optional rooms
+  if(cfg.livingRoom){h+=roomHdr('Living Room');h+=hmRoomBlock(pid+'_hm_living',false,false);}
+  if(cfg.diningRoom){h+=roomHdr('Dining Room');h+=hmRoomBlock(pid+'_hm_dining',false,false);}
+  if(cfg.loft){h+=roomHdr('Loft');h+=hmRoomBlock(pid+'_hm_loft',false,false);}
+  if(cfg.laundry){h+=roomHdr('Laundry Room');h+=hmRoomBlock(pid+'_hm_laundry',true,false);}
+  if(cfg.basement){h+=roomHdr('Basement / Rec Room');h+=hmRoomBlock(pid+'_hm_basement',false,false);}
+
+  // Bedrooms
+  for(let b=1;b<=cfg.beds;b++){
+    const lbl=b===1?'Primary Bedroom':'Bedroom '+b;
+    h+=roomHdr(lbl);h+=hmRoomBlock(pid+'_hm_bed'+b,false,false);
+  }
+
+  // Full baths
+  for(let b=1;b<=cfg.baths;b++){
+    const lbl=b===1?'Primary Bathroom':'Bathroom '+b;
+    h+=roomHdr(lbl);h+=hmRoomBlock(pid+'_hm_bath'+b,true,false);
+  }
+
+  // Half baths
+  for(let hb=1;hb<=cfg.halfs;hb++){
+    h+=roomHdr('Half Bath '+hb);h+=hmRoomBlock(pid+'_hm_half'+hb,true,false);
+  }
+
+  // Hallways
+  for(let hw=1;hw<=cfg.hallways;hw++){
+    const lbl=cfg.hallways===1?'Hallway':'Hallway '+hw;
+    h+=roomHdr(lbl);h+=hmRoomBlock(pid+'_hm_hall'+hw,false,false);
+  }
+
+  // Staircases
+  for(let sc=1;sc<=cfg.staircases;sc++){
+    const lbl=cfg.staircases===1?'Staircase':'Staircase '+sc;
+    h+=roomHdr(lbl);h+=hmRoomBlock(pid+'_hm_stair'+sc,false,false);
+  }
+
+  // Exterior standalone
+  h+='<div class="sec-hdr" style="margin-top:20px;">Exterior</div>';
+  h+=ci(pid+'_hm_porch_pw','Power wash covered porch (cobwebs and debris)');
+  h+=ci(pid+'_hm_deck_pw','Power wash back patio/deck (stains)');
+
+  // CO / Smoke detectors
+  h+='<div class="sec-hdr" style="margin-top:18px;">CO Alarm &amp; Smoke Detector — Per Floor</div>';
+  for(let f=1;f<=cfg.floors;f++){
+    const flbl=f===1?'Main Level':f===2?'Upper Level':f===3?'Basement Level':'Floor '+f;
+    const fk=pid+'_det_'+f;
+    h+='<div class="det-row">'+
+      '<span class="det-label">'+flbl+'</span>'+
+      '<div class="det-right">'+
+        '<div class="det-pairs">'+
+          '<div class="det-group"><span class="det-group-lbl">Smoke Detector</span>'+
+            '<div class="det-btns">'+
+              '<button class="det-btn" id="'+fk+'_sm_y" onclick="setDet(\''+fk+'_sm\',\'yes\')">YES</button>'+
+              '<button class="det-btn" id="'+fk+'_sm_n" onclick="setDet(\''+fk+'_sm\',\'no\')">NO</button>'+
+            '</div></div>'+
+          '<div class="det-group"><span class="det-group-lbl">CO Alarm</span>'+
+            '<div class="det-btns">'+
+              '<button class="det-btn" id="'+fk+'_co_y" onclick="setDet(\''+fk+'_co\',\'yes\')">YES</button>'+
+              '<button class="det-btn" id="'+fk+'_co_n" onclick="setDet(\''+fk+'_co\',\'no\')">NO</button>'+
+            '</div></div>'+
+        '</div>'+
+        '<textarea class="det-note" placeholder="Notes (e.g. move so it is within 15 feet of all bedrooms)..."></textarea>'+
+      '</div>'+
+    '</div>';
+  }
+
+  return h;
+}
+
+/* ===================== CLEANING ROOMS ===================== */
+function clStdRoom(rk,isPatio){
+  return ci(rk+'_1','Check closets for any items left behind')+
+    ci(rk+'_2','Dust hanging light fixtures and/or ceiling fans')+
+    ci(rk+'_3','Dust exposed a/c-heat registers')+
+    ci(rk+'_4','Dust/vacuum windowsills')+
+    ci(rk+'_5','Clean all window blinds')+
+    ci(rk+'_6','Wipe down interior of all doors and doorknobs')+
+    ci(rk+'_7','Clean all light switches and electrical plates')+
+    ci(rk+'_8','Spot clean all walls')+
+    (isPatio?ci(rk+'_9p','Clean patio doors both inside and outside'):'')+
+    ci(rk+'_10','Sweep and mop any bare floors (including closets)')+
+    ci(rk+'_11','Carpets must be vacuumed before they are professionally cleaned')+
+    ci(rk+'_12','Remove any ceiling cobwebs')+
+    ci(rk+'_13','Replace any burned out light bulbs');
+}
+function clBathroom(br,isHalf){
+  return ci(br+'_1','Check closets and cabinets for any items left behind')+
+    ci(br+'_2','Wipe down inside and outside of all cabinets')+
+    (!isHalf?ci(br+'_3','Clean inside and surround of all tubs and shower stalls (including glass doors)'):'')+
+    ci(br+'_4','Clean and disinfect all sinks and faucets')+
+    ci(br+'_5','Clean all mirrors')+
+    ci(br+'_6','Clean toilets (all areas including base of toilet)')+
+    ci(br+'_7','Wipe down all towel racks')+
+    ci(br+'_8','Wipe down interior of all doors and doorknobs')+
+    ci(br+'_9','Clean all light switches and electrical plates')+
+    ci(br+'_10','Dust/vacuum windowsills')+
+    ci(br+'_11','Clean all window blinds')+
+    ci(br+'_12','Spot clean all walls')+
+    ci(br+'_13','Sweep and mop floors')+
+    ci(br+'_14','Remove any ceiling cobwebs')+
+    ci(br+'_15','Replace any burned out light bulbs')+
+    ci(br+'_16','Remove all cleaning supplies and chemicals');
+}
+function clKitchen(kr){
+  return ci(kr+'_1','Check all cabinets, closets, and pantry for any items left behind')+
+    ci(kr+'_2','Wipe down inside and outside of all cabinets')+
+    ci(kr+'_3','Clean any grime on the walls (pay close attention to walls near sink and oven)')+
+    ci(kr+'_4','Clean all countertops and backsplashes')+
+    ci(kr+'_5','Clean inside and outside of all appliances: dishwasher, oven, microwave, and refrigerator (IMPORTANT: clean rubber seals, vents on bottom of fridge, and top of refrigerator)')+
+    ci(kr+'_6','Replace stove-top drip pans')+
+    ci(kr+'_7','Sweep and mop behind all appliances')+
+    ci(kr+'_8','Clean and disinfect all sinks and faucets')+
+    ci(kr+'_9','Wipe down washer/dryer')+
+    ci(kr+'_10','Dust/vacuum windowsills')+
+    ci(kr+'_11','Clean all window blinds')+
+    ci(kr+'_12','Wipe down interior of all doors and doorknobs')+
+    ci(kr+'_13','Clean all light switches and electrical plates')+
+    ci(kr+'_14','Spot clean all walls')+
+    ci(kr+'_15','Sweep and mop any bare floors (including closets and/or pantry)')+
+    ci(kr+'_16','Carpets must be vacuumed before they are professionally cleaned')+
+    ci(kr+'_17','Remove any ceiling cobwebs')+
+    ci(kr+'_18','Replace any burned out light bulbs (including appliances)')+
+    ci(kr+'_19','Remove ALL cleaning chemicals');
+}
+function buildCLRooms(pid,cfg){
+  let h='';
+
+  // Always
+  h+=roomHdr('Family Room');h+=clStdRoom(pid+'_cl_family',true);
+  h+=roomHdr('Kitchen & Laundry');h+=clKitchen(pid+'_cl_kitchen');
+
+  if(cfg.livingRoom){h+=roomHdr('Living Room');h+=clStdRoom(pid+'_cl_living',false);}
+  if(cfg.diningRoom){h+=roomHdr('Dining Room');h+=clStdRoom(pid+'_cl_dining',false);}
+  if(cfg.loft){h+=roomHdr('Loft');h+=clStdRoom(pid+'_cl_loft',false);}
+  if(cfg.laundry){h+=roomHdr('Laundry Room');h+=clStdRoom(pid+'_cl_laundry',false);}
+  if(cfg.basement){h+=roomHdr('Basement / Rec Room');h+=clStdRoom(pid+'_cl_basement',false);}
+
+  for(let b=1;b<=cfg.beds;b++){
+    const lbl=b===1?'Primary Bedroom':'Bedroom '+b;
+    h+=roomHdr(lbl);h+=clStdRoom(pid+'_cl_bed'+b,false);
+  }
+  for(let b=1;b<=cfg.baths;b++){
+    const lbl=b===1?'Primary Bathroom':'Bathroom '+b;
+    h+=roomHdr(lbl);h+=clBathroom(pid+'_cl_bath'+b,false);
+  }
+  for(let hb=1;hb<=cfg.halfs;hb++){
+    h+=roomHdr('Half Bath '+hb);h+=clBathroom(pid+'_cl_half'+hb,true);
+  }
+  for(let hw=1;hw<=cfg.hallways;hw++){
+    const lbl=cfg.hallways===1?'Hallway':'Hallway '+hw;
+    h+=roomHdr(lbl);h+=clStdRoom(pid+'_cl_hall'+hw,false);
+  }
+  for(let sc=1;sc<=cfg.staircases;sc++){
+    const lbl=cfg.staircases===1?'Staircase':'Staircase '+sc;
+    h+=roomHdr(lbl);h+=clStdRoom(pid+'_cl_stair'+sc,false);
+  }
+  if(cfg.garage){
+    h+=roomHdr('Garage');
+    const gr=pid+'_cl_garage';
+    h+=ci(gr+'_1','Check for any items left behind (remove all chemicals)')+
+      ci(gr+'_2','Sweep garage floor')+
+      ci(gr+'_3','Replace any burned out light bulbs')+
+      ci(gr+'_4','Replace garage remote/keypad batteries if necessary');
+  }
+  if(cfg.shed){
+    h+=roomHdr('Shed');
+    h+=ci(pid+'_cl_shed_1','Sweep shed');
+  }
+  return h;
+}
+
+/* ===================== VENDOR BLOCK ===================== */
+function vendorBlock(pid,vkey,icon,label,startOpen){
+  const vid=pid+'_'+vkey;
+  const dotClass=startOpen?'needed':'';
+  const openClass=startOpen?'open':'';
+  const nt=startOpen;
+  let body='';
+
+  const needTog=(yes)=>'<div class="needed-toggle"><label>Needed?</label><div class="toggle-options">'+
+    '<button class="toggle-opt'+(yes?' active-yes':'')+'" id="yes_'+vid+'" onclick="setNeeded(\''+vid+'\',\'yes\')">YES</button>'+
+    '<button class="toggle-opt" id="no_'+vid+'" onclick="setNeeded(\''+vid+'\',\'no\')">NO</button>'+
+    '</div></div>';
+
+  if(vkey==='handyman'){
+    body=needTog(true)+
+      '<div id="hmrooms_'+pid+'">'+buildHMRooms(pid,{beds:3,baths:2,halfs:0,floors:2,hallways:1,staircases:1,livingRoom:false,loft:false,diningRoom:true,laundry:true,basement:false,garage:false,shed:false})+'</div>'+
+      notesBlock('Additional notes for handyman...');
+  } else if(vkey==='cleaning'){
+    body=needTog(true)+
+      '<div id="clrooms_'+pid+'">'+buildCLRooms(pid,{beds:3,baths:2,halfs:0,floors:2,hallways:1,staircases:1,livingRoom:false,loft:false,diningRoom:true,laundry:true,basement:false,garage:true,shed:false})+'</div>'+
+      notesBlock('Additional notes for cleaners...');
+  } else if(vkey==='junk'){
+    body=needTog(false)+
+      ci(vid+'_j1','Empty garage (leave any flooring, paint, and construction materials)')+
+      ci(vid+'_j2','Empty kitchen cabinets/drawers')+
+      ci(vid+'_j3','Empty kitchen appliances')+
+      ci(vid+'_j4','Remove curtains (leave curtain rods)')+
+      ci(vid+'_j5','Empty bathroom cabinets/drawers')+
+      ci(vid+'_j6','Remove shower curtain rod')+
+      ci(vid+'_j7','Remove hoses/toys/debris from front/back yard')+
+      ci(vid+'_j8','Leave HOA-provided trash canisters')+
+      ci(vid+'_j9','Empty unfinished basement (leave any flooring, paint, and construction materials)')+
+      ci(vid+'_j10','Empty shed')+
+      notesBlock('Additional notes for junk removal...');
+  } else if(vkey==='carpet_clean'){
+    body=needTog(false)+
+      ci(vid+'_c1','Strong pet odors noted')+
+      ci(vid+'_c2','Heavily stained')+
+      notesBlock('Additional notes for carpet cleaning...');
+  } else if(vkey==='carpet_repair'){
+    body=needTog(false)+
+      '<div class="itr"><input type="checkbox" style="accent-color:var(--green)"><label>Carpet stretching</label><input class="itr-input" placeholder="Room location..."></div>'+
+      '<div class="itr"><input type="checkbox" style="accent-color:var(--green)"><label>Repair threshold</label><input class="itr-input" placeholder="Room location..."></div>'+
+      '<div class="itr"><input type="checkbox" style="accent-color:var(--green)"><label>Patch stained carpet</label><input class="itr-input" placeholder="Room location..."></div>'+
+      notesBlock('Additional notes for carpet repairs...');
+  } else if(vkey==='landscaping'){
+    body=needTog(false)+
+      ci(vid+'_l1','One-time clean-up (weeds)')+
+      ci(vid+'_l2','One-time clean-up (leaf and debris blow-off)')+
+      ci(vid+'_l3','Add to biweekly mow schedule')+
+      ci(vid+'_l4','Estimate needed: tree trimming (overhanging roof/touching house)')+
+      '<div class="itr"><input type="checkbox" style="accent-color:var(--green)"><label>Estimate needed: remove naturally growing shoots near</label><input class="itr-input" placeholder="Corner of house/yard..."></div>'+
+      notesBlock('Additional notes for landscaping...');
+  } else if(vkey==='pooper'){
+    body=needTog(false)+notesBlock('Additional notes for pooper scoopers...');
+  } else if(vkey==='pest'){
+    body=needTog(false)+
+      ci(vid+'_p1','Spiders')+ci(vid+'_p2','General pests')+ci(vid+'_p3','Mice')+
+      '<div class="ci" style="flex-direction:column;align-items:flex-start;gap:4px;">'+
+        '<div style="display:flex;align-items:center;gap:9px;"><input type="checkbox" style="accent-color:var(--green);width:15px;height:15px;"><label style="font-size:13px;color:var(--gray-700);">Wasp nests</label></div>'+
+        '<div class="sub-items">'+ci(vid+'_w1','Under eaves')+ci(vid+'_w2','On fencing')+ci(vid+'_w3','Under deck')+ci(vid+'_w4','Covered porch')+'</div>'+
+      '</div>'+
+      notesBlock('Additional notes for pest control...');
+  } else if(vkey==='estimates'){
+    body='<div class="sec-hdr">Deck</div>'+
+      '<div class="dr"><div class="dr-top"><input type="checkbox" style="accent-color:var(--green);width:15px;height:15px;"><label>Assessment needed</label></div><textarea placeholder="Describe the issue..."></textarea></div>'+
+      '<div class="dr"><div class="dr-top"><input type="checkbox" style="accent-color:var(--green);width:15px;height:15px;"><label>Repairs needed</label></div><textarea placeholder="Describe the repairs needed..."></textarea></div>'+
+      ci(vid+'_deck_stain','Stain/paint deck')+
+      '<div class="sec-hdr">Exterior Paint</div>'+
+      ci(vid+'_ext_paint','Full exterior paint needed')+
+      '<div class="dr"><div class="dr-top"><input type="checkbox" style="accent-color:var(--green);width:15px;height:15px;"><label>Repairs needed before painting</label></div><textarea placeholder="Describe the repairs needed..."></textarea></div>'+
+      '<div class="sec-hdr">Interior Paint</div>'+
+      ci(vid+'_int_paint','Full interior paint needed')+
+      notesBlock('Additional notes for estimates...');
+  }
+
+  return '<div class="vendor-block">'+
+    '<div class="vendor-header" onclick="toggleVendor(\''+vid+'\')">'+
+      '<div class="vendor-dot '+dotClass+'" id="dot_'+vid+'"></div>'+
+      '<span class="vendor-name">'+icon+' '+label+'</span>'+
+      '<span class="vendor-chevron '+openClass+'" id="vchev_'+vid+'">▼</span>'+
+    '</div>'+
+    '<div class="vendor-body '+openClass+'" id="vbody_'+vid+'">'+body+'</div>'+
+  '</div>';
+}
+
+/* ===================== ROOM TOGGLE BUTTON ===================== */
+function roomToggleBtn(pid,key,label){
+  return '<button class="room-toggle-btn" id="rtoggle_'+pid+'_'+key+'" onclick="toggleRoomBtn(\''+pid+'\',\''+key+'\')">'+
+    '<span class="dot"></span>'+label+'</button>';
+}
+function toggleRoomBtn(pid,key){
+  document.getElementById('rtoggle_'+pid+'_'+key).classList.toggle('on');
+}
+
+/* ===================== PROPERTY HTML ===================== */
+function addProperty(){
+  const inp=document.getElementById('newPropInput');
+  const addr=inp.value.trim();if(!addr){inp.focus();return;}
+  inp.value='';
+  const list=document.getElementById('propertiesList');
+  const empty=list.querySelector('.empty-state');if(empty)empty.remove();
+  const pid='p_'+uid();
+  const card=document.createElement('div');
+  card.className='property-card';card.id=pid;
+  card.innerHTML=buildPropertyHTML(pid,addr);
+  list.appendChild(card);
+}
+function removeProperty(pid){
+  const c=document.getElementById(pid);if(c)c.remove();
+  const list=document.getElementById('propertiesList');
+  if(!list.querySelector('.property-card'))
+    list.innerHTML='<div class="empty-state"><div class="icon">🏠</div><h3>No Properties Yet</h3><p>Add a property address above to get started.</p></div>';
+}
+
+function buildPropertyHTML(pid,addr){
+  return '<div class="property-header" onclick="toggleProp(\''+pid+'\')">'+
+    '<div class="property-icon">🏠</div>'+
+    '<div class="property-name"><input value="'+addr+'" placeholder="Address" onclick="event.stopPropagation()"></div>'+
+    '<div class="property-controls">'+
+      '<button class="btn-remove-prop" onclick="event.stopPropagation();removeProperty(\''+pid+'\')">Remove</button>'+
+      '<span class="chevron open" id="pchev_'+pid+'">▼</span>'+
+    '</div>'+
+  '</div>'+
+  '<div class="property-body open" id="pbody_'+pid+'">'+
+    '<div class="property-setup">'+
+      '<div class="setup-title">Property Configuration</div>'+
+
+      '<div class="setup-group-label">Counts</div>'+
+      '<div class="setup-row">'+
+        '<div class="setup-field"><label>Bedrooms</label><input type="number" id="beds_'+pid+'" min="0" max="10" value="3"></div>'+
+        '<div class="setup-field"><label>Full Baths</label><input type="number" id="baths_'+pid+'" min="0" max="10" value="2"></div>'+
+        '<div class="setup-field"><label>Half Baths</label><input type="number" id="halfs_'+pid+'" min="0" max="5" value="0"></div>'+
+        '<div class="setup-field"><label>Floors</label><input type="number" id="floors_'+pid+'" min="1" max="4" value="2"></div>'+
+        '<div class="setup-field"><label>Hallways</label><input type="number" id="hallways_'+pid+'" min="0" max="5" value="1"></div>'+
+        '<div class="setup-field"><label>Staircases</label><input type="number" id="staircases_'+pid+'" min="0" max="4" value="1"></div>'+
+      '</div>'+
+
+      '<div class="setup-group-label">Optional Rooms — tap to include</div>'+
+      '<div class="room-toggles">'+
+        roomToggleBtn(pid,'living','Living Room')+
+        roomToggleBtn(pid,'dining','Dining Room')+
+        roomToggleBtn(pid,'loft','Loft')+
+        roomToggleBtn(pid,'laundry','Laundry Room')+
+        roomToggleBtn(pid,'basement','Basement / Rec Room')+
+        roomToggleBtn(pid,'garage','Garage')+
+        roomToggleBtn(pid,'shed','Shed')+
+      '</div>'+
+
+      '<button class="btn-apply" onclick="applyRooms(\''+pid+'\')">Apply Configuration</button>'+
+    '</div>'+
+    '<div class="vendors-list">'+
+      vendorBlock(pid,'handyman','🔨','Handyman',true)+
+      vendorBlock(pid,'cleaning','🧹','Cleaning',true)+
+      vendorBlock(pid,'junk','🗑️','Junk Removal',false)+
+      vendorBlock(pid,'carpet_clean','🟤','Carpet Cleaning',false)+
+      vendorBlock(pid,'carpet_repair','🔧','Carpet Repairs',false)+
+      vendorBlock(pid,'landscaping','🌿','Landscaping',false)+
+      vendorBlock(pid,'pooper','🐾','Pooper Scoopers',false)+
+      vendorBlock(pid,'pest','🐜','Pest Control',false)+
+      vendorBlock(pid,'estimates','📋','Estimates Needed',false)+
+    '</div>'+
+  '</div>';
+}
+</script>
+</body>
+</html>
