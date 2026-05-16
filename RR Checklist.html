@@ -212,6 +212,267 @@ body{font-family:'Open Sans',sans-serif;background:var(--white);color:var(--gray
   </div>
 </div>
 <script>
+
+// ===================== SUPABASE CONFIG =====================
+const SUPA_URL = 'https://yudtghbbiqkqcjhchulx.supabase.co';
+const SUPA_KEY = 'sb_publishable_fLzk6kaug0Uor6B3ywZunA_gL7egj3v';
+const SUPA_TABLE = 'vendor_schedules';
+
+async function supaFetch(method, path, body){
+  const res = await fetch(SUPA_URL+'/rest/v1/'+path, {
+    method,
+    headers:{
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer '+SUPA_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': method==='POST'?'return=representation':'return=minimal'
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if(method==='DELETE'||method==='PATCH') return true;
+  return res.json();
+}
+
+// Collect all state from a property card into a plain object
+function collectState(pid){
+  const card = document.getElementById(pid);
+  if(!card) return {};
+
+  // address
+  const addrEl = card.querySelector('.property-name input');
+  const address = addrEl ? addrEl.value : '';
+
+  // config numbers
+  const n = k => { const el=document.getElementById(k+'_'+pid); return el?parseInt(el.value)||0:0; };
+  const tog = k => { const el=document.getElementById('rtoggle_'+pid+'_'+k); return el?el.classList.contains('on'):false; };
+  const config = {
+    beds:n('beds'), baths:n('baths'), halfs:n('halfs'),
+    floors:n('floors'), hallways:n('hallways'), staircases:n('staircases'),
+    livingRoom:tog('living'), loft:tog('loft'), diningRoom:tog('dining'),
+    laundry:tog('laundry'), basement:tog('basement'), garage:tog('garage'), shed:tog('shed')
+  };
+
+  // vendor needed states
+  const vkeys=['handyman','cleaning','carpet_clean','carpet_repair','junk','landscaping','garage_door','pooper','pest','estimates'];
+  const vendorStates={};
+  vkeys.forEach(vk=>{
+    const vid=pid+'_'+vk;
+    const yBtn=document.getElementById('yes_'+vid);
+    const nBtn=document.getElementById('no_'+vid);
+    vendorStates[vk]={
+      needed: yBtn&&yBtn.classList.contains('active-yes')?'yes': nBtn&&nBtn.classList.contains('active-no')?'no':'',
+      vendorIdx: (()=>{ const sel=document.getElementById('vsel_'+pid+'_'+vk); return sel?sel.value:'-1'; })()
+    };
+  });
+
+  // checkboxes
+  const checkboxes={};
+  card.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+    if(cb.id) checkboxes[cb.id]=cb.checked;
+  });
+
+  // textareas
+  const textareas={};
+  card.querySelectorAll('textarea').forEach((ta,i)=>{
+    const key=ta.id||(pid+'_ta_'+i);
+    textareas[key]=ta.value;
+  });
+
+  // paint selections
+  const paints={};
+  card.querySelectorAll('.prl.selected').forEach(p=>{
+    const inp=p.querySelector('input');
+    if(inp&&inp.name) paints[inp.name]=inp.value;
+  });
+
+  // grout yn buttons
+  const grouts={};
+  card.querySelectorAll('.yn-btn').forEach(b=>{
+    if(b.id) grouts[b.id]=b.classList.contains('yes')?'yes':b.classList.contains('no')?'no':'';
+  });
+
+  // det buttons
+  const dets={};
+  card.querySelectorAll('.det-btn').forEach(b=>{
+    if(b.id) dets[b.id]=b.classList.contains('yes')?'yes':b.classList.contains('no')?'no':'';
+  });
+
+  const isComplete = card.classList.contains('complete');
+
+  return { address, config, vendor_data:{ vendorStates, checkboxes, textareas, paints, grouts, dets }, is_complete:isComplete };
+}
+
+// Restore state into a property card
+function restoreState(pid, data){
+  const card = document.getElementById(pid);
+  if(!card||!data) return;
+  const { config={}, vendor_data={}, is_complete=false } = data;
+  const { vendorStates={}, checkboxes={}, textareas={}, paints={}, grouts={}, dets={} } = vendor_data;
+
+  // restore room toggles & counts before applying rooms
+  const nums=['beds','baths','halfs','floors','hallways','staircases'];
+  nums.forEach(k=>{ const el=document.getElementById(k+'_'+pid); if(el&&config[k]!==undefined) el.value=config[k]; });
+
+  const togKeys=['living','dining','loft','laundry','basement','garage','shed'];
+  const cfgMap={living:'livingRoom',dining:'diningRoom',loft:'loft',laundry:'laundry',basement:'basement',garage:'garage',shed:'shed'};
+  togKeys.forEach(k=>{
+    const el=document.getElementById('rtoggle_'+pid+'_'+k);
+    if(!el) return;
+    const shouldBeOn=config[cfgMap[k]]||false;
+    if(shouldBeOn) el.classList.add('on'); else el.classList.remove('on');
+    el.querySelector('.dot').style.background=shouldBeOn?'var(--green)':'var(--gray-300)';
+  });
+
+  // rebuild rooms with restored config
+  const cfg={
+    beds:config.beds||3, baths:config.baths||2, halfs:config.halfs||0,
+    floors:config.floors||2, hallways:config.hallways||1, staircases:config.staircases||1,
+    livingRoom:config.livingRoom||false, loft:config.loft||false, diningRoom:config.diningRoom!==false,
+    laundry:config.laundry!==false, basement:config.basement||false,
+    garage:config.garage||false, shed:config.shed||false
+  };
+  const hmEl=document.getElementById('hmrooms_'+pid);
+  const clEl=document.getElementById('clrooms_'+pid);
+  if(hmEl) hmEl.innerHTML=buildHMRooms(pid,cfg);
+  if(clEl) clEl.innerHTML=buildCLRooms(pid,cfg);
+
+  // restore vendor states
+  Object.entries(vendorStates).forEach(([vk,vs])=>{
+    if(vs.needed) setNeeded(pid,vk,vs.needed);
+    const sel=document.getElementById('vsel_'+pid+'_'+vk);
+    if(sel&&vs.vendorIdx!==undefined){ sel.value=vs.vendorIdx; updateVendorContact(pid,vk); }
+  });
+
+  // restore checkboxes
+  Object.entries(checkboxes).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.checked=val; });
+
+  // restore textareas
+  card.querySelectorAll('textarea').forEach((ta,i)=>{
+    const key=ta.id||(pid+'_ta_'+i);
+    if(textareas[key]!==undefined) ta.value=textareas[key];
+  });
+
+  // restore paint
+  Object.entries(paints).forEach(([name,val])=>{
+    const radios=card.querySelectorAll('input[name="'+name+'"]');
+    radios.forEach(r=>{
+      const lbl=r.closest('.prl');
+      if(r.value===val){ if(lbl) lbl.classList.add('selected'); }
+      else { if(lbl) lbl.classList.remove('selected'); }
+    });
+  });
+
+  // restore grout
+  Object.entries(grouts).forEach(([id,val])=>{
+    const el=document.getElementById(id);
+    if(el&&val){
+      el.className='yn-btn'+(val==='yes'?' yes':val==='no'?' no':'');
+      // show sub if yes
+      const base=id.replace('_y','').replace('_n','');
+      const sub=document.getElementById(base+'_sub');
+      if(sub) sub.className='grout-sub'+(val==='yes'?' show':'');
+    }
+  });
+
+  // restore det buttons
+  Object.entries(dets).forEach(([id,val])=>{
+    const el=document.getElementById(id);
+    if(el&&val) el.className='det-btn'+(val==='yes'?' yes':val==='no'?' no':'');
+  });
+
+  // restore complete
+  if(is_complete){
+    card.classList.add('complete');
+    const body=document.getElementById('pbody_'+pid);
+    const chev=document.getElementById('pchev_'+pid);
+    if(body) body.classList.remove('open');
+    if(chev) chev.classList.remove('open');
+    document.getElementById('propertiesList').appendChild(card);
+  }
+}
+
+// Save a single property to Supabase
+const saveTimers={};
+async function saveProperty(pid){
+  clearTimeout(saveTimers[pid]);
+  saveTimers[pid]=setTimeout(async()=>{
+    const state=collectState(pid);
+    const supaId=window._supaIds&&window._supaIds[pid];
+    if(supaId){
+      await supaFetch('PATCH',SUPA_TABLE+'?id=eq.'+supaId,{
+        address:state.address, config:state.config,
+        vendor_data:state.vendor_data, is_complete:state.is_complete,
+        updated_at:new Date().toISOString()
+      });
+    } else {
+      const result=await supaFetch('POST',SUPA_TABLE,[{
+        id: pid.replace('p_',''), address:state.address,
+        config:state.config, vendor_data:state.vendor_data,
+        is_complete:state.is_complete
+      }]);
+      if(result&&result[0]){
+        if(!window._supaIds) window._supaIds={};
+        window._supaIds[pid]=result[0].id;
+      }
+    }
+    showSaveIndicator();
+  }, 800);
+}
+
+function showSaveIndicator(){
+  let ind=document.getElementById('save-indicator');
+  if(!ind){
+    ind=document.createElement('div');
+    ind.id='save-indicator';
+    ind.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--green);color:white;padding:8px 16px;border-radius:8px;font-family:Montserrat,sans-serif;font-size:12px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:9999;transition:opacity 0.5s;';
+    document.body.appendChild(ind);
+  }
+  ind.textContent='✓ Saved';
+  ind.style.opacity='1';
+  setTimeout(()=>ind.style.opacity='0',2000);
+}
+
+// Load all properties from Supabase on page load
+async function loadAllProperties(){
+  const list=document.getElementById('propertiesList');
+  list.innerHTML='<div style="text-align:center;padding:40px;color:var(--gray-500);font-family:Montserrat,sans-serif;font-size:13px;">Loading properties...</div>';
+  try{
+    const data=await supaFetch('GET',SUPA_TABLE+'?order=created_at.asc');
+    if(!data||!data.length){
+      list.innerHTML='<div class="empty-state"><div class="icon">🏠</div><h3>No Properties Yet</h3><p>Add a property address above to get started.</p></div>';
+      return;
+    }
+    list.innerHTML='';
+    if(!window._supaIds) window._supaIds={};
+    data.forEach(row=>{
+      const pid='p_'+row.id;
+      const card=document.createElement('div');
+      card.className='property-card';
+      card.id=pid;
+      card.innerHTML=buildPropertyHTML(pid,row.address||'');
+      list.appendChild(card);
+      window._supaIds[pid]=row.id;
+      restoreState(pid,row);
+      attachSaveListeners(pid);
+    });
+  } catch(e){
+    list.innerHTML='<div class="empty-state"><div class="icon">🏠</div><h3>No Properties Yet</h3><p>Add a property address above to get started.</p></div>';
+  }
+}
+
+function attachSaveListeners(pid){
+  const card=document.getElementById(pid);
+  if(!card) return;
+  card.addEventListener('change',()=>saveProperty(pid));
+  card.addEventListener('input',()=>saveProperty(pid));
+  // observe class changes for complete
+  const obs=new MutationObserver(()=>saveProperty(pid));
+  obs.observe(card,{attributes:true,attributeFilter:['class']});
+}
+
+window.addEventListener('DOMContentLoaded', loadAllProperties);
+
+
 // ===================== VENDOR DATA =====================
 const VENDORS = {
   handyman:[
@@ -272,14 +533,30 @@ function addProperty(){
   inp.value='';
   const list=document.getElementById('propertiesList');
   const empty=list.querySelector('.empty-state');if(empty)empty.remove();
-  const pid='p_'+uid();
+  const rawId=uid();
+  const pid='p_'+rawId;
   const card=document.createElement('div');
   card.className='property-card';card.id=pid;
   card.innerHTML=buildPropertyHTML(pid,addr);
   list.appendChild(card);
+  // Save to Supabase
+  (async()=>{
+    const result=await supaFetch('POST',SUPA_TABLE,[{
+      id:rawId, address:addr, config:{beds:3,baths:2,halfs:0,floors:2,hallways:1,staircases:1,livingRoom:false,loft:false,diningRoom:true,laundry:true,basement:false,garage:false,shed:false},
+      vendor_data:{}, is_complete:false
+    }]);
+    if(result&&result[0]){
+      if(!window._supaIds) window._supaIds={};
+      window._supaIds[pid]=result[0].id;
+    }
+    attachSaveListeners(pid);
+    showSaveIndicator();
+  })();
 }
 
 function removeProperty(pid){
+  const supaId=window._supaIds&&window._supaIds[pid];
+  if(supaId) supaFetch('DELETE',SUPA_TABLE+'?id=eq.'+supaId);
   const c=document.getElementById(pid);if(c)c.remove();
   const list=document.getElementById('propertiesList');
   if(!list.querySelector('.property-card'))
