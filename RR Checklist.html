@@ -5,164 +5,191 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vendor Scheduler | Alliance Property Management</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap');
-  :root {
-    --green:#4a7c59;--green-light:#6aaa7a;--green-pale:#e8f3ec;
-    --blue:#1e4d8c;--blue-light:#2e6cb5;--blue-pale:#e8eef7;
-    --teal:#2a7a7a;--white:#ffffff;
-    --gray-50:#f8fafb;--gray-100:#f0f4f7;--gray-200:#e2e8ef;
-    --gray-300:#c8d3dc;--gray-400:#9aaab8;--gray-500:#6b7f8e;--gray-700:#374a5a;--gray-900:#1a2530;
-    --red:#e05252;
-    --shadow-sm:0 1px 3px rgba(30,77,140,0.08);
-    --shadow-md:0 4px 16px rgba(30,77,140,0.12);
-    --radius:10px;--radius-lg:16px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Open Sans',sans-serif;background:var(--white);color:var(--gray-900);min-height:100vh;}
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap');
+:root{
+  --green:#4a7c59;--green-light:#6aaa7a;--green-pale:#e8f3ec;
+  --blue:#1e4d8c;--blue-light:#2e6cb5;--blue-pale:#e8eef7;
+  --teal:#2a7a7a;--white:#ffffff;
+  --purple:#6b3fa0;--purple-light:#8b5cc0;--purple-pale:#f0eaf8;
+  --gray-50:#f8fafb;--gray-100:#f0f4f7;--gray-200:#e2e8ef;
+  --gray-300:#c8d3dc;--gray-400:#9aaab8;--gray-500:#6b7f8e;--gray-700:#374a5a;--gray-900:#1a2530;
+  --red:#e05252;
+  --shadow-sm:0 1px 3px rgba(30,77,140,0.08);
+  --shadow-md:0 4px 16px rgba(30,77,140,0.12);
+  --radius:10px;--radius-lg:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Open Sans',sans-serif;background:var(--white);color:var(--gray-900);min-height:100vh;}
 
-  /* HEADER */
-  .header{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 50%,var(--teal) 100%);padding:26px 32px 22px;display:flex;align-items:center;gap:18px;box-shadow:0 4px 20px rgba(30,77,140,0.25);}
-  .header-logo{width:50px;height:50px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:var(--blue);font-family:'Montserrat',sans-serif;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
-  .header-text h1{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:white;letter-spacing:-0.3px;}
-  .header-text p{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500;margin-top:2px;}
-  .header-badge{margin-left:auto;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);color:white;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:0.5px;white-space:nowrap;}
+/* HEADER */
+.header{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 50%,var(--teal) 100%);padding:26px 32px 22px;display:flex;align-items:center;gap:18px;box-shadow:0 4px 20px rgba(30,77,140,0.25);}
+.header-logo{width:50px;height:50px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:var(--blue);font-family:'Montserrat',sans-serif;flex-shrink:0;}
+.header-text h1{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:white;}
+.header-text p{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500;margin-top:2px;}
+.header-badge{margin-left:auto;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);color:white;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:0.5px;white-space:nowrap;}
 
-  .main{max-width:920px;margin:0 auto;padding:28px 20px 60px;}
+.main{max-width:920px;margin:0 auto;padding:28px 20px 60px;}
 
-  /* ADD BAR */
-  .add-bar{display:flex;gap:10px;margin-bottom:28px;}
-  .add-bar input{flex:1;padding:11px 16px;border:2px solid var(--gray-200);border-radius:var(--radius);font-family:'Open Sans',sans-serif;font-size:14px;color:var(--gray-900);background:var(--white);transition:border-color 0.2s;outline:none;}
-  .add-bar input:focus{border-color:var(--blue-light);}
-  .add-bar input::placeholder{color:var(--gray-400);}
-  .btn-add{padding:11px 22px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 100%);color:white;border:none;border-radius:var(--radius);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:var(--shadow-sm);}
-  .btn-add:hover{box-shadow:var(--shadow-md);}
+/* ADD BAR */
+.add-bar{display:flex;gap:10px;margin-bottom:28px;}
+.add-bar input{flex:1;padding:11px 16px;border:2px solid var(--gray-200);border-radius:var(--radius);font-family:'Open Sans',sans-serif;font-size:14px;color:var(--gray-900);background:var(--white);outline:none;transition:border-color 0.2s;}
+.add-bar input:focus{border-color:var(--blue-light);}
+.add-bar input::placeholder{color:var(--gray-400);}
+.btn-add{padding:11px 22px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 100%);color:white;border:none;border-radius:var(--radius);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
 
-  /* PROPERTY CARD */
-  .property-card{background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius-lg);margin-bottom:20px;box-shadow:var(--shadow-sm);overflow:hidden;}
-  .property-header{display:flex;align-items:center;gap:12px;padding:15px 20px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 100%);cursor:pointer;user-select:none;}
-  .property-icon{width:34px;height:34px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
-  .property-name{flex:1;}
-  .property-name input{background:transparent;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:white;width:100%;}
-  .property-name input::placeholder{color:rgba(255,255,255,0.55);}
-  .property-controls{display:flex;align-items:center;gap:8px;}
-  .chevron{color:rgba(255,255,255,0.8);font-size:16px;transition:transform 0.3s;display:inline-block;}
-  .chevron.open{transform:rotate(180deg);}
-  .btn-remove-prop{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;font-weight:600;}
-  .btn-remove-prop:hover{background:rgba(200,0,0,0.45);}
-  .property-body{display:none;}
-  .property-body.open{display:block;}
+/* PROPERTY CARD */
+.property-card{background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius-lg);margin-bottom:16px;box-shadow:var(--shadow-sm);overflow:hidden;transition:all 0.4s;}
+.property-card.complete{border-color:var(--purple-light);box-shadow:0 4px 20px rgba(107,63,160,0.15);}
+.property-header{display:flex;align-items:center;gap:12px;padding:15px 20px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 100%);cursor:pointer;user-select:none;transition:background 0.4s;}
+.property-card.complete .property-header{background:linear-gradient(135deg,var(--purple) 0%,var(--purple-light) 100%);}
+.property-icon{width:34px;height:34px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.property-name{flex:1;}
+.property-name input{background:transparent;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:white;width:100%;}
+.property-name input::placeholder{color:rgba(255,255,255,0.55);}
+.prop-controls{display:flex;align-items:center;gap:8px;}
+.complete-badge{background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);color:white;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;display:none;}
+.property-card.complete .complete-badge{display:inline-block;}
+.chevron{color:rgba(255,255,255,0.8);font-size:16px;transition:transform 0.3s;display:inline-block;}
+.chevron.open{transform:rotate(180deg);}
+.btn-remove-prop{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;font-weight:600;}
+.btn-remove-prop:hover{background:rgba(200,0,0,0.45);}
+.property-body{display:none;}
+.property-body.open{display:block;}
 
-  /* SETUP */
-  .property-setup{padding:18px 20px;background:var(--blue-pale);border-bottom:2px solid var(--gray-200);}
-  .setup-title{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
-  .setup-group-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.8px;margin:14px 0 8px;}
-  .setup-group-label:first-of-type{margin-top:0;}
-  .setup-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:6px;}
-  .setup-field{display:flex;flex-direction:column;gap:4px;}
-  .setup-field label{font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.5px;}
-  .setup-field input[type="number"]{width:72px;padding:7px 10px;border:2px solid var(--blue-light);border-radius:7px;font-size:14px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:white;}
-  /* TOGGLE BUTTONS for room yes/no */
-  .room-toggles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
-  .room-toggle-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border:2px solid var(--gray-300);border-radius:20px;background:white;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--gray-500);cursor:pointer;transition:all 0.15s;user-select:none;}
-  .room-toggle-btn.on{border-color:var(--green);background:var(--green-pale);color:var(--green);}
-  .room-toggle-btn .dot{width:8px;height:8px;border-radius:50%;background:var(--gray-300);flex-shrink:0;transition:background 0.15s;}
-  .room-toggle-btn.on .dot{background:var(--green);}
-  .btn-apply{padding:9px 20px;background:linear-gradient(135deg,var(--green) 0%,var(--green-light) 100%);color:white;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.3px;margin-top:14px;}
-  .btn-apply:hover{box-shadow:var(--shadow-sm);}
+/* SETUP */
+.property-setup{padding:18px 20px;background:var(--blue-pale);border-bottom:2px solid var(--gray-200);}
+.setup-title{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
+.setup-group-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.8px;margin:14px 0 8px;}
+.setup-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:6px;}
+.setup-field{display:flex;flex-direction:column;gap:4px;}
+.setup-field label{font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.5px;}
+.setup-field input[type="number"]{width:72px;padding:7px 10px;border:2px solid var(--blue-light);border-radius:7px;font-size:14px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:white;}
+.room-toggles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+.room-toggle-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border:2px solid var(--gray-300);border-radius:20px;background:white;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--gray-500);cursor:pointer;transition:all 0.15s;user-select:none;}
+.room-toggle-btn.on{border-color:var(--green);background:var(--green-pale);color:var(--green);}
+.room-toggle-btn .dot{width:8px;height:8px;border-radius:50%;background:var(--gray-300);flex-shrink:0;transition:background 0.15s;}
+.room-toggle-btn.on .dot{background:var(--green);}
+.btn-apply{padding:9px 20px;background:linear-gradient(135deg,var(--green) 0%,var(--green-light) 100%);color:white;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.3px;margin-top:14px;}
 
-  /* VENDORS */
-  .vendors-list{padding:16px 20px;display:flex;flex-direction:column;gap:10px;}
-  .vendor-block{border:2px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;}
-  .vendor-header{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--gray-50);cursor:pointer;user-select:none;}
-  .vendor-header:hover{background:var(--gray-100);}
-  .vendor-dot{width:10px;height:10px;border-radius:50%;background:var(--gray-300);flex-shrink:0;transition:background 0.2s;}
-  .vendor-dot.needed{background:var(--green);}
-  .vendor-name{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--gray-700);flex:1;text-transform:uppercase;letter-spacing:0.5px;}
-  .vendor-chevron{color:var(--gray-500);font-size:13px;transition:transform 0.3s;display:inline-block;}
-  .vendor-chevron.open{transform:rotate(180deg);}
-  .vendor-body{display:none;padding:16px;}
-  .vendor-body.open{display:block;}
+/* VENDORS */
+.vendors-list{padding:16px 20px;display:flex;flex-direction:column;gap:10px;}
+.vendor-block{border:2px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;}
+.vendor-header{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--gray-50);cursor:pointer;user-select:none;}
+.vendor-header:hover{background:var(--gray-100);}
+.vendor-dot{width:10px;height:10px;border-radius:50%;background:var(--gray-300);flex-shrink:0;transition:background 0.2s;}
+.vendor-dot.needed{background:var(--green);}
+.vendor-dot.not-needed{background:var(--gray-400);}
+.vendor-name{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--gray-700);flex:1;text-transform:uppercase;letter-spacing:0.5px;}
+.vendor-assigned{font-size:11px;font-weight:600;color:var(--green);font-family:'Montserrat',sans-serif;margin-right:6px;}
+.vendor-chevron{color:var(--gray-500);font-size:13px;transition:transform 0.3s;display:inline-block;}
+.vendor-chevron.open{transform:rotate(180deg);}
+.vendor-body{display:none;padding:16px;}
+.vendor-body.open{display:block;}
 
-  /* NEEDED TOGGLE */
-  .needed-toggle{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid var(--gray-100);}
-  .needed-toggle label{font-size:13px;font-weight:600;color:var(--gray-700);}
-  .toggle-options{display:flex;border-radius:8px;overflow:hidden;border:2px solid var(--gray-200);}
-  .toggle-opt{padding:6px 16px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;background:white;color:var(--gray-400);border:none;transition:all 0.15s;letter-spacing:0.3px;}
-  .toggle-opt.active-yes{background:var(--green);color:white;}
-  .toggle-opt.active-no{background:var(--gray-300);color:var(--gray-700);}
+/* NEEDED TOGGLE */
+.needed-toggle{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:2px solid var(--gray-100);}
+.needed-toggle label{font-size:13px;font-weight:600;color:var(--gray-700);}
+.toggle-options{display:flex;border-radius:8px;overflow:hidden;border:2px solid var(--gray-200);}
+.toggle-opt{padding:6px 16px;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;background:white;color:var(--gray-400);border:none;transition:all 0.15s;letter-spacing:0.3px;}
+.toggle-opt.active-yes{background:var(--green);color:white;}
+.toggle-opt.active-no{background:var(--gray-300);color:var(--gray-700);}
 
-  /* SECTION HEADER */
-  .sec-hdr{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1.2px;padding:10px 0 5px;border-bottom:2px solid var(--green-pale);margin-bottom:8px;margin-top:14px;}
+/* VENDOR DROPDOWN */
+.vendor-select-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.vendor-select-row label{font-size:12px;font-weight:700;color:var(--blue);font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
+.vendor-select{padding:7px 12px;border:2px solid var(--blue-light);border-radius:8px;font-family:'Open Sans',sans-serif;font-size:13px;color:var(--gray-900);background:white;outline:none;cursor:pointer;flex:1;min-width:180px;}
+.vendor-contact-display{font-size:12px;color:var(--gray-500);margin-top:4px;padding:6px 10px;background:var(--gray-50);border-radius:6px;border:1px solid var(--gray-200);}
+.vendor-contact-display a{color:var(--blue);text-decoration:none;}
 
-  /* ROOM HEADER */
-  .room-hdr{display:flex;align-items:center;padding:7px 12px;background:var(--green-pale);border-radius:6px;margin:16px 0 10px;}
-  .room-name-input{background:transparent;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.6px;flex:1;width:100%;}
+/* EMAIL BUTTON */
+.email-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-light) 100%);color:white;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-top:14px;letter-spacing:0.3px;}
+.email-btn:hover{box-shadow:var(--shadow-md);}
+.email-btn:disabled{background:var(--gray-300);cursor:not-allowed;}
 
-  /* CHECKLIST ITEM */
-  .ci{display:flex;align-items:flex-start;gap:9px;padding:6px 2px;border-bottom:1px solid var(--gray-100);}
-  .ci:last-child{border-bottom:none;}
-  .ci input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;margin-top:2px;cursor:pointer;accent-color:var(--green);}
-  .ci label{font-size:13px;color:var(--gray-700);line-height:1.4;cursor:pointer;}
-  .ci input[type="checkbox"]:checked+label{color:var(--gray-300);text-decoration:line-through;}
+/* SECTION HEADER */
+.sec-hdr{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1.2px;padding:10px 0 5px;border-bottom:2px solid var(--green-pale);margin-bottom:8px;margin-top:14px;}
 
-  /* PAINT ROW */
-  .paint-row{display:flex;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--gray-100);flex-wrap:wrap;}
-  .paint-row-label{font-size:13px;color:var(--gray-700);font-weight:600;flex:1;min-width:100px;}
-  .paint-opts{display:flex;gap:6px;}
-  .prl{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;padding:4px 11px;border-radius:20px;border:2px solid var(--gray-200);cursor:pointer;color:var(--gray-400);transition:all 0.15s;user-select:none;}
-  .prl input{display:none;}
-  .prl.selected{border-color:var(--blue);background:var(--blue-pale);color:var(--blue);}
+/* ROOM HEADER */
+.room-hdr{display:flex;align-items:center;padding:7px 12px;background:var(--green-pale);border-radius:6px;margin:16px 0 10px;}
+.room-name-input{background:transparent;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.6px;flex:1;width:100%;}
 
-  /* DETECTOR ROW */
-  .det-row{display:flex;align-items:flex-start;gap:10px;padding:8px 2px;border-bottom:1px solid var(--gray-100);flex-wrap:wrap;}
-  .det-label{font-size:13px;color:var(--gray-700);flex:1;min-width:120px;padding-top:4px;font-weight:600;}
-  .det-right{display:flex;flex-direction:column;gap:6px;flex:2;min-width:220px;}
-  .det-pairs{display:flex;gap:20px;flex-wrap:wrap;}
-  .det-group{display:flex;flex-direction:column;gap:4px;}
-  .det-group-lbl{font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.5px;font-family:'Montserrat',sans-serif;}
-  .det-btns{display:flex;border-radius:7px;overflow:hidden;border:2px solid var(--gray-200);}
-  .det-btn{padding:5px 14px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;background:white;color:var(--gray-400);border:none;transition:all 0.15s;letter-spacing:0.3px;}
-  .det-btn.yes{background:var(--green);color:white;}
-  .det-btn.no{background:var(--red);color:white;}
-  .det-note{width:100%;padding:5px 9px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:12px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:var(--gray-50);resize:none;min-height:34px;transition:border-color 0.2s;}
-  .det-note:focus{border-color:var(--blue-light);background:white;}
-  .det-note::placeholder{color:var(--gray-300);}
+/* CHECKLIST */
+.ci{display:flex;align-items:flex-start;gap:9px;padding:6px 2px;border-bottom:1px solid var(--gray-100);}
+.ci:last-child{border-bottom:none;}
+.ci input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;margin-top:2px;cursor:pointer;accent-color:var(--green);}
+.ci label{font-size:13px;color:var(--gray-700);line-height:1.4;cursor:pointer;}
+.ci input[type="checkbox"]:checked+label{color:var(--green);font-weight:700;}
 
-  /* INLINE TEXT ROW */
-  .itr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 2px;border-bottom:1px solid var(--gray-100);}
-  .itr input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;cursor:pointer;accent-color:var(--green);}
-  .itr label{font-size:13px;color:var(--gray-700);}
-  .itr-input{flex:1;min-width:120px;padding:4px 8px;border:1.5px solid var(--gray-200);border-radius:5px;font-size:12px;font-family:'Open Sans',sans-serif;outline:none;background:var(--gray-50);transition:border-color 0.2s;}
-  .itr-input:focus{border-color:var(--green);background:white;}
-  .itr-input::placeholder{color:var(--gray-300);}
+/* PAINT ROW */
+.paint-row{display:flex;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--gray-100);flex-wrap:wrap;}
+.paint-row-label{font-size:13px;color:var(--gray-700);font-weight:600;flex:1;min-width:100px;}
+.paint-opts{display:flex;gap:6px;}
+.prl{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;padding:4px 11px;border-radius:20px;border:2px solid var(--gray-200);cursor:pointer;color:var(--gray-400);transition:all 0.15s;user-select:none;}
+.prl input{display:none;}
+.prl.selected{border-color:var(--blue);background:var(--blue-pale);color:var(--blue);}
 
-  /* DESC ROW */
-  .dr{display:flex;flex-direction:column;gap:5px;padding:7px 2px;border-bottom:1px solid var(--gray-100);}
-  .dr-top{display:flex;align-items:center;gap:9px;}
-  .dr input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;cursor:pointer;accent-color:var(--green);}
-  .dr label{font-size:13px;color:var(--gray-700);}
-  .dr textarea,.ta-plain{width:100%;padding:6px 9px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:12px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:var(--gray-50);resize:vertical;min-height:32px;transition:border-color 0.2s;margin-top:4px;}
-  .dr textarea:focus,.ta-plain:focus{border-color:var(--green);background:white;}
-  .dr textarea::placeholder,.ta-plain::placeholder{color:var(--gray-300);}
+/* YES/NO INLINE */
+.yn-row{display:flex;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--gray-100);flex-wrap:wrap;}
+.yn-label{font-size:13px;color:var(--gray-700);flex:1;min-width:140px;}
+.yn-btns{display:flex;border-radius:7px;overflow:hidden;border:2px solid var(--gray-200);}
+.yn-btn{padding:4px 13px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;background:white;color:var(--gray-400);border:none;transition:all 0.15s;}
+.yn-btn.yes{background:var(--green);color:white;}
+.yn-btn.no{background:var(--red);color:white;}
+.grout-sub{display:none;padding:6px 0 4px 24px;}
+.grout-sub.show{display:flex;gap:8px;align-items:center;}
+.grout-sub span{font-size:12px;color:var(--gray-500);font-weight:600;}
 
-  /* NOTES */
-  .notes-area{margin-top:14px;padding-top:14px;border-top:2px solid var(--gray-100);}
-  .notes-lbl{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;display:block;}
-  .notes-ta{width:100%;padding:10px 12px;border:2px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:var(--gray-50);resize:vertical;min-height:68px;transition:border-color 0.2s;}
-  .notes-ta:focus{border-color:var(--blue-light);background:white;}
-  .notes-ta::placeholder{color:var(--gray-300);}
+/* DETECTOR ROW */
+.det-row{display:flex;align-items:flex-start;gap:10px;padding:8px 2px;border-bottom:1px solid var(--gray-100);flex-wrap:wrap;}
+.det-label{font-size:13px;color:var(--gray-700);flex:1;min-width:120px;padding-top:4px;font-weight:600;}
+.det-right{display:flex;flex-direction:column;gap:6px;flex:2;min-width:220px;}
+.det-pairs{display:flex;gap:20px;flex-wrap:wrap;}
+.det-group{display:flex;flex-direction:column;gap:4px;}
+.det-group-lbl{font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.5px;font-family:'Montserrat',sans-serif;}
+.det-btns{display:flex;border-radius:7px;overflow:hidden;border:2px solid var(--gray-200);}
+.det-btn{padding:5px 14px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;background:white;color:var(--gray-400);border:none;transition:all 0.15s;}
+.det-btn.yes{background:var(--green);color:white;}
+.det-btn.no{background:var(--red);color:white;}
+.det-note{width:100%;padding:5px 9px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:12px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:var(--gray-50);resize:none;min-height:34px;}
+.det-note:focus{border-color:var(--blue-light);background:white;}
+.det-note::placeholder{color:var(--gray-300);}
 
-  /* EMPTY STATE */
-  .empty-state{text-align:center;padding:60px 20px;color:var(--gray-500);}
-  .empty-state .icon{font-size:46px;margin-bottom:12px;}
-  .empty-state h3{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:var(--gray-700);margin-bottom:6px;}
-  .empty-state p{font-size:14px;}
+/* INLINE TEXT */
+.itr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 2px;border-bottom:1px solid var(--gray-100);}
+.itr input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;cursor:pointer;accent-color:var(--green);}
+.itr label{font-size:13px;color:var(--gray-700);}
+.itr-input{flex:1;min-width:120px;padding:4px 8px;border:1.5px solid var(--gray-200);border-radius:5px;font-size:12px;font-family:'Open Sans',sans-serif;outline:none;background:var(--gray-50);}
+.itr-input:focus{border-color:var(--green);background:white;}
+.itr-input::placeholder{color:var(--gray-300);}
 
-  .sub-items{padding-left:24px;margin-top:2px;}
+/* DESC ROW */
+.dr{display:flex;flex-direction:column;gap:5px;padding:7px 2px;border-bottom:1px solid var(--gray-100);}
+.dr-top{display:flex;align-items:center;gap:9px;}
+.dr input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;cursor:pointer;accent-color:var(--green);}
+.dr label{font-size:13px;color:var(--gray-700);}
+.dr textarea,.ta-plain{width:100%;padding:6px 9px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:12px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:var(--gray-50);resize:vertical;min-height:32px;margin-top:4px;}
+.dr textarea:focus,.ta-plain:focus{border-color:var(--green);background:white;}
+.dr textarea::placeholder,.ta-plain::placeholder{color:var(--gray-300);}
+
+/* NOTES */
+.notes-area{margin-top:14px;padding-top:14px;border-top:2px solid var(--gray-100);}
+.notes-lbl{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;display:block;}
+.notes-ta{width:100%;padding:10px 12px;border:2px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:'Open Sans',sans-serif;color:var(--gray-900);outline:none;background:var(--gray-50);resize:vertical;min-height:68px;}
+.notes-ta:focus{border-color:var(--blue-light);background:white;}
+.notes-ta::placeholder{color:var(--gray-300);}
+
+/* TREATMENTS */
+.ta-plain{display:block;margin-top:6px;}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:60px 20px;color:var(--gray-500);}
+.empty-state .icon{font-size:46px;margin-bottom:12px;}
+.empty-state h3{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:var(--gray-700);margin-bottom:6px;}
+.empty-state p{font-size:14px;}
+.sub-items{padding-left:24px;margin-top:2px;}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="header-logo">A</div>
   <div class="header-text">
@@ -171,7 +198,6 @@
   </div>
   <div class="header-badge">MOVE-OUT</div>
 </div>
-
 <div class="main">
   <div class="add-bar">
     <input type="text" id="newPropInput" placeholder="Enter property address..." onkeydown="if(event.key==='Enter')addProperty()">
@@ -185,30 +211,156 @@
     </div>
   </div>
 </div>
-
 <script>
+// ===================== VENDOR DATA =====================
+const VENDORS = {
+  handyman:[
+    {name:'No Bull Home Repairs / Jason',email:'nobullhomerepairs@gmail.com',phone:'(719) 828-9444'},
+    {name:'MY Repair / Mark',email:'yellowgators@aol.com',phone:'(719) 323-5162'},
+    {name:'Robles Residential / David',email:'coloradopmconcierge@gmail.com',phone:'(719) 428-1013'},
+    {name:'Sick of It / Jed',email:'sickofitllccos@gmail.com',phone:'(719) 321-5688'},
+    {name:'CRM / Aidee & Carlos',email:'carlos@crmcleaning.com,aidee@crmcleaning.com',phone:'(719) 362-0588 / (719) 347-1390'},
+  ],
+  cleaning:[
+    {name:'CRM / Aidee & Carlos',email:'carlos@crmcleaning.com,aidee@crmcleaning.com',phone:'(719) 362-0588 / (719) 347-1390'},
+    {name:'OCD / Savannah',email:'Theoriginalcleaningdoctor@gmail.com',phone:'(719) 213-9240'},
+    {name:'Sparklean / Mandy',email:'mandyjordan@live.com',phone:'(720) 629-2573'},
+    {name:'Tidy Coop / Chris (refresh only)',email:'rooster@tidycoop.com',phone:'(719) 422-6717'},
+  ],
+  carpet_clean:[
+    {name:'CRM / Aidee & Carlos',email:'carlos@crmcleaning.com,aidee@crmcleaning.com',phone:'(719) 362-0588 / (719) 347-1390'},
+    {name:'Premier Carpets',email:'719carpets@gmail.com',phone:'(719) 268-1611'},
+    {name:'STOP Restoration / Paul (emergency/backup)',email:'jason@stopcos.com',phone:'(719) 482-8288'},
+  ],
+  carpet_repair:[
+    {name:'Jeff\'s Carpet / Jeff',email:'carpetrepair@outlook.com',phone:'(719) 649-6069'},
+  ],
+  junk:[
+    {name:'Pikes Peak Junk Removal / Anthony',email:'info@pikespeakjunk.com',phone:'(719) 377-1795'},
+  ],
+  landscaping:[
+    {name:'CRM / Aidee & Carlos',email:'carlos@crmcleaning.com,aidee@crmcleaning.com',phone:'(719) 362-0588 / (719) 347-1390'},
+    {name:'Robles Residential / David',email:'coloradopmconcierge@gmail.com',phone:'(719) 428-1013'},
+    {name:'Sick of It / Jed',email:'sickofitllccos@gmail.com',phone:'(719) 321-5688'},
+    {name:'ManageMowed / Kirk',email:'kirk.k@managemowed.com',phone:'(719) 299-2577 / (727) 871-9415'},
+  ],
+  gutter:[
+    {name:'Best Buy Gutter / Chris',email:'bestbuygutter@gmail.com',phone:'(719) 963-0020'},
+  ],
+  tree:[
+    {name:'Affordable Tree & Shrub',email:'affordabletreeandshrub@gmail.com',phone:'(719) 598-8907'},
+    {name:'ManageMowed / Kirk',email:'kirk.k@managemowed.com',phone:'(719) 299-2577 / (727) 871-9415'},
+  ],
+  garage_door:[
+    {name:'Colorado Springs Garage Doors',email:'cspringsgaragedoors@gmail.com',phone:'(719) 291-1088'},
+  ],
+  pooper:[
+    {name:'The Poop Happens',email:'Info@thepoophappens.com',phone:'(719) 306-6761'},
+  ],
+  pest:[],
+};
+
+const CC_EMAIL = 'maggie@alliancecolorado.com';
+const REPLY_TO = 'maggie@alliancecolorado.com';
+
 function uid(){return Math.random().toString(36).substr(2,9);}
 
-/* ---- TOGGLE HELPERS ---- */
-function toggleProp(pid){
-  document.getElementById('pbody_'+pid).classList.toggle('open');
-  document.getElementById('pchev_'+pid).classList.toggle('open');
+// ===================== PROPERTY =====================
+function addProperty(){
+  const inp=document.getElementById('newPropInput');
+  const addr=inp.value.trim();if(!addr){inp.focus();return;}
+  inp.value='';
+  const list=document.getElementById('propertiesList');
+  const empty=list.querySelector('.empty-state');if(empty)empty.remove();
+  const pid='p_'+uid();
+  const card=document.createElement('div');
+  card.className='property-card';card.id=pid;
+  card.innerHTML=buildPropertyHTML(pid,addr);
+  list.appendChild(card);
 }
+
+function removeProperty(pid){
+  const c=document.getElementById(pid);if(c)c.remove();
+  const list=document.getElementById('propertiesList');
+  if(!list.querySelector('.property-card'))
+    list.innerHTML='<div class="empty-state"><div class="icon">🏠</div><h3>No Properties Yet</h3><p>Add a property address above to get started.</p></div>';
+}
+
+function toggleProp(pid){
+  const body=document.getElementById('pbody_'+pid);
+  const chev=document.getElementById('pchev_'+pid);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+// ===================== COMPLETE CHECK =====================
+function checkComplete(pid){
+  const vkeys=['handyman','cleaning','carpet_clean','carpet_repair','junk','landscaping','garage_door','pooper','pest','estimates'];
+  const allDone=vkeys.every(vk=>{
+    const vid=pid+'_'+vk;
+    const yBtn=document.getElementById('yes_'+vid);
+    const nBtn=document.getElementById('no_'+vid);
+    if(!yBtn||!nBtn)return false;
+    return yBtn.classList.contains('active-yes')||nBtn.classList.contains('active-no');
+  });
+  const card=document.getElementById(pid);
+  if(!card)return;
+  if(allDone){
+    card.classList.add('complete');
+    // move to bottom
+    const list=document.getElementById('propertiesList');
+    list.appendChild(card);
+    // collapse
+    const body=document.getElementById('pbody_'+pid);
+    const chev=document.getElementById('pchev_'+pid);
+    if(body)body.classList.remove('open');
+    if(chev)chev.classList.remove('open');
+  } else {
+    card.classList.remove('complete');
+  }
+}
+
+// ===================== VENDOR NEEDED TOGGLE =====================
+function setNeeded(pid,vkey,val){
+  const vid=pid+'_'+vkey;
+  const yBtn=document.getElementById('yes_'+vid);
+  const nBtn=document.getElementById('no_'+vid);
+  const dot=document.getElementById('dot_'+vid);
+  if(!yBtn||!nBtn)return;
+  yBtn.className='toggle-opt'+(val==='yes'?' active-yes':'');
+  nBtn.className='toggle-opt'+(val==='no'?' active-no':'');
+  if(dot){
+    dot.className='vendor-dot'+(val==='yes'?' needed':val==='no'?' not-needed':'');
+  }
+  checkComplete(pid);
+}
+
+// ===================== VENDOR DROPDOWN =====================
+function updateVendorContact(pid,vkey){
+  const sel=document.getElementById('vsel_'+pid+'_'+vkey);
+  const display=document.getElementById('vcontact_'+pid+'_'+vkey);
+  const assignedSpan=document.getElementById('vassigned_'+pid+'_'+vkey);
+  if(!sel||!display)return;
+  const idx=parseInt(sel.value);
+  const list=VENDORS[vkey]||[];
+  if(isNaN(idx)||idx<0){
+    display.style.display='none';
+    if(assignedSpan)assignedSpan.textContent='';
+    return;
+  }
+  const v=list[idx];
+  if(!v){display.style.display='none';return;}
+  display.style.display='block';
+  display.innerHTML=`<strong>${v.name}</strong> &nbsp;|&nbsp; <a href="mailto:${v.email}">${v.email}</a> &nbsp;|&nbsp; ${v.phone}`;
+  if(assignedSpan)assignedSpan.textContent=v.name.split('/')[0].trim();
+}
+
 function toggleVendor(vid){
   document.getElementById('vbody_'+vid).classList.toggle('open');
   document.getElementById('vchev_'+vid).classList.toggle('open');
 }
-function setNeeded(vid,val){
-  document.getElementById('yes_'+vid).className='toggle-opt'+(val==='yes'?' active-yes':'');
-  document.getElementById('no_'+vid).className='toggle-opt'+(val==='no'?' active-no':'');
-  document.getElementById('dot_'+vid).className='vendor-dot'+(val==='yes'?' needed':'');
-}
-function setDet(base,val){
-  const y=document.getElementById(base+'_y');
-  const n=document.getElementById(base+'_n');
-  if(y)y.className='det-btn'+(val==='yes'?' yes':'');
-  if(n)n.className='det-btn'+(val==='no'?' no':'');
-}
+
+// ===================== PAINT =====================
 function selectPaint(selId,otherId){
   setTimeout(()=>{
     const sl=document.getElementById('lbl_'+selId);
@@ -217,20 +369,45 @@ function selectPaint(selId,otherId){
     if(ol)ol.classList.remove('selected');
   },0);
 }
-function toggleRoomBtn(pid,key){
-  const btn=document.getElementById('rtoggle_'+pid+'_'+key);
-  btn.classList.toggle('on');
+
+// ===================== GROUT =====================
+function setGrout(base,val){
+  const yb=document.getElementById(base+'_y');
+  const nb=document.getElementById(base+'_n');
+  const sub=document.getElementById(base+'_sub');
+  if(yb)yb.className='yn-btn'+(val==='yes'?' yes':'');
+  if(nb)nb.className='yn-btn'+(val==='no'?' no':'');
+  if(sub){sub.className='grout-sub'+(val==='yes'?' show':'');}
 }
 
-/* ---- GET CONFIG ---- */
+function setGroutScope(base,val){
+  const pb=document.getElementById(base+'_part');
+  const fb=document.getElementById(base+'_full');
+  if(pb)pb.className='prl'+(val==='partial'?' selected':'');
+  if(fb)fb.className='prl'+(val==='full'?' selected':'');
+}
+
+// ===================== DETECTOR =====================
+function setDet(base,val){
+  const y=document.getElementById(base+'_y');
+  const n=document.getElementById(base+'_n');
+  if(y)y.className='det-btn'+(val==='yes'?' yes':'');
+  if(n)n.className='det-btn'+(val==='no'?' no':'');
+}
+
+// ===================== ROOM TOGGLE =====================
+function toggleRoomBtn(pid,key){
+  document.getElementById('rtoggle_'+pid+'_'+key).classList.toggle('on');
+}
+
 function getConfig(pid){
   const n=k=>parseInt(document.getElementById(k+'_'+pid).value)||0;
   const tog=k=>document.getElementById('rtoggle_'+pid+'_'+k).classList.contains('on');
-  return {
-    beds:n('beds'), baths:n('baths'), halfs:n('halfs'),
-    floors:n('floors'), hallways:n('hallways'), staircases:n('staircases'),
-    livingRoom:tog('living'), loft:tog('loft'), diningRoom:tog('dining'),
-    laundry:tog('laundry'), basement:tog('basement'), garage:tog('garage'), shed:tog('shed')
+  return{
+    beds:n('beds'),baths:n('baths'),halfs:n('halfs'),
+    floors:n('floors'),hallways:n('hallways'),staircases:n('staircases'),
+    livingRoom:tog('living'),loft:tog('loft'),diningRoom:tog('dining'),
+    laundry:tog('laundry'),basement:tog('basement'),garage:tog('garage'),shed:tog('shed')
   };
 }
 
@@ -240,7 +417,7 @@ function applyRooms(pid){
   document.getElementById('clrooms_'+pid).innerHTML=buildCLRooms(pid,cfg);
 }
 
-/* ---- SHARED HELPERS ---- */
+// ===================== HELPERS =====================
 function ci(id,label){
   return '<div class="ci"><input type="checkbox" id="'+id+'" style="accent-color:var(--green)"><label for="'+id+'">'+label+'</label></div>';
 }
@@ -266,6 +443,21 @@ function treatmentsBlock(rk,isPatio){
     (isPatio?ci(rk+'_t_patio_vert','Add/replace patio door vertical blinds')+ci(rk+'_t_patio_rod','Add/replace patio door curtain rod'):'')+
     '<textarea class="ta-plain" placeholder="Notes (e.g. which window or door)..."></textarea>';
 }
+function groutRow(rk){
+  const base=rk+'_grout';
+  return '<div class="yn-row">'+
+    '<span class="yn-label">Inspect shower/tub tile — regrouting needed?</span>'+
+    '<div class="yn-btns">'+
+      '<button class="yn-btn" id="'+base+'_y" onclick="setGrout(\''+base+'\',\'yes\')">YES</button>'+
+      '<button class="yn-btn" id="'+base+'_n" onclick="setGrout(\''+base+'\',\'no\')">NO</button>'+
+    '</div></div>'+
+    '<div class="grout-sub" id="'+base+'_sub">'+
+      '<span>Scope:</span>'+
+      '<label class="prl" id="'+base+'_part" onclick="setGroutScope(\''+base+'\',\'partial\')"><input type="radio" name="grout_'+rk+'" style="display:none"> Partial</label>'+
+      '<label class="prl" id="'+base+'_full" onclick="setGroutScope(\''+base+'\',\'full\')"><input type="radio" name="grout_'+rk+'" style="display:none"> Full</label>'+
+    '</div>';
+}
+
 function hmRoomBlock(rk,hasCabinets,isPatio){
   return ci(rk+'_nails','Pull nails, screws, and hardware from walls')+
     ci(rk+'_patch','Patch holes')+
@@ -276,88 +468,71 @@ function hmRoomBlock(rk,hasCabinets,isPatio){
     treatmentsBlock(rk,isPatio);
 }
 
-/* ===================== HANDYMAN ROOMS ===================== */
+function hmBathroomBlock(rk,isHalf){
+  return ci(rk+'_nails','Pull nails, screws, and hardware from walls')+
+    ci(rk+'_patch','Patch holes')+
+    paintRow(rk)+
+    ci(rk+'_screens','Torn/damaged window screens (repair or replace)')+
+    ci(rk+'_cab_doors','Loose cabinet doors (tighten hinges)')+
+    ci(rk+'_cab_handles','Loose handles on drawers, cabinets, and doors (tighten)')+
+    treatmentsBlock(rk,false)+
+    (!isHalf?'<div class="sec-hdr" style="margin-top:10px;">Tile & Grout</div>'+groutRow(rk):'');
+}
+
+// ===================== HANDYMAN ROOMS =====================
 function buildHMRooms(pid,cfg){
   let h='';
-
-  // Always: Family Room (patio door likely)
-  h+=roomHdr('Family Room');
-  h+=hmRoomBlock(pid+'_hm_family',false,true);
-
-  // Always: Kitchen
-  h+=roomHdr('Kitchen');
-  h+=hmRoomBlock(pid+'_hm_kitchen',true,false);
-
-  // Optional rooms
+  h+=roomHdr('Family Room');h+=hmRoomBlock(pid+'_hm_family',false,true);
+  h+=roomHdr('Kitchen');h+=hmRoomBlock(pid+'_hm_kitchen',true,false);
   if(cfg.livingRoom){h+=roomHdr('Living Room');h+=hmRoomBlock(pid+'_hm_living',false,false);}
   if(cfg.diningRoom){h+=roomHdr('Dining Room');h+=hmRoomBlock(pid+'_hm_dining',false,false);}
   if(cfg.loft){h+=roomHdr('Loft');h+=hmRoomBlock(pid+'_hm_loft',false,false);}
   if(cfg.laundry){h+=roomHdr('Laundry Room');h+=hmRoomBlock(pid+'_hm_laundry',true,false);}
   if(cfg.basement){h+=roomHdr('Basement / Rec Room');h+=hmRoomBlock(pid+'_hm_basement',false,false);}
-
-  // Bedrooms
   for(let b=1;b<=cfg.beds;b++){
     const lbl=b===1?'Primary Bedroom':'Bedroom '+b;
     h+=roomHdr(lbl);h+=hmRoomBlock(pid+'_hm_bed'+b,false,false);
   }
-
-  // Full baths
   for(let b=1;b<=cfg.baths;b++){
     const lbl=b===1?'Primary Bathroom':'Bathroom '+b;
-    h+=roomHdr(lbl);h+=hmRoomBlock(pid+'_hm_bath'+b,true,false);
+    h+=roomHdr(lbl);h+=hmBathroomBlock(pid+'_hm_bath'+b,false);
   }
-
-  // Half baths
   for(let hb=1;hb<=cfg.halfs;hb++){
-    h+=roomHdr('Half Bath '+hb);h+=hmRoomBlock(pid+'_hm_half'+hb,true,false);
+    h+=roomHdr('Half Bath '+hb);h+=hmBathroomBlock(pid+'_hm_half'+hb,true);
   }
-
-  // Hallways
   for(let hw=1;hw<=cfg.hallways;hw++){
     const lbl=cfg.hallways===1?'Hallway':'Hallway '+hw;
     h+=roomHdr(lbl);h+=hmRoomBlock(pid+'_hm_hall'+hw,false,false);
   }
-
-  // Staircases
   for(let sc=1;sc<=cfg.staircases;sc++){
     const lbl=cfg.staircases===1?'Staircase':'Staircase '+sc;
     h+=roomHdr(lbl);h+=hmRoomBlock(pid+'_hm_stair'+sc,false,false);
   }
-
-  // Exterior standalone
   h+='<div class="sec-hdr" style="margin-top:20px;">Exterior</div>';
   h+=ci(pid+'_hm_porch_pw','Power wash covered porch (cobwebs and debris)');
   h+=ci(pid+'_hm_deck_pw','Power wash back patio/deck (stains)');
-
-  // CO / Smoke detectors
   h+='<div class="sec-hdr" style="margin-top:18px;">CO Alarm &amp; Smoke Detector — Per Floor</div>';
   for(let f=1;f<=cfg.floors;f++){
     const flbl=f===1?'Main Level':f===2?'Upper Level':f===3?'Basement Level':'Floor '+f;
     const fk=pid+'_det_'+f;
-    h+='<div class="det-row">'+
-      '<span class="det-label">'+flbl+'</span>'+
-      '<div class="det-right">'+
-        '<div class="det-pairs">'+
-          '<div class="det-group"><span class="det-group-lbl">Smoke Detector</span>'+
-            '<div class="det-btns">'+
-              '<button class="det-btn" id="'+fk+'_sm_y" onclick="setDet(\''+fk+'_sm\',\'yes\')">YES</button>'+
-              '<button class="det-btn" id="'+fk+'_sm_n" onclick="setDet(\''+fk+'_sm\',\'no\')">NO</button>'+
-            '</div></div>'+
-          '<div class="det-group"><span class="det-group-lbl">CO Alarm</span>'+
-            '<div class="det-btns">'+
-              '<button class="det-btn" id="'+fk+'_co_y" onclick="setDet(\''+fk+'_co\',\'yes\')">YES</button>'+
-              '<button class="det-btn" id="'+fk+'_co_n" onclick="setDet(\''+fk+'_co\',\'no\')">NO</button>'+
-            '</div></div>'+
-        '</div>'+
-        '<textarea class="det-note" placeholder="Notes (e.g. move so it is within 15 feet of all bedrooms)..."></textarea>'+
-      '</div>'+
-    '</div>';
+    h+='<div class="det-row"><span class="det-label">'+flbl+'</span>'+
+      '<div class="det-right"><div class="det-pairs">'+
+        '<div class="det-group"><span class="det-group-lbl">Smoke Detector</span>'+
+          '<div class="det-btns">'+
+            '<button class="det-btn" id="'+fk+'_sm_y" onclick="setDet(\''+fk+'_sm\',\'yes\')">YES</button>'+
+            '<button class="det-btn" id="'+fk+'_sm_n" onclick="setDet(\''+fk+'_sm\',\'no\')">NO</button>'+
+          '</div></div>'+
+        '<div class="det-group"><span class="det-group-lbl">CO Alarm</span>'+
+          '<div class="det-btns">'+
+            '<button class="det-btn" id="'+fk+'_co_y" onclick="setDet(\''+fk+'_co\',\'yes\')">YES</button>'+
+            '<button class="det-btn" id="'+fk+'_co_n" onclick="setDet(\''+fk+'_co\',\'no\')">NO</button>'+
+          '</div></div>'+
+      '</div><textarea class="det-note" placeholder="Notes (e.g. move so it is within 15 feet of all bedrooms)..."></textarea></div></div>';
   }
-
   return h;
 }
 
-/* ===================== CLEANING ROOMS ===================== */
+// ===================== CLEANING ROOMS =====================
 function clStdRoom(rk,isPatio){
   return ci(rk+'_1','Check closets for any items left behind')+
     ci(rk+'_2','Dust hanging light fixtures and/or ceiling fans')+
@@ -414,17 +589,13 @@ function clKitchen(kr){
 }
 function buildCLRooms(pid,cfg){
   let h='';
-
-  // Always
   h+=roomHdr('Family Room');h+=clStdRoom(pid+'_cl_family',true);
   h+=roomHdr('Kitchen & Laundry');h+=clKitchen(pid+'_cl_kitchen');
-
   if(cfg.livingRoom){h+=roomHdr('Living Room');h+=clStdRoom(pid+'_cl_living',false);}
   if(cfg.diningRoom){h+=roomHdr('Dining Room');h+=clStdRoom(pid+'_cl_dining',false);}
   if(cfg.loft){h+=roomHdr('Loft');h+=clStdRoom(pid+'_cl_loft',false);}
   if(cfg.laundry){h+=roomHdr('Laundry Room');h+=clStdRoom(pid+'_cl_laundry',false);}
   if(cfg.basement){h+=roomHdr('Basement / Rec Room');h+=clStdRoom(pid+'_cl_basement',false);}
-
   for(let b=1;b<=cfg.beds;b++){
     const lbl=b===1?'Primary Bedroom':'Bedroom '+b;
     h+=roomHdr(lbl);h+=clStdRoom(pid+'_cl_bed'+b,false);
@@ -452,36 +623,103 @@ function buildCLRooms(pid,cfg){
       ci(gr+'_3','Replace any burned out light bulbs')+
       ci(gr+'_4','Replace garage remote/keypad batteries if necessary');
   }
-  if(cfg.shed){
-    h+=roomHdr('Shed');
-    h+=ci(pid+'_cl_shed_1','Sweep shed');
-  }
+  if(cfg.shed){h+=roomHdr('Shed');h+=ci(pid+'_cl_shed_1','Sweep shed');}
   return h;
 }
 
-/* ===================== VENDOR BLOCK ===================== */
-function vendorBlock(pid,vkey,icon,label,startOpen){
-  const vid=pid+'_'+vkey;
-  const dotClass=startOpen?'needed':'';
-  const openClass=startOpen?'open':'';
-  const nt=startOpen;
-  let body='';
+// ===================== VENDOR DROPDOWN HTML =====================
+function vendorDropdown(pid,vkey){
+  const list=VENDORS[vkey]||[];
+  if(!list.length)return'';
+  let opts='<option value="-1">-- Select vendor --</option>';
+  list.forEach((v,i)=>{opts+='<option value="'+i+'">'+v.name+'</option>';});
+  return '<div class="vendor-select-row">'+
+    '<label>Assign Vendor</label>'+
+    '<select class="vendor-select" id="vsel_'+pid+'_'+vkey+'" onchange="updateVendorContact(\''+pid+'\',\''+vkey+'\')">'+opts+'</select>'+
+    '</div>'+
+    '<div class="vendor-contact-display" id="vcontact_'+pid+'_'+vkey+'" style="display:none;margin-bottom:12px;"></div>';
+}
 
-  const needTog=(yes)=>'<div class="needed-toggle"><label>Needed?</label><div class="toggle-options">'+
-    '<button class="toggle-opt'+(yes?' active-yes':'')+'" id="yes_'+vid+'" onclick="setNeeded(\''+vid+'\',\'yes\')">YES</button>'+
-    '<button class="toggle-opt" id="no_'+vid+'" onclick="setNeeded(\''+vid+'\',\'no\')">NO</button>'+
+// ===================== EMAIL GENERATION =====================
+function generateEmail(pid,vkey,addr){
+  const sel=document.getElementById('vsel_'+pid+'_'+vkey);
+  if(!sel)return;
+  const idx=parseInt(sel.value);
+  const list=VENDORS[vkey]||[];
+  if(isNaN(idx)||idx<0){alert('Please assign a vendor first.');return;}
+  const vendor=list[idx];
+  const body=document.getElementById('vbody_'+pid+'_'+vkey)||document.getElementById('vbody_'+pid+'_'+vkey.replace('_','-'));
+
+  // Collect checked items from this vendor's section
+  const vendorBodyEl=document.getElementById('vbody_'+pid+'_'+vkey);
+  if(!vendorBodyEl){alert('Could not find vendor section.');return;}
+  const checks=vendorBodyEl.querySelectorAll('input[type="checkbox"]:checked');
+  const paintSels=vendorBodyEl.querySelectorAll('.prl.selected');
+
+  let lines=[];
+  checks.forEach(cb=>{
+    const lbl=cb.nextElementSibling;
+    if(lbl&&lbl.tagName==='LABEL')lines.push('- '+lbl.textContent.trim());
+  });
+  paintSels.forEach(p=>{
+    const roomHdrEl=p.closest('.vendor-body')?.querySelector('.room-name-input');
+    lines.push('- Paint ('+p.textContent.trim()+')');
+  });
+
+  // Collect notes
+  const notes=vendorBodyEl.querySelectorAll('.notes-ta');
+  let notesText='';
+  notes.forEach(n=>{if(n.value.trim())notesText+='\n\nNotes: '+n.value.trim();});
+
+  const propAddr=document.querySelector('#'+pid+' .property-name input')?.value||addr||'Property';
+  const subject=encodeURIComponent('Work Order: '+propAddr+' — '+vendor.name.split('/')[0].trim());
+  const bodyText=encodeURIComponent(
+    'Hi '+vendor.name.split('/')[0].trim().split(' ')[0]+',\n\n'+
+    'Please see the scope of work needed at the following property:\n\n'+
+    propAddr+'\n\n'+
+    (lines.length?lines.join('\n'):'No specific items checked — please coordinate directly.')+
+    notesText+
+    '\n\nPlease confirm receipt and your availability.\n\nThank you,\nMaggie\nAlliance Property Management\n(719) 355-8688'
+  );
+  const emails=vendor.email.split(',').map(e=>e.trim());
+  const toEmail=encodeURIComponent(emails[0]);
+  const ccEmail=encodeURIComponent(CC_EMAIL+(emails.length>1?','+emails.slice(1).join(','):''));
+  window.location.href='mailto:'+toEmail+'?cc='+ccEmail+'&subject='+subject+'&body='+bodyText;
+}
+
+// ===================== VENDOR BLOCK =====================
+function vendorBlock(pid,vkey,icon,label,cfg){
+  const vid=pid+'_'+vkey;
+  let body='';
+  const needTog='<div class="needed-toggle"><label>Needed?</label><div class="toggle-options">'+
+    '<button class="toggle-opt" id="yes_'+vid+'" onclick="setNeeded(\''+pid+'\',\''+vkey+'\',\'yes\')">YES</button>'+
+    '<button class="toggle-opt" id="no_'+vid+'" onclick="setNeeded(\''+pid+'\',\''+vkey+'\',\'no\')">NO</button>'+
     '</div></div>';
 
+  const emailBtn='<button class="email-btn" onclick="generateEmail(\''+pid+'\',\''+vkey+'\',\'\')">'+
+    '✉️ Send Work Order Email</button>';
+
   if(vkey==='handyman'){
-    body=needTog(true)+
-      '<div id="hmrooms_'+pid+'">'+buildHMRooms(pid,{beds:3,baths:2,halfs:0,floors:2,hallways:1,staircases:1,livingRoom:false,loft:false,diningRoom:true,laundry:true,basement:false,garage:false,shed:false})+'</div>'+
-      notesBlock('Additional notes for handyman...');
+    body=needTog+vendorDropdown(pid,vkey)+
+      '<div id="hmrooms_'+pid+'">'+buildHMRooms(pid,cfg)+'</div>'+
+      notesBlock('Additional notes for handyman...')+emailBtn;
   } else if(vkey==='cleaning'){
-    body=needTog(true)+
-      '<div id="clrooms_'+pid+'">'+buildCLRooms(pid,{beds:3,baths:2,halfs:0,floors:2,hallways:1,staircases:1,livingRoom:false,loft:false,diningRoom:true,laundry:true,basement:false,garage:true,shed:false})+'</div>'+
-      notesBlock('Additional notes for cleaners...');
+    body=needTog+vendorDropdown(pid,vkey)+
+      '<div id="clrooms_'+pid+'">'+buildCLRooms(pid,cfg)+'</div>'+
+      notesBlock('Additional notes for cleaners...')+emailBtn;
+  } else if(vkey==='carpet_clean'){
+    body=needTog+vendorDropdown(pid,vkey)+
+      ci(vid+'_c1','Strong pet odors noted')+
+      ci(vid+'_c2','Heavily stained')+
+      notesBlock('Additional notes for carpet cleaning...')+emailBtn;
+  } else if(vkey==='carpet_repair'){
+    body=needTog+vendorDropdown(pid,vkey)+
+      '<div class="itr"><input type="checkbox" style="accent-color:var(--green)"><label>Carpet stretching</label><input class="itr-input" placeholder="Room location..."></div>'+
+      '<div class="itr"><input type="checkbox" style="accent-color:var(--green)"><label>Repair threshold</label><input class="itr-input" placeholder="Room location..."></div>'+
+      '<div class="itr"><input type="checkbox" style="accent-color:var(--green)"><label>Patch stained carpet</label><input class="itr-input" placeholder="Room location..."></div>'+
+      notesBlock('Additional notes for carpet repairs...')+emailBtn;
   } else if(vkey==='junk'){
-    body=needTog(false)+
+    body=needTog+vendorDropdown(pid,vkey)+
       ci(vid+'_j1','Empty garage (leave any flooring, paint, and construction materials)')+
       ci(vid+'_j2','Empty kitchen cabinets/drawers')+
       ci(vid+'_j3','Empty kitchen appliances')+
@@ -492,30 +730,39 @@ function vendorBlock(pid,vkey,icon,label,startOpen){
       ci(vid+'_j8','Leave HOA-provided trash canisters')+
       ci(vid+'_j9','Empty unfinished basement (leave any flooring, paint, and construction materials)')+
       ci(vid+'_j10','Empty shed')+
-      notesBlock('Additional notes for junk removal...');
-  } else if(vkey==='carpet_clean'){
-    body=needTog(false)+
-      ci(vid+'_c1','Strong pet odors noted')+
-      ci(vid+'_c2','Heavily stained')+
-      notesBlock('Additional notes for carpet cleaning...');
-  } else if(vkey==='carpet_repair'){
-    body=needTog(false)+
-      '<div class="itr"><input type="checkbox" style="accent-color:var(--green)"><label>Carpet stretching</label><input class="itr-input" placeholder="Room location..."></div>'+
-      '<div class="itr"><input type="checkbox" style="accent-color:var(--green)"><label>Repair threshold</label><input class="itr-input" placeholder="Room location..."></div>'+
-      '<div class="itr"><input type="checkbox" style="accent-color:var(--green)"><label>Patch stained carpet</label><input class="itr-input" placeholder="Room location..."></div>'+
-      notesBlock('Additional notes for carpet repairs...');
+      notesBlock('Additional notes for junk removal...')+emailBtn;
   } else if(vkey==='landscaping'){
-    body=needTog(false)+
+    body=needTog+vendorDropdown(pid,vkey)+
       ci(vid+'_l1','One-time clean-up (weeds)')+
       ci(vid+'_l2','One-time clean-up (leaf and debris blow-off)')+
       ci(vid+'_l3','Add to biweekly mow schedule')+
+      '<div class="sec-hdr">Tree Trimming</div>'+
       ci(vid+'_l4','Estimate needed: tree trimming (overhanging roof/touching house)')+
+      '<div class="vendor-select-row" style="margin-top:8px;"><label>Tree Vendor</label>'+
+        '<select class="vendor-select" id="vsel_'+pid+'_tree" onchange="updateVendorContact(\''+pid+'\',\'tree\')">'+
+          '<option value="-1">-- Select vendor --</option>'+
+          VENDORS.tree.map((v,i)=>'<option value="'+i+'">'+v.name+'</option>').join('')+
+        '</select></div>'+
+      '<div class="vendor-contact-display" id="vcontact_'+pid+'_tree" style="display:none;margin-bottom:8px;"></div>'+
       '<div class="itr"><input type="checkbox" style="accent-color:var(--green)"><label>Estimate needed: remove naturally growing shoots near</label><input class="itr-input" placeholder="Corner of house/yard..."></div>'+
-      notesBlock('Additional notes for landscaping...');
+      '<div class="sec-hdr">Gutter Clean-Out</div>'+
+      ci(vid+'_gutter','Gutter clean-out needed')+
+      '<div class="vendor-select-row" style="margin-top:6px;"><label>Gutter Vendor</label>'+
+        '<select class="vendor-select" id="vsel_'+pid+'_gutter" onchange="updateVendorContact(\''+pid+'\',\'gutter\')">'+
+          '<option value="-1">-- Select vendor --</option>'+
+          VENDORS.gutter.map((v,i)=>'<option value="'+i+'">'+v.name+'</option>').join('')+
+        '</select></div>'+
+      '<div class="vendor-contact-display" id="vcontact_'+pid+'_gutter" style="display:none;margin-bottom:8px;"></div>'+
+      notesBlock('Additional notes for landscaping...')+emailBtn;
+  } else if(vkey==='garage_door'){
+    body=needTog+vendorDropdown(pid,vkey)+
+      '<div class="dr"><div class="dr-top"><input type="checkbox" style="accent-color:var(--green);width:15px;height:15px;"><label>Issue description</label></div><textarea placeholder="Describe what is wrong with the garage door..."></textarea></div>'+
+      notesBlock('Additional notes for garage door...')+emailBtn;
   } else if(vkey==='pooper'){
-    body=needTog(false)+notesBlock('Additional notes for pooper scoopers...');
+    body=needTog+vendorDropdown(pid,vkey)+
+      notesBlock('Additional notes for pooper scoopers...')+emailBtn;
   } else if(vkey==='pest'){
-    body=needTog(false)+
+    body=needTog+
       ci(vid+'_p1','Spiders')+ci(vid+'_p2','General pests')+ci(vid+'_p3','Mice')+
       '<div class="ci" style="flex-direction:column;align-items:flex-start;gap:4px;">'+
         '<div style="display:flex;align-items:center;gap:9px;"><input type="checkbox" style="accent-color:var(--green);width:15px;height:15px;"><label style="font-size:13px;color:var(--gray-700);">Wasp nests</label></div>'+
@@ -535,50 +782,29 @@ function vendorBlock(pid,vkey,icon,label,startOpen){
       notesBlock('Additional notes for estimates...');
   }
 
+  const hasVendor=(VENDORS[vkey]||[]).length>0;
   return '<div class="vendor-block">'+
     '<div class="vendor-header" onclick="toggleVendor(\''+vid+'\')">'+
-      '<div class="vendor-dot '+dotClass+'" id="dot_'+vid+'"></div>'+
+      '<div class="vendor-dot" id="dot_'+vid+'"></div>'+
       '<span class="vendor-name">'+icon+' '+label+'</span>'+
-      '<span class="vendor-chevron '+openClass+'" id="vchev_'+vid+'">▼</span>'+
+      '<span class="vendor-assigned" id="vassigned_'+pid+'_'+vkey+'"></span>'+
+      '<span class="vendor-chevron" id="vchev_'+vid+'">▼</span>'+
     '</div>'+
-    '<div class="vendor-body '+openClass+'" id="vbody_'+vid+'">'+body+'</div>'+
+    '<div class="vendor-body" id="vbody_'+vid+'">'+body+'</div>'+
   '</div>';
 }
 
-/* ===================== ROOM TOGGLE BUTTON ===================== */
-function roomToggleBtn(pid,key,label){
-  return '<button class="room-toggle-btn" id="rtoggle_'+pid+'_'+key+'" onclick="toggleRoomBtn(\''+pid+'\',\''+key+'\')">'+
-    '<span class="dot"></span>'+label+'</button>';
-}
-function toggleRoomBtn(pid,key){
-  document.getElementById('rtoggle_'+pid+'_'+key).classList.toggle('on');
-}
-
-/* ===================== PROPERTY HTML ===================== */
-function addProperty(){
-  const inp=document.getElementById('newPropInput');
-  const addr=inp.value.trim();if(!addr){inp.focus();return;}
-  inp.value='';
-  const list=document.getElementById('propertiesList');
-  const empty=list.querySelector('.empty-state');if(empty)empty.remove();
-  const pid='p_'+uid();
-  const card=document.createElement('div');
-  card.className='property-card';card.id=pid;
-  card.innerHTML=buildPropertyHTML(pid,addr);
-  list.appendChild(card);
-}
-function removeProperty(pid){
-  const c=document.getElementById(pid);if(c)c.remove();
-  const list=document.getElementById('propertiesList');
-  if(!list.querySelector('.property-card'))
-    list.innerHTML='<div class="empty-state"><div class="icon">🏠</div><h3>No Properties Yet</h3><p>Add a property address above to get started.</p></div>';
-}
-
+// ===================== PROPERTY HTML =====================
 function buildPropertyHTML(pid,addr){
+  const defaultCfg={beds:3,baths:2,halfs:0,floors:2,hallways:1,staircases:1,livingRoom:false,loft:false,diningRoom:true,laundry:true,basement:false,garage:false,shed:false};
+  function rtb(key,label){
+    return '<button class="room-toggle-btn'+(defaultCfg[key]?' on':'')+'" id="rtoggle_'+pid+'_'+key+'" onclick="toggleRoomBtn(\''+pid+'\',\''+key+'\')"><span class="dot"></span>'+label+'</button>';
+  }
   return '<div class="property-header" onclick="toggleProp(\''+pid+'\')">'+
     '<div class="property-icon">🏠</div>'+
     '<div class="property-name"><input value="'+addr+'" placeholder="Address" onclick="event.stopPropagation()"></div>'+
-    '<div class="property-controls">'+
+    '<div class="prop-controls">'+
+      '<span class="complete-badge">✓ SCHEDULED</span>'+
       '<button class="btn-remove-prop" onclick="event.stopPropagation();removeProperty(\''+pid+'\')">Remove</button>'+
       '<span class="chevron open" id="pchev_'+pid+'">▼</span>'+
     '</div>'+
@@ -586,7 +812,6 @@ function buildPropertyHTML(pid,addr){
   '<div class="property-body open" id="pbody_'+pid+'">'+
     '<div class="property-setup">'+
       '<div class="setup-title">Property Configuration</div>'+
-
       '<div class="setup-group-label">Counts</div>'+
       '<div class="setup-row">'+
         '<div class="setup-field"><label>Bedrooms</label><input type="number" id="beds_'+pid+'" min="0" max="10" value="3"></div>'+
@@ -596,30 +821,25 @@ function buildPropertyHTML(pid,addr){
         '<div class="setup-field"><label>Hallways</label><input type="number" id="hallways_'+pid+'" min="0" max="5" value="1"></div>'+
         '<div class="setup-field"><label>Staircases</label><input type="number" id="staircases_'+pid+'" min="0" max="4" value="1"></div>'+
       '</div>'+
-
       '<div class="setup-group-label">Optional Rooms — tap to include</div>'+
       '<div class="room-toggles">'+
-        roomToggleBtn(pid,'living','Living Room')+
-        roomToggleBtn(pid,'dining','Dining Room')+
-        roomToggleBtn(pid,'loft','Loft')+
-        roomToggleBtn(pid,'laundry','Laundry Room')+
-        roomToggleBtn(pid,'basement','Basement / Rec Room')+
-        roomToggleBtn(pid,'garage','Garage')+
-        roomToggleBtn(pid,'shed','Shed')+
+        rtb('living','Living Room')+rtb('dining','Dining Room')+rtb('loft','Loft')+
+        rtb('laundry','Laundry Room')+rtb('basement','Basement / Rec Room')+
+        rtb('garage','Garage')+rtb('shed','Shed')+
       '</div>'+
-
       '<button class="btn-apply" onclick="applyRooms(\''+pid+'\')">Apply Configuration</button>'+
     '</div>'+
     '<div class="vendors-list">'+
-      vendorBlock(pid,'handyman','🔨','Handyman',true)+
-      vendorBlock(pid,'cleaning','🧹','Cleaning',true)+
-      vendorBlock(pid,'junk','🗑️','Junk Removal',false)+
-      vendorBlock(pid,'carpet_clean','🟤','Carpet Cleaning',false)+
-      vendorBlock(pid,'carpet_repair','🔧','Carpet Repairs',false)+
-      vendorBlock(pid,'landscaping','🌿','Landscaping',false)+
-      vendorBlock(pid,'pooper','🐾','Pooper Scoopers',false)+
-      vendorBlock(pid,'pest','🐜','Pest Control',false)+
-      vendorBlock(pid,'estimates','📋','Estimates Needed',false)+
+      vendorBlock(pid,'handyman','🔨','Handyman',defaultCfg)+
+      vendorBlock(pid,'cleaning','🧹','Cleaning',defaultCfg)+
+      vendorBlock(pid,'carpet_clean','🟤','Carpet Cleaning',defaultCfg)+
+      vendorBlock(pid,'carpet_repair','🔧','Carpet Repairs',defaultCfg)+
+      vendorBlock(pid,'junk','🗑️','Junk Removal',defaultCfg)+
+      vendorBlock(pid,'landscaping','🌿','Landscaping',defaultCfg)+
+      vendorBlock(pid,'garage_door','🚪','Garage Door',defaultCfg)+
+      vendorBlock(pid,'pooper','🐾','Animal Waste Clean-Up',defaultCfg)+
+      vendorBlock(pid,'pest','🐜','Pest Control',defaultCfg)+
+      vendorBlock(pid,'estimates','📋','Estimates Needed',defaultCfg)+
     '</div>'+
   '</div>';
 }
