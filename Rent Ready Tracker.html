@@ -9,177 +9,144 @@
 <title>Rent Ready Tracker</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap');
-
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #22263a;
-    --border: #2e3350;
-    --accent: #f0c040;
-    --accent3: #f87171;
-    --text: #e8eaf6;
-    --muted: #6b7280;
-    --inprogress: #f0c040;
-    --complete: #4fd1c5;
-    --purple: #a78bfa;
-    --radius: 10px;
+    --bg:#0f1117; --surface:#1a1d27; --surface2:#22263a; --border:#2e3350;
+    --accent:#f0c040; --accent3:#f87171; --text:#e8eaf6; --muted:#6b7280;
+    --inprogress:#f0c040; --complete:#4fd1c5; --purple:#a78bfa; --radius:10px;
   }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'DM Mono',monospace;background:var(--bg);color:var(--text);min-height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);}
+  header{background:var(--surface);border-bottom:2px solid var(--accent);padding:18px 16px 14px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .header-title{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.5px;color:var(--text);line-height:1;}
+  .header-title span{color:var(--accent);}
+  .sync-indicator{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;flex-shrink:0;}
+  .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);transition:background 0.3s;}
+  .sync-dot.syncing{background:var(--inprogress);animation:pulse 1s infinite;}
+  .sync-dot.synced{background:var(--complete);}
+  .sync-dot.error{background:var(--accent3);}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  #pull-indicator{text-align:center;height:0;overflow:hidden;color:var(--muted);font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px;transition:height 0.15s;}
+  #pull-indicator.visible{height:44px;}
+  #pull-indicator.release{color:var(--accent);}
+  main{padding:12px;display:flex;flex-direction:column;gap:12px;}
+  .stats-bar{display:flex;gap:8px;}
+  .stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;flex:1;text-align:center;}
+  .stat-num{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;line-height:1;margin-bottom:2px;}
+  .stat-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  /* Search */
+  .search-wrap{position:relative;}
+  .search-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;padding:10px 14px 10px 36px;outline:none;transition:border-color 0.15s;}
+  .search-input:focus{border-color:var(--accent);}
+  .search-input::placeholder{color:var(--muted);}
+  .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;}
+  .search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;display:none;padding:2px 4px;}
+  .search-clear.visible{display:block;}
 
-  body {
-    font-family: 'DM Mono', monospace;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100dvh;
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-  }
+  /* Cards */
+  .property-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color 0.2s;margin-bottom:10px;}
+  .property-card:last-child{margin-bottom:0;}
+  .property-card.mic-warning{border-color:var(--accent3);}
+  .property-card.all-done{border-color:var(--complete);}
+  .property-header{display:flex;align-items:center;padding:12px 14px;cursor:pointer;user-select:none;background:var(--surface2);gap:8px;}
+  .property-address{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);flex:1;letter-spacing:-0.3px;}
+  .address-edit-input{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);background:var(--bg);border:1.5px solid var(--accent);border-radius:6px;padding:4px 8px;flex:1;outline:none;}
+  .edit-address-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:4px;flex-shrink:0;line-height:1;}
+  .header-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .progress-bar-wrap{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .progress-bar{width:50px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--complete);border-radius:2px;transition:width 0.4s ease;}
+  .progress-pct{font-size:10px;color:var(--muted);min-width:28px;text-align:right;}
+  .chevron{color:var(--muted);font-size:12px;transition:transform 0.2s;flex-shrink:0;}
+  .property-card.open .chevron{transform:rotate(180deg);}
+  .btn-delete{background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);color:var(--accent3);border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;flex-shrink:0;line-height:1;}
+  .btn-delete:active{background:rgba(248,113,113,0.25);}
+  .vendor-grid{display:none;flex-direction:column;}
+  .property-card.open .vendor-grid{display:flex;}
 
-  header {
-    background: var(--surface);
-    border-bottom: 2px solid var(--accent);
-    padding: 18px 16px 14px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
+  /* Date fields */
+  .dates-row{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border);background:rgba(167,139,250,0.03);flex-wrap:wrap;}
+  .date-field{display:flex;flex-direction:column;gap:3px;flex:1;min-width:130px;}
+  .date-field-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;}
+  .date-field-input{background:var(--bg);border:1.5px solid var(--border);border-radius:7px;color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;padding:5px 8px;outline:none;cursor:pointer;transition:border-color 0.15s,color 0.15s;width:100%;}
+  .date-field-input:focus{border-color:var(--accent);}
+  .date-field-input.has-date{border-color:var(--inprogress);color:var(--inprogress);}
+  .date-field-input.lease-date.has-date{border-color:var(--purple);color:var(--purple);}
+  .date-field-input::-webkit-calendar-picker-indicator{filter:invert(0.5);cursor:pointer;}
 
-  .header-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; color: var(--text); line-height: 1; }
-  .header-title span { color: var(--accent); }
+  .vendor-row{display:flex;align-items:center;padding:8px 14px;border-top:1px solid var(--border);gap:8px;flex-wrap:wrap;}
+  .vendor-row:active{background:var(--surface2);}
+  .vendor-icon{font-size:16px;width:24px;text-align:center;flex-shrink:0;}
+  .vendor-name{font-size:12px;color:var(--text);flex:1;text-transform:uppercase;font-weight:500;min-width:80px;}
+  .status-dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background 0.2s;}
+  .vendor-controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;flex:1;}
+  .vendor-date{background:var(--bg);border:1.5px solid var(--border);border-radius:8px;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;padding:4px 6px;outline:none;cursor:pointer;transition:border-color 0.15s,color 0.15s;min-width:100px;}
+  .vendor-date:focus{border-color:var(--accent);}
+  .vendor-date.has-date{border-color:var(--inprogress);color:var(--inprogress);}
+  .vendor-date::-webkit-calendar-picker-indicator{filter:invert(0.5);cursor:pointer;}
+  .mic-row{display:flex;align-items:center;padding:11px 14px;border-top:1px solid var(--border);gap:10px;background:rgba(167,139,250,0.04);}
+  .mic-badge{font-size:15px;flex-shrink:0;}
+  .mic-label{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--text);flex:1;text-transform:uppercase;}
+  .notes-row{border-top:1px solid var(--border);padding:10px 14px;background:rgba(79,209,197,0.02);}
+  .notes-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+  .notes-textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;padding:10px 12px;outline:none;resize:none;min-height:70px;transition:border-color 0.15s;line-height:1.5;}
+  .notes-textarea:focus{border-color:var(--complete);}
+  .notes-textarea::placeholder{color:var(--muted);}
+  .radio-group{display:flex;gap:4px;flex-shrink:0;}
+  .radio-pill input[type="radio"]{display:none;}
+  .radio-pill label{display:flex;align-items:center;justify-content:center;padding:5px 9px;border-radius:20px;border:1.5px solid var(--border);font-size:10px;font-weight:500;cursor:pointer;color:var(--muted);background:var(--bg);transition:all 0.15s;white-space:nowrap;-webkit-user-select:none;user-select:none;}
+  .radio-pill label:active{transform:scale(0.94);}
+  .radio-pill input[value="na"]:checked+label{background:rgba(107,114,128,0.18);border-color:#6b7280;color:#6b7280;}
+  .radio-pill input[value="ip"]:checked+label{background:rgba(240,192,64,0.15);border-color:var(--inprogress);color:var(--inprogress);}
+  .radio-pill input[value="done"]:checked+label{background:rgba(79,209,197,0.15);border-color:var(--complete);color:var(--complete);}
+  .radio-pill input[value="no"]:checked+label{background:rgba(248,113,113,0.18);border-color:var(--accent3);color:var(--accent3);}
+  .radio-pill input[value="yes"]:checked+label{background:rgba(79,209,197,0.18);border-color:var(--complete);color:var(--complete);}
+  .radio-pill input[value="micdone"]:checked+label{background:rgba(167,139,250,0.18);border-color:var(--purple);color:var(--purple);}
 
-  .sync-indicator { font-size: 10px; color: var(--muted); display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
-  .sync-dot.syncing { background: var(--inprogress); animation: pulse 1s infinite; }
-  .sync-dot.synced { background: var(--complete); }
-  .sync-dot.error { background: var(--accent3); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  /* Completed banners */
+  .section-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:4px 2px;}
+  .completed-banner{background:rgba(167,139,250,0.06);border:1px solid var(--purple);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .completed-banner:last-child{margin-bottom:0;}
+  .completed-banner-address{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--purple);flex:1;text-decoration:line-through;opacity:0.8;}
+  .completed-badge{font-size:10px;color:var(--purple);background:rgba(167,139,250,0.15);border:1px solid var(--purple);border-radius:20px;padding:3px 8px;font-weight:600;flex-shrink:0;}
+  .restore-btn{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;flex-shrink:0;padding:4px;}
 
-  #pull-indicator { text-align: center; height: 0; overflow: hidden; color: var(--muted); font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: height 0.15s; }
-  #pull-indicator.visible { height: 44px; }
-  #pull-indicator.release { color: var(--accent); }
+  /* Archive */
+  .archive-toggle{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;user-select:none;margin-top:4px;}
+  .archive-toggle-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;flex:1;}
+  .archive-count{font-size:10px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:2px 8px;}
+  .archive-chevron{color:var(--muted);font-size:11px;transition:transform 0.2s;}
+  .archive-chevron.open{transform:rotate(180deg);}
+  .archive-body{display:none;margin-top:8px;display:flex;flex-direction:column;gap:8px;}
+  .archive-body.open{display:flex;}
+  .archive-search-wrap{position:relative;}
+  .archive-item{background:rgba(107,114,128,0.06);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;opacity:0.6;}
+  .archive-item-address{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--muted);flex:1;}
+  .archive-item-meta{font-size:10px;color:var(--muted);}
+  .archive-restore-btn{background:none;border:1px solid var(--border);color:var(--muted);font-size:10px;cursor:pointer;font-family:'DM Mono',monospace;flex-shrink:0;padding:3px 8px;border-radius:5px;}
 
-  main { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+  /* No-results */
+  .no-results{text-align:center;padding:24px;color:var(--muted);font-size:12px;}
 
-  .stats-bar { display: flex; gap: 8px; }
-  .stat-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; flex: 1; text-align: center; }
-  .stat-num { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; line-height: 1; margin-bottom: 2px; }
-  .stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-
-  .property-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s; }
-  .property-card.mic-warning { border-color: var(--accent3); }
-  .property-card.all-done { border-color: var(--complete); }
-
-  .property-header { display: flex; align-items: center; padding: 12px 14px; cursor: pointer; user-select: none; background: var(--surface2); gap: 8px; }
-  .property-address { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--text); flex: 1; letter-spacing: -0.3px; }
-  .address-edit-input { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--text); background: var(--bg); border: 1.5px solid var(--accent); border-radius: 6px; padding: 4px 8px; flex: 1; outline: none; }
-  .edit-address-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; padding: 4px; flex-shrink: 0; line-height: 1; }
-
-  .progress-bar-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-  .progress-bar { width: 50px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--complete); border-radius: 2px; transition: width 0.4s ease; }
-  .progress-pct { font-size: 10px; color: var(--muted); min-width: 28px; text-align: right; }
-  .chevron { color: var(--muted); font-size: 12px; margin-left: 4px; transition: transform 0.2s; flex-shrink: 0; }
-  .property-card.open .chevron { transform: rotate(180deg); }
-
-  .vendor-grid { display: none; flex-direction: column; }
-  .property-card.open .vendor-grid { display: flex; }
-
-  .vendor-row { display: flex; align-items: center; padding: 8px 14px; border-top: 1px solid var(--border); gap: 8px; flex-wrap: wrap; }
-  .vendor-row:active { background: var(--surface2); }
-  .vendor-icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
-  .vendor-name { font-size: 12px; color: var(--text); flex: 1; text-transform: uppercase; font-weight: 500; min-width: 80px; }
-  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: background 0.2s; }
-
-  .vendor-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; flex: 1; }
-
-  /* Date picker */
-  .vendor-date {
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    padding: 4px 6px;
-    outline: none;
-    cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
-    min-width: 100px;
-  }
-  .vendor-date:focus { border-color: var(--accent); }
-  .vendor-date.has-date { border-color: var(--inprogress); color: var(--inprogress); }
-
-  /* Webkit date input styling */
-  .vendor-date::-webkit-calendar-picker-indicator {
-    filter: invert(0.5);
-    cursor: pointer;
-  }
-
-  .mic-row { display: flex; align-items: center; padding: 11px 14px; border-top: 1px solid var(--border); gap: 10px; background: rgba(167,139,250,0.04); }
-  .mic-badge { font-size: 15px; flex-shrink: 0; }
-  .mic-label { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: var(--text); flex: 1; text-transform: uppercase; }
-
-  /* Notes row */
-  .notes-row { border-top: 1px solid var(--border); padding: 10px 14px; background: rgba(79,209,197,0.02); }
-  .notes-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-  .notes-textarea {
-    width: 100%;
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    padding: 10px 12px;
-    outline: none;
-    resize: none;
-    min-height: 70px;
-    transition: border-color 0.15s;
-    line-height: 1.5;
-  }
-  .notes-textarea:focus { border-color: var(--complete); }
-  .notes-textarea::placeholder { color: var(--muted); }
-
-  .radio-group { display: flex; gap: 4px; flex-shrink: 0; }
-  .radio-pill input[type="radio"] { display: none; }
-  .radio-pill label { display: flex; align-items: center; justify-content: center; padding: 5px 9px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 10px; font-weight: 500; cursor: pointer; color: var(--muted); background: var(--bg); transition: all 0.15s; white-space: nowrap; -webkit-user-select: none; user-select: none; }
-  .radio-pill label:active { transform: scale(0.94); }
-  .radio-pill input[value="na"]:checked + label { background: rgba(107,114,128,0.18); border-color: #6b7280; color: #6b7280; }
-  .radio-pill input[value="ip"]:checked + label { background: rgba(240,192,64,0.15); border-color: var(--inprogress); color: var(--inprogress); }
-  .radio-pill input[value="done"]:checked + label { background: rgba(79,209,197,0.15); border-color: var(--complete); color: var(--complete); }
-  .radio-pill input[value="no"]:checked + label { background: rgba(248,113,113,0.18); border-color: var(--accent3); color: var(--accent3); }
-  .radio-pill input[value="yes"]:checked + label { background: rgba(79,209,197,0.18); border-color: var(--complete); color: var(--complete); }
-  .radio-pill input[value="micdone"]:checked + label { background: rgba(167,139,250,0.18); border-color: var(--purple); color: var(--purple); }
-
-  .section-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; padding: 4px 2px; }
-  .completed-banner { background: rgba(167,139,250,0.06); border: 1px solid var(--purple); border-radius: var(--radius); padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
-  .completed-banner-address { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--purple); flex: 1; text-decoration: line-through; opacity: 0.8; }
-  .completed-badge { font-size: 10px; color: var(--purple); background: rgba(167,139,250,0.15); border: 1px solid var(--purple); border-radius: 20px; padding: 3px 8px; font-weight: 600; flex-shrink: 0; }
-  .restore-btn { background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; font-family: 'DM Mono', monospace; flex-shrink: 0; padding: 4px; }
-
-  .fab { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom)); right: 16px; width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #0f1117; border: none; font-size: 26px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(240,192,64,0.4); display: flex; align-items: center; justify-content: center; z-index: 200; transition: transform 0.15s; }
-  .fab:active { transform: scale(0.9); }
-
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; align-items: flex-end; justify-content: center; }
-  .modal-overlay.visible { display: flex; }
-  .modal { background: var(--surface); border-radius: 20px 20px 0 0; padding: 24px 20px calc(24px + env(safe-area-inset-bottom)); width: 100%; max-width: 500px; animation: slideUp 0.25s ease; }
-  @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-  .modal h2 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 16px; color: var(--text); }
-  .modal input { width: 100%; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; padding: 12px 14px; outline: none; margin-bottom: 14px; }
-  .modal input:focus { border-color: var(--accent); }
-  .modal-actions { display: flex; gap: 10px; }
-  .btn { flex: 1; padding: 13px; border-radius: 8px; border: none; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; cursor: pointer; }
-  .btn-primary { background: var(--accent); color: #0f1117; }
-  .btn-ghost { background: var(--surface2); color: var(--muted); }
-
-  .empty { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 13px; line-height: 1.8; }
-  .empty-icon { font-size: 40px; margin-bottom: 12px; }
-  .empty strong { color: var(--text); font-family: 'Syne', sans-serif; font-size: 16px; display: block; margin-bottom: 6px; }
-  .bottom-spacer { height: 80px; }
+  /* FAB & Modal */
+  .fab{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));right:16px;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#0f1117;border:none;font-size:26px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(240,192,64,0.4);display:flex;align-items:center;justify-content:center;z-index:200;transition:transform 0.15s;}
+  .fab:active{transform:scale(0.9);}
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300;align-items:flex-end;justify-content:center;}
+  .modal-overlay.visible{display:flex;}
+  .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom));width:100%;max-width:500px;animation:slideUp 0.25s ease;}
+  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .modal h2{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:16px;color:var(--text);}
+  .modal input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:14px;padding:12px 14px;outline:none;margin-bottom:14px;}
+  .modal input:focus{border-color:var(--accent);}
+  .modal-actions{display:flex;gap:10px;}
+  .btn{flex:1;padding:13px;border-radius:8px;border:none;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;cursor:pointer;}
+  .btn-primary{background:var(--accent);color:#0f1117;}
+  .btn-ghost{background:var(--surface2);color:var(--muted);}
+  .empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:13px;line-height:1.8;}
+  .empty-icon{font-size:40px;margin-bottom:12px;}
+  .empty strong{color:var(--text);font-family:'Syne',sans-serif;font-size:16px;display:block;margin-bottom:6px;}
+  .bottom-spacer{height:80px;}
+  .hidden{display:none!important;}
 </style>
 </head>
 <body>
@@ -200,8 +167,34 @@
     <div class="stat-chip"><div class="stat-num" id="stat-inprog" style="color:var(--inprogress)">0</div><div class="stat-label">In Progress</div></div>
     <div class="stat-chip"><div class="stat-num" id="stat-done" style="color:var(--purple)">0</div><div class="stat-label">MIC Done</div></div>
   </div>
+
+  <!-- Active search -->
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="active-search" placeholder="Search active properties..." autocomplete="off" autocorrect="off" spellcheck="false">
+    <button class="search-clear" id="active-search-clear">×</button>
+  </div>
+
   <div id="cards-container"></div>
-  <div id="completed-section" style="display:flex;flex-direction:column;gap:8px;"></div>
+  <div id="completed-section" style="display:flex;flex-direction:column;gap:0;"></div>
+
+  <!-- Archive -->
+  <div id="archive-wrap" style="display:none;">
+    <div class="archive-toggle" id="archive-toggle">
+      <span class="archive-toggle-label">📦 Archive</span>
+      <span class="archive-count" id="archive-count">0</span>
+      <span class="archive-chevron" id="archive-chevron">▼</span>
+    </div>
+    <div class="archive-body" id="archive-body">
+      <div class="search-wrap archive-search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="archive-search" placeholder="Search archive..." autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="search-clear" id="archive-search-clear">×</button>
+      </div>
+      <div id="archive-list"></div>
+    </div>
+  </div>
+
   <div class="bottom-spacer"></div>
 </main>
 
@@ -221,6 +214,7 @@
 <script>
 const BASE = 'https://yudtghbbiqkqcjhchulx.supabase.co/rest/v1';
 const KEY  = 'sb_publishable_fLzk6kaug0Uor6B3ywZunA_gL7egj3v';
+const ARCHIVE_DAYS = 30;
 
 const VENDORS = [
   { key:'handyman', label:'Handyman',       icon:'🔧' },
@@ -232,6 +226,7 @@ const VENDORS = [
 ];
 
 let props = [];
+let archiveOpen = false;
 
 function hdr(extra) {
   return Object.assign({
@@ -250,7 +245,7 @@ function sync(state) {
 async function fetchAll() {
   sync('syncing');
   try {
-    const r = await fetch(BASE+'/properties?order=sort_order.asc,created_at.asc', {headers:hdr()});
+    const r = await fetch(BASE+'/properties?order=lease_start.asc.nullslast,created_at.asc', {headers:hdr()});
     if (!r.ok) throw new Error(await r.text());
     props = await r.json();
     sync('synced');
@@ -270,11 +265,7 @@ async function insertProp(data) {
     const rows = await r.json();
     sync('synced');
     return rows[0];
-  } catch(e) {
-    console.error('insert:', e);
-    sync('error');
-    return null;
-  }
+  } catch(e) { console.error('insert:', e); sync('error'); return null; }
 }
 
 async function updateProp(id, data) {
@@ -283,10 +274,7 @@ async function updateProp(id, data) {
     const r = await fetch(BASE+'/properties?id=eq.'+id, {method:'PATCH', headers:hdr(), body:JSON.stringify(data)});
     if (!r.ok) throw new Error(await r.text());
     sync('synced');
-  } catch(e) {
-    console.error('update:', e);
-    sync('error');
-  }
+  } catch(e) { console.error('update:', e); sync('error'); }
 }
 
 async function deleteProp(id) {
@@ -295,66 +283,137 @@ async function deleteProp(id) {
     const r = await fetch(BASE+'/properties?id=eq.'+id, {method:'DELETE', headers:hdr({'Prefer':''})});
     if (!r.ok) throw new Error(await r.text());
     sync('synced');
-  } catch(e) {
-    console.error('delete:', e);
-    sync('error');
-  }
+  } catch(e) { console.error('delete:', e); sync('error'); }
 }
 
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function vstatus(p,k){ return p.vendors?.[k]||'na'; }
 function vdate(p,k){ return p.vendors?.[k+'_date']||''; }
 function vdone(p){ return VENDORS.filter(v=>vstatus(p,v.key)==='done').length; }
 function pct(p){ return Math.round(vdone(p)/VENDORS.length*100); }
 function dotColor(s){ return s==='ip'?'var(--inprogress)':s==='done'?'var(--complete)':'var(--border)'; }
 
+function isArchived(p) {
+  if (p.mic !== 'micdone') return false;
+  if (!p.mic_done_at) return false;
+  const doneDate = new Date(p.mic_done_at);
+  const now = new Date();
+  const diffDays = (now - doneDate) / (1000 * 60 * 60 * 24);
+  return diffDays >= ARCHIVE_DAYS;
+}
+
+function getActiveSearch() {
+  return document.getElementById('active-search').value.trim().toLowerCase();
+}
+function getArchiveSearch() {
+  return document.getElementById('archive-search').value.trim().toLowerCase();
+}
+
 function render() {
   const cc = document.getElementById('cards-container');
   const cs = document.getElementById('completed-section');
-  cc.innerHTML=''; cs.innerHTML='';
+  cc.innerHTML = ''; cs.innerHTML = '';
 
-  const active = props.filter(p=>p.mic!=='micdone');
-  const done   = props.filter(p=>p.mic==='micdone');
+  const archived  = props.filter(p => isArchived(p));
+  const micdone   = props.filter(p => p.mic === 'micdone' && !isArchived(p));
+  // Sort active: by lease_start asc nulls last, then created_at
+  const active = props
+    .filter(p => p.mic !== 'micdone')
+    .sort((a,b) => {
+      if (a.lease_start && b.lease_start) return new Date(a.lease_start) - new Date(b.lease_start);
+      if (a.lease_start) return -1;
+      if (b.lease_start) return 1;
+      return new Date(a.created_at||0) - new Date(b.created_at||0);
+    });
+
+  const activeSearch = getActiveSearch();
 
   if (!props.length) {
-    cc.innerHTML=`<div class="empty"><div class="empty-icon">🏠</div><strong>No Properties Yet</strong>Tap + to add your first property.</div>`;
-    stats(); return;
+    cc.innerHTML = `<div class="empty"><div class="empty-icon">🏠</div><strong>No Properties Yet</strong>Tap + to add your first property.</div>`;
+    stats(); renderArchive(archived); return;
   }
 
-  active.forEach(p => buildCard(p, cc));
+  // Active cards with search filter
+  const filteredActive = activeSearch ? active.filter(p => p.address.toLowerCase().includes(activeSearch)) : active;
+  if (active.length && filteredActive.length === 0) {
+    cc.innerHTML = `<div class="no-results">No active properties match "${activeSearch}"</div>`;
+  } else {
+    filteredActive.forEach(p => buildCard(p, cc));
+  }
 
-  if (done.length) {
-    const lbl=document.createElement('div');
-    lbl.className='section-label'; lbl.textContent='🔑 MIC Complete';
+  // MIC Done (recently completed, not yet archived)
+  if (micdone.length) {
+    const lbl = document.createElement('div');
+    lbl.className = 'section-label'; lbl.textContent = '🔑 MIC Complete';
     cs.appendChild(lbl);
-    done.forEach(p=>{
-      const b=document.createElement('div');
-      b.className='completed-banner';
-      b.innerHTML=`<div class="completed-banner-address">${esc(p.address)}</div><div class="completed-badge">MIC ✓</div><button class="restore-btn">↩ undo</button>`;
-      b.querySelector('.restore-btn').addEventListener('click', async e=>{
+    micdone.forEach(p => {
+      const b = document.createElement('div');
+      b.className = 'completed-banner';
+      b.innerHTML = `<div class="completed-banner-address">${esc(p.address)}</div><div class="completed-badge">MIC ✓</div><button class="restore-btn">↩ undo</button>`;
+      b.querySelector('.restore-btn').addEventListener('click', async e => {
         e.stopPropagation();
-        p.mic='yes';
-        await updateProp(p.id,{mic:'yes'});
+        p.mic = 'yes'; p.mic_done_at = null;
+        await updateProp(p.id, {mic:'yes', mic_done_at:null});
         render();
       });
       cs.appendChild(b);
     });
   }
+
   stats();
+  renderArchive(archived);
+}
+
+function renderArchive(archived) {
+  const wrap = document.getElementById('archive-wrap');
+  const list = document.getElementById('archive-list');
+  const countEl = document.getElementById('archive-count');
+  list.innerHTML = '';
+
+  if (!archived.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  countEl.textContent = archived.length;
+
+  const q = getArchiveSearch();
+  const filtered = q ? archived.filter(p => p.address.toLowerCase().includes(q)) : archived;
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="no-results">No archived properties match "${q}"</div>`;
+    return;
+  }
+
+  filtered.forEach(p => {
+    const doneDate = p.mic_done_at ? new Date(p.mic_done_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+    const item = document.createElement('div');
+    item.className = 'archive-item';
+    item.innerHTML = `
+      <div class="archive-item-address">${esc(p.address)}</div>
+      ${doneDate ? `<div class="archive-item-meta">MIC ${doneDate}</div>` : ''}
+      <button class="archive-restore-btn">↩ restore</button>`;
+    item.querySelector('.archive-restore-btn').addEventListener('click', async () => {
+      p.mic = 'yes'; p.mic_done_at = null;
+      await updateProp(p.id, {mic:'yes', mic_done_at:null});
+      props = props.map(x => x.id === p.id ? {...x, mic:'yes', mic_done_at:null} : x);
+      render();
+    });
+    list.appendChild(item);
+  });
 }
 
 function buildCard(p, container) {
   const pc = pct(p);
-  const isOpen = p.open!==false;
-  const micVal = p.mic||'';
-  const micWarning = micVal!=='yes' && micVal!=='micdone';
+  const isOpen = p.open !== false;
+  const micVal = p.mic || '';
+  const micWarning = micVal !== 'yes' && micVal !== 'micdone';
+  const moveout = p.move_out_date || '';
+  const leaseStart = p.lease_start || '';
 
   const card = document.createElement('div');
   card.className = ['property-card', isOpen?'open':'', pc===100?'all-done':'', micWarning?'mic-warning':''].filter(Boolean).join(' ');
 
-  const vendorHTML = VENDORS.map(v=>{
-    const s = vstatus(p,v.key);
-    const d = vdate(p,v.key);
+  const vendorHTML = VENDORS.map(v => {
+    const s = vstatus(p, v.key);
+    const d = vdate(p, v.key);
     const n = `rv_${p.id}_${v.key}`;
     return `<div class="vendor-row" data-vendor="${v.key}">
       <div class="status-dot" style="background:${dotColor(s)}"></div>
@@ -382,6 +441,17 @@ function buildCard(p, container) {
     </div>
   </div>`;
 
+  const datesHTML = `<div class="dates-row">
+    <div class="date-field">
+      <div class="date-field-label">📦 Move-Out Date</div>
+      <input type="date" class="date-field-input ${moveout?'has-date':''}" data-datefield="move_out_date" value="${esc(moveout)}">
+    </div>
+    <div class="date-field">
+      <div class="date-field-label">🔑 Lease Start</div>
+      <input type="date" class="date-field-input lease-date ${leaseStart?'has-date':''}" data-datefield="lease_start" value="${esc(leaseStart)}">
+    </div>
+  </div>`;
+
   const notesHTML = `<div class="notes-row">
     <div class="notes-label">📝 Notes</div>
     <textarea class="notes-textarea" placeholder="Add notes for field tech...">${esc(p.notes||'')}</textarea>
@@ -389,150 +459,197 @@ function buildCard(p, container) {
 
   card.innerHTML = `
     <div class="property-header">
-      <div class="property-address" id="adr_${p.id}">${esc(p.address)}</div>
-      <button class="edit-address-btn">✏️</button>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar"><div class="progress-fill" style="width:${pc}%"></div></div>
-        <div class="progress-pct">${pc}%</div>
-      </div>
       <div class="chevron">▼</div>
+      <div class="property-address" id="adr_${p.id}">${esc(p.address)}</div>
+      <div class="header-right">
+        <button class="edit-address-btn">✏️</button>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:${pc}%"></div></div>
+          <div class="progress-pct">${pc}%</div>
+        </div>
+        <button class="btn-delete">🗑</button>
+      </div>
     </div>
-    <div class="vendor-grid">${micHTML}${vendorHTML}${notesHTML}</div>`;
+    <div class="vendor-grid">${datesHTML}${micHTML}${vendorHTML}${notesHTML}</div>`;
 
-  // toggle open
-  card.querySelector('.property-header').addEventListener('click', async e=>{
-    if(e.target.closest('.edit-address-btn')||e.target.tagName==='INPUT') return;
-    p.open=!isOpen;
-    await updateProp(p.id,{open:p.open});
+  // Toggle open — only the chevron+address area, not the whole header
+  const headerEl = card.querySelector('.property-header');
+  headerEl.addEventListener('click', async e => {
+    if (e.target.closest('.edit-address-btn') || e.target.closest('.btn-delete') || e.target.tagName === 'INPUT') return;
+    p.open = !isOpen;
+    await updateProp(p.id, {open: p.open});
     render();
   });
 
-  // edit address
-  card.querySelector('.edit-address-btn').addEventListener('click', e=>{
+  // Delete button — separated from chevron, requires confirm
+  card.querySelector('.btn-delete').addEventListener('click', async e => {
     e.stopPropagation();
-    const disp=card.querySelector(`#adr_${p.id}`);
-    const btn=card.querySelector('.edit-address-btn');
-    const inp=document.createElement('input');
-    inp.className='address-edit-input'; inp.value=p.address;
-    disp.replaceWith(inp); btn.textContent='✅'; inp.focus();
-    async function commit(){
-      const v=inp.value.trim();
-      if(v){ p.address=v; await updateProp(p.id,{address:v}); }
+    if (confirm(`Remove "${p.address}" from the tracker? This cannot be undone.`)) {
+      await deleteProp(p.id);
+      props = props.filter(x => x.id !== p.id);
       render();
     }
-    btn.onclick=e=>{e.stopPropagation();commit();};
-    inp.addEventListener('keydown',e=>{if(e.key==='Enter')commit();});
-    inp.addEventListener('blur',()=>setTimeout(commit,150));
   });
 
-  // vendor status radios
-  card.querySelectorAll('.vendor-row input[type="radio"]').forEach(inp=>{
-    inp.addEventListener('change', async e=>{
-      const k=e.target.closest('.vendor-row').dataset.vendor;
-      if(!p.vendors) p.vendors={};
-      p.vendors[k]=e.target.value;
-      await updateProp(p.id,{vendors:p.vendors});
-      e.target.closest('.vendor-row').querySelector('.status-dot').style.background=dotColor(e.target.value);
-      const np=pct(p);
-      card.querySelector('.progress-fill').style.width=np+'%';
-      card.querySelector('.progress-pct').textContent=np+'%';
-      card.classList.toggle('all-done',np===100);
+  // Edit address
+  card.querySelector('.edit-address-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    const disp = card.querySelector(`#adr_${p.id}`);
+    const btn = card.querySelector('.edit-address-btn');
+    const inp = document.createElement('input');
+    inp.className = 'address-edit-input'; inp.value = p.address;
+    disp.replaceWith(inp); btn.textContent = '✅'; inp.focus();
+    async function commit() {
+      const v = inp.value.trim();
+      if (v) { p.address = v; await updateProp(p.id, {address: v}); }
+      render();
+    }
+    btn.onclick = e => { e.stopPropagation(); commit(); };
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') commit(); });
+    inp.addEventListener('blur', () => setTimeout(commit, 150));
+  });
+
+  // Vendor status radios
+  card.querySelectorAll('.vendor-row input[type="radio"]').forEach(inp => {
+    inp.addEventListener('change', async e => {
+      const k = e.target.closest('.vendor-row').dataset.vendor;
+      if (!p.vendors) p.vendors = {};
+      p.vendors[k] = e.target.value;
+      await updateProp(p.id, {vendors: p.vendors});
+      e.target.closest('.vendor-row').querySelector('.status-dot').style.background = dotColor(e.target.value);
+      const np = pct(p);
+      card.querySelector('.progress-fill').style.width = np + '%';
+      card.querySelector('.progress-pct').textContent = np + '%';
+      card.classList.toggle('all-done', np === 100);
       stats();
     });
   });
 
-  // vendor date pickers
+  // Vendor date pickers
   let dateTimer;
-  card.querySelectorAll('.vendor-date').forEach(input=>{
-    input.addEventListener('change', e=>{
-      const k=e.target.dataset.vendor;
-      if(!p.vendors) p.vendors={};
-      p.vendors[k+'_date']=e.target.value;
+  card.querySelectorAll('.vendor-date').forEach(input => {
+    input.addEventListener('change', e => {
+      const k = e.target.dataset.vendor;
+      if (!p.vendors) p.vendors = {};
+      p.vendors[k + '_date'] = e.target.value;
       e.target.classList.toggle('has-date', !!e.target.value);
       clearTimeout(dateTimer);
-      dateTimer=setTimeout(()=>updateProp(p.id,{vendors:p.vendors}), 800);
+      dateTimer = setTimeout(() => updateProp(p.id, {vendors: p.vendors}), 800);
     });
-    // prevent card collapse when tapping date
-    input.addEventListener('click', e=>e.stopPropagation());
+    input.addEventListener('click', e => e.stopPropagation());
   });
 
-  // mic radios
-  card.querySelectorAll(`input[name="${mn}"]`).forEach(inp=>{
-    inp.addEventListener('change', async e=>{
-      p.mic=e.target.value;
-      await updateProp(p.id,{mic:p.mic});
-      if(e.target.value==='micdone'){ render(); }
-      else { card.classList.toggle('mic-warning', e.target.value!=='yes'); }
+  // Property date fields (move-out, lease start)
+  card.querySelectorAll('.date-field-input').forEach(input => {
+    input.addEventListener('change', async e => {
+      const field = e.target.dataset.datefield;
+      const val = e.target.value;
+      p[field] = val;
+      e.target.classList.toggle('has-date', !!val);
+      await updateProp(p.id, {[field]: val || null});
+      // Re-sort if lease_start changed (affects order)
+      if (field === 'lease_start') render();
+    });
+    input.addEventListener('click', e => e.stopPropagation());
+  });
+
+  // MIC radios
+  card.querySelectorAll(`input[name="${mn}"]`).forEach(inp => {
+    inp.addEventListener('change', async e => {
+      p.mic = e.target.value;
+      const updateData = {mic: p.mic};
+      if (e.target.value === 'micdone') {
+        p.mic_done_at = new Date().toISOString();
+        updateData.mic_done_at = p.mic_done_at;
+      } else {
+        p.mic_done_at = null;
+        updateData.mic_done_at = null;
+      }
+      await updateProp(p.id, updateData);
+      render();
     });
   });
 
-  // notes
+  // Notes
   let notesTimer;
   const textarea = card.querySelector('.notes-textarea');
-  textarea.addEventListener('input', ()=>{
-    p.notes=textarea.value;
+  textarea.addEventListener('input', () => {
+    p.notes = textarea.value;
     clearTimeout(notesTimer);
-    notesTimer=setTimeout(()=>updateProp(p.id,{notes:p.notes}), 1000);
+    notesTimer = setTimeout(() => updateProp(p.id, {notes: p.notes}), 1000);
   });
-  textarea.addEventListener('click', e=>e.stopPropagation());
-
-  // long press delete (touch only)
-  let pt;
-  card.querySelector('.property-header').addEventListener('touchstart',()=>{
-    pt=setTimeout(async()=>{
-      if(confirm(`Remove "${p.address}"?`)){
-        await deleteProp(p.id);
-        props=props.filter(x=>x.id!==p.id);
-        render();
-      }
-    },700);
-  });
-  card.querySelector('.property-header').addEventListener('touchend',()=>clearTimeout(pt));
-  card.querySelector('.property-header').addEventListener('touchmove',()=>clearTimeout(pt));
+  textarea.addEventListener('click', e => e.stopPropagation());
 
   container.appendChild(card);
 }
 
 function stats() {
-  document.getElementById('stat-props').textContent=props.length;
-  document.getElementById('stat-inprog').textContent=props.filter(p=>p.mic!=='micdone'&&VENDORS.some(v=>vstatus(p,v.key)==='ip')).length;
-  document.getElementById('stat-done').textContent=props.filter(p=>p.mic==='micdone').length;
+  document.getElementById('stat-props').textContent = props.filter(p => !isArchived(p)).length;
+  document.getElementById('stat-inprog').textContent = props.filter(p => p.mic !== 'micdone' && !isArchived(p) && VENDORS.some(v => vstatus(p, v.key) === 'ip')).length;
+  document.getElementById('stat-done').textContent = props.filter(p => p.mic === 'micdone').length;
 }
 
-// modal
-const modal=document.getElementById('modal-overlay');
-const ainput=document.getElementById('address-input');
-document.getElementById('add-btn').addEventListener('click',()=>{ ainput.value=''; modal.classList.add('visible'); setTimeout(()=>ainput.focus(),300); });
-document.getElementById('cancel-btn').addEventListener('click',()=>modal.classList.remove('visible'));
-modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.remove('visible'); });
-document.getElementById('save-btn').addEventListener('click', async()=>{
-  const addr=ainput.value.trim();
-  if(!addr){ainput.focus();return;}
-  modal.classList.remove('visible');
-  const row=await insertProp({address:addr,vendors:{},mic:'',open:true,notes:'',sort_order:props.length});
-  if(row){ props.push(row); render(); }
+// Archive toggle
+document.getElementById('archive-toggle').addEventListener('click', () => {
+  archiveOpen = !archiveOpen;
+  document.getElementById('archive-body').classList.toggle('open', archiveOpen);
+  document.getElementById('archive-chevron').classList.toggle('open', archiveOpen);
 });
-ainput.addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('save-btn').click(); });
 
-// pull to refresh
-let touchY=0, pulling=false;
-const pullEl=document.getElementById('pull-indicator');
-document.addEventListener('touchstart',e=>{ if(window.scrollY===0){touchY=e.touches[0].clientY;pulling=true;}},{passive:true});
-document.addEventListener('touchmove',e=>{
-  if(!pulling)return;
-  const d=e.touches[0].clientY-touchY;
-  if(d>10){ pullEl.classList.add('visible'); pullEl.textContent=d>60?'↑ release to refresh':'↓ pull to refresh'; pullEl.classList.toggle('release',d>60); }
-},{passive:true});
-document.addEventListener('touchend',e=>{
-  if(!pulling)return;
-  const d=e.changedTouches[0].clientY-touchY;
-  pulling=false;
-  if(d>60){ pullEl.textContent='⟳ refreshing...'; fetchAll().then(()=>pullEl.classList.remove('visible','release')); }
+// Search handlers
+function setupSearch(inputId, clearId, renderFn) {
+  const input = document.getElementById(inputId);
+  const clear = document.getElementById(clearId);
+  input.addEventListener('input', () => {
+    clear.classList.toggle('visible', !!input.value);
+    renderFn();
+  });
+  clear.addEventListener('click', () => {
+    input.value = '';
+    clear.classList.remove('visible');
+    renderFn();
+  });
+}
+setupSearch('active-search', 'active-search-clear', render);
+setupSearch('archive-search', 'archive-search-clear', () => {
+  const archived = props.filter(p => isArchived(p));
+  renderArchive(archived);
+});
+
+// Modal
+const modal = document.getElementById('modal-overlay');
+const ainput = document.getElementById('address-input');
+document.getElementById('add-btn').addEventListener('click', () => { ainput.value = ''; modal.classList.add('visible'); setTimeout(() => ainput.focus(), 300); });
+document.getElementById('cancel-btn').addEventListener('click', () => modal.classList.remove('visible'));
+modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('visible'); });
+document.getElementById('save-btn').addEventListener('click', async () => {
+  const addr = ainput.value.trim();
+  if (!addr) { ainput.focus(); return; }
+  modal.classList.remove('visible');
+  const row = await insertProp({address: addr, vendors: {}, mic: '', open: true, notes: '', lease_start: null, move_out_date: null, mic_done_at: null});
+  if (row) { props.push(row); render(); }
+});
+ainput.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('save-btn').click(); });
+
+// Pull to refresh
+let touchY = 0, pulling = false;
+const pullEl = document.getElementById('pull-indicator');
+document.addEventListener('touchstart', e => { if (window.scrollY === 0) { touchY = e.touches[0].clientY; pulling = true; } }, {passive:true});
+document.addEventListener('touchmove', e => {
+  if (!pulling) return;
+  const d = e.touches[0].clientY - touchY;
+  if (d > 10) { pullEl.classList.add('visible'); pullEl.textContent = d > 60 ? '↑ release to refresh' : '↓ pull to refresh'; pullEl.classList.toggle('release', d > 60); }
+}, {passive:true});
+document.addEventListener('touchend', e => {
+  if (!pulling) return;
+  const d = e.changedTouches[0].clientY - touchY;
+  pulling = false;
+  if (d > 60) { pullEl.textContent = '⟳ refreshing...'; fetchAll().then(() => pullEl.classList.remove('visible','release')); }
   else { pullEl.classList.remove('visible','release'); }
 });
 
-// auto-refresh every 30s
-setInterval(fetchAll,30000);
+// Auto-refresh
+setInterval(fetchAll, 30000);
 fetchAll();
 </script>
 </body>
