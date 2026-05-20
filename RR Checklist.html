@@ -58,8 +58,8 @@ body{font-family:'Open Sans',sans-serif;background:var(--white);color:var(--gray
 .chevron-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;border-radius:6px;padding:5px 10px;font-size:13px;cursor:pointer;transition:transform 0.3s,background 0.2s;display:inline-block;line-height:1;}
 .chevron-btn:hover{background:rgba(255,255,255,0.25);}
 .chevron-btn.open{transform:rotate(180deg);}
-.btn-remove-prop{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.8);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600;transition:background 0.2s;}
-.btn-remove-prop:hover{background:rgba(224,82,82,0.4);border-color:rgba(224,82,82,0.6);}
+.btn-remove-prop{margin-left:auto;background:rgba(224,82,82,0.08);border:1.5px solid rgba(224,82,82,0.3);color:var(--red);border-radius:7px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:700;transition:background 0.2s;white-space:nowrap;align-self:flex-end;}
+.btn-remove-prop:hover{background:rgba(224,82,82,0.18);}
 
 /* Move-out date in header */
 .moveout-display{font-size:11px;color:rgba(255,255,255,0.75);font-family:'Montserrat',sans-serif;font-weight:600;white-space:nowrap;}
@@ -86,6 +86,11 @@ body{font-family:'Open Sans',sans-serif;background:var(--white);color:var(--gray
 .room-toggle-btn.on{border-color:var(--green);background:var(--green-pale);color:var(--green);}
 .room-toggle-btn .dot{width:8px;height:8px;border-radius:50%;background:var(--gray-300);flex-shrink:0;}
 .room-toggle-btn.on .dot{background:var(--green);}
+.custom-rooms-wrap{display:flex;flex-direction:column;gap:8px;margin-bottom:6px;}
+.custom-room-row{display:flex;align-items:center;gap:8px;}
+.custom-room-label{flex:1;padding:6px 10px;border:2px solid var(--gray-200);border-radius:20px;font-family:'Open Sans',sans-serif;font-size:11px;color:var(--gray-700);outline:none;background:white;transition:border-color 0.2s;}
+.custom-room-label:focus{border-color:var(--green);}
+.custom-room-label::placeholder{color:var(--gray-400);}
 .btn-apply{padding:9px 20px;background:linear-gradient(135deg,var(--green) 0%,var(--green-light) 100%);color:white;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-top:14px;}
 .vendors-list{padding:16px 20px;display:flex;flex-direction:column;gap:10px;}
 .vendor-block{border:2px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;}
@@ -315,6 +320,7 @@ function getRooms(cfg) {
   for(let b=1;b<=cfg.staircases;b++) rooms.push({key:'stair'+b, label:cfg.staircases===1?'Staircase':'Staircase '+b, type:'staircase'});
   if(cfg.garage) rooms.push({key:'garage', label:'Garage', type:'garage'});
   if(cfg.shed) rooms.push({key:'shed', label:'Shed', type:'shed'});
+  for(let c=1;c<=3;c++){if(cfg['custom'+c])rooms.push({key:'custom'+c,label:cfg['custom'+c+'_label']||'Custom Room '+c,type:'living'});}
   return rooms;
 }
 
@@ -434,7 +440,9 @@ function collect(pid){
   const move_out_date=moveoutEl?moveoutEl.value||null:null;
   const nv=k=>{const e=document.getElementById(k+'_'+pid);return e?parseInt(e.value)||0:0;};
   const tv=k=>{const e=document.getElementById('rtoggle_'+pid+'_'+k);return e?e.classList.contains('on'):false;};
-  const config={beds:nv('beds'),baths:nv('baths'),halfs:nv('halfs'),floors:nv('floors'),hallways:nv('hallways'),staircases:nv('staircases'),livingRoom:tv('living'),loft:tv('loft'),diningRoom:tv('dining'),laundry:tv('laundry'),basement:tv('basement'),garage:tv('garage'),shed:tv('shed'),entry:tv('entry'),office:tv('office'),wetbar:tv('wetbar'),mechanical:tv('mechanical')};
+  const cv=k=>{const e=document.getElementById('rtoggle_'+pid+'_'+k);return e?e.classList.contains('on'):false;};
+  const cl=k=>{const e=document.getElementById('clabel_'+pid+'_'+k);return e?e.value:'';};
+  const config={beds:nv('beds'),baths:nv('baths'),halfs:nv('halfs'),floors:nv('floors'),hallways:nv('hallways'),staircases:nv('staircases'),livingRoom:tv('living'),loft:tv('loft'),diningRoom:tv('dining'),laundry:tv('laundry'),basement:tv('basement'),garage:tv('garage'),shed:tv('shed'),entry:tv('entry'),office:tv('office'),wetbar:tv('wetbar'),mechanical:tv('mechanical'),custom1:cv('custom1'),custom1_label:cl('custom1'),custom2:cv('custom2'),custom2_label:cl('custom2'),custom3:cv('custom3'),custom3_label:cl('custom3')};
   const vkeys=['handyman','cleaning','carpet_clean','carpet_repair','junk','landscaping','garage_door','pooper','pest','estimates'];
   const vs={};
   vkeys.forEach(vk=>{
@@ -483,12 +491,17 @@ function restore(pid,row){
   if(moveEl&&move_out_date){moveEl.value=move_out_date;moveEl.classList.add('has-value');}
   // Config numbers
   ['beds','baths','halfs','floors','hallways','staircases'].forEach(k=>{const e=document.getElementById(k+'_'+pid);if(e&&config[k]!==undefined)e.value=config[k];});
-  const km={living:'livingRoom',dining:'diningRoom',loft:'loft',laundry:'laundry',basement:'basement',garage:'garage',shed:'shed',entry:'entry',office:'office',wetbar:'wetbar',mechanical:'mechanical'};
+  const km={living:'livingRoom',dining:'diningRoom',loft:'loft',laundry:'laundry',basement:'basement',garage:'garage',shed:'shed',entry:'entry',office:'office',wetbar:'wetbar',mechanical:'mechanical',custom1:'custom1',custom2:'custom2',custom3:'custom3'};
   Object.entries(km).forEach(([k,ck])=>{
     const e=document.getElementById('rtoggle_'+pid+'_'+k);if(!e)return;
     const on=config[ck]||false;e.classList.toggle('on',on);e.querySelector('.dot').style.background=on?'var(--green)':'var(--gray-300)';
   });
-  const cfg={beds:config.beds||3,baths:config.baths||2,halfs:config.halfs||0,floors:config.floors||2,hallways:config.hallways||1,staircases:config.staircases||1,livingRoom:config.livingRoom||false,loft:config.loft||false,diningRoom:config.diningRoom!==false,laundry:config.laundry!==false,basement:config.basement||false,garage:config.garage||false,shed:config.shed||false,entry:config.entry||false,office:config.office||false,wetbar:config.wetbar||false,mechanical:config.mechanical||false};
+  // Restore custom room labels
+  [1,2,3].forEach(c=>{
+    const lbl=document.getElementById('clabel_'+pid+'_custom'+c);
+    if(lbl&&config['custom'+c+'_label'])lbl.value=config['custom'+c+'_label'];
+  });
+  const cfg={beds:config.beds||3,baths:config.baths||2,halfs:config.halfs||0,floors:config.floors||2,hallways:config.hallways||1,staircases:config.staircases||1,livingRoom:config.livingRoom||false,loft:config.loft||false,diningRoom:config.diningRoom!==false,laundry:config.laundry!==false,basement:config.basement||false,garage:config.garage||false,shed:config.shed||false,entry:config.entry||false,office:config.office||false,wetbar:config.wetbar||false,mechanical:config.mechanical||false,custom1:config.custom1||false,custom1_label:config.custom1_label||'',custom2:config.custom2||false,custom2_label:config.custom2_label||'',custom3:config.custom3||false,custom3_label:config.custom3_label||''};
   const hmc=document.getElementById('hmtasks_'+pid);
   const clc=document.getElementById('cltasks_'+pid);
   if(hmc)hmc.innerHTML=buildHMTasks(pid,cfg);
@@ -818,7 +831,8 @@ function toggleRoom(pid,key){document.getElementById('rtoggle_'+pid+'_'+key).cla
 function applyRooms(pid){
   const n=k=>parseInt(document.getElementById(k+'_'+pid).value)||0;
   const t=k=>document.getElementById('rtoggle_'+pid+'_'+k).classList.contains('on');
-  const cfg={beds:n('beds'),baths:n('baths'),halfs:n('halfs'),floors:n('floors'),hallways:n('hallways'),staircases:n('staircases'),livingRoom:t('living'),loft:t('loft'),diningRoom:t('dining'),laundry:t('laundry'),basement:t('basement'),garage:t('garage'),shed:t('shed'),entry:t('entry'),office:t('office'),wetbar:t('wetbar'),mechanical:t('mechanical')};
+  const cl2=k=>{const e=document.getElementById('clabel_'+pid+'_'+k);return e?e.value:'';};
+  const cfg={beds:n('beds'),baths:n('baths'),halfs:n('halfs'),floors:n('floors'),hallways:n('hallways'),staircases:n('staircases'),livingRoom:t('living'),loft:t('loft'),diningRoom:t('dining'),laundry:t('laundry'),basement:t('basement'),garage:t('garage'),shed:t('shed'),entry:t('entry'),office:t('office'),wetbar:t('wetbar'),mechanical:t('mechanical'),custom1:t('custom1'),custom1_label:cl2('custom1'),custom2:t('custom2'),custom2_label:cl2('custom2'),custom3:t('custom3'),custom3_label:cl2('custom3')};
   document.getElementById('hmtasks_'+pid).innerHTML=buildHMTasks(pid,cfg);
   document.getElementById('cltasks_'+pid).innerHTML=buildCLTasks(pid,cfg);
 }
@@ -901,7 +915,7 @@ function buildVendor(pid,vkey,icon,label,cfg){
 }
 
 function buildPropHTML(pid, addr, moveout){
-  const dc={beds:3,baths:2,halfs:0,floors:2,hallways:1,staircases:1,livingRoom:false,loft:false,diningRoom:true,laundry:true,basement:false,garage:false,shed:false,entry:false,office:false,wetbar:false,mechanical:false};
+  const dc={beds:3,baths:2,halfs:0,floors:2,hallways:1,staircases:1,livingRoom:false,loft:false,diningRoom:true,laundry:true,basement:false,garage:false,shed:false,entry:false,office:false,wetbar:false,mechanical:false,custom1:false,custom1_label:'',custom2:false,custom2_label:'',custom3:false,custom3_label:''};
   const rtb=(key,lbl)=>'<button class="room-toggle-btn'+(dc[key]?' on':'')+'" id="rtoggle_'+pid+'_'+key+'" onclick="toggleRoom(\''+pid+'\',\''+key+'\')"><span class="dot"></span>'+lbl+'</button>';
   const moveoutDisplay = moveout ? `<span class="moveout-display">📦 ${moveout}</span>` : '';
   return `
@@ -914,7 +928,6 @@ function buildPropHTML(pid, addr, moveout){
         ${moveoutDisplay}
         <span class="complete-badge">✓ SCHEDULED</span>
         <span class="chevron-btn" id="pchev_${pid}" onclick="toggleProp('${pid}')">▼</span>
-        <button class="btn-remove-prop" onclick="event.stopPropagation();if(confirm('Remove this property?'))removeProperty('${pid}')">Remove</button>
       </div>
     </div>
     <div class="property-body open" id="pbody_${pid}">
@@ -923,6 +936,7 @@ function buildPropHTML(pid, addr, moveout){
           <div class="date-label">📦 Move-Out Date</div>
           <input type="date" class="date-input${moveout?' has-value':''}" data-datefield="move_out_date" value="${moveout||''}" onchange="onDateChange(this,'${pid}')">
         </div>
+        <button class="btn-remove-prop" onclick="if(confirm('Remove this property? This cannot be undone.'))removeProperty('${pid}')">🗑 Remove</button>
       </div>
       <div class="property-setup">
         <div class="setup-title">Property Configuration</div>
@@ -938,6 +952,10 @@ function buildPropHTML(pid, addr, moveout){
         <div class="setup-group-label">Optional Rooms — tap to include</div>
         <div class="room-toggles">
           ${rtb('living','Living Room')}${rtb('dining','Dining Room')}${rtb('loft','Loft')}${rtb('entry','Entry')}${rtb('office','Office')}${rtb('laundry','Laundry Room')}${rtb('basement','Basement / Rec Room')}${rtb('wetbar','Wet Bar / Sec. Kitchen')}${rtb('mechanical','Mechanical Room')}${rtb('garage','Garage')}${rtb('shed','Shed')}
+        </div>
+        <div class="setup-group-label">Custom Rooms — enable and name as needed</div>
+        <div class="custom-rooms-wrap">
+          ${[1,2,3].map(c=>'<div class="custom-room-row"><button class="room-toggle-btn" id="rtoggle_'+pid+'_custom'+c+'" onclick="toggleRoom(\''+pid+'\',\'custom'+c+'\')"><span class="dot"></span>Room '+c+'</button><input class="custom-room-label" id="clabel_'+pid+'_custom'+c+'" placeholder="Name this room..." onclick="event.stopPropagation()"></div>').join('')}
         </div>
         <button class="btn-apply" onclick="applyRooms('${pid}')">Apply Configuration</button>
       </div>

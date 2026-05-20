@@ -245,9 +245,18 @@ function sync(state) {
 async function fetchAll() {
   sync('syncing');
   try {
-    const r = await fetch(BASE+'/properties?order=lease_start.asc.nullslast,created_at.asc', {headers:hdr()});
+    const r = await fetch(BASE+'/properties?order=created_at.asc', {headers:hdr()});
     if (!r.ok) throw new Error(await r.text());
-    props = await r.json();
+    const data = await r.json();
+    // Sort by lease_start client-side so missing column doesn't break the fetch
+    props = data.sort((a,b) => {
+      if (a.mic === 'micdone' && b.mic !== 'micdone') return 1;
+      if (b.mic === 'micdone' && a.mic !== 'micdone') return -1;
+      if (a.lease_start && b.lease_start) return new Date(a.lease_start) - new Date(b.lease_start);
+      if (a.lease_start) return -1;
+      if (b.lease_start) return 1;
+      return new Date(a.created_at||0) - new Date(b.created_at||0);
+    });
     sync('synced');
     render();
   } catch(e) {
